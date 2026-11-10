@@ -1,82 +1,238 @@
-/* nmui-sheet — M3 bottom sheet / side sheet. */
+/* nmui-sheet — M3 bottom sheets and side sheets.
+ *
+ * Spec values:
+ *   Bottom: container surface-container-low, corner-extra-
+ *   large on top (28dp), elevation level 1, width full up to
+ *   640dp (with 56dp side margins beyond that), top margin
+ *   72dp (56dp on wide windows). Drag handle 32×4dp in
+ *   on-surface-variant, centered in a 48dp zone (22dp padding
+ *   above and below it).
+ *   Side: width 256dp default, max 400dp, content padding
+ *   24dp, headline title-large in on-surface-variant.
+ *   Standard side: surface, no corners, no elevation, split
+ *   from the body by a divider. Modal side: surface-
+ *   container-low, level 1, 16dp corners on the edge side.
+ *   Scrim (modal only): scrim color at 32%. */
 
 nmui-sheet {
-  display: none;
   position: fixed;
   inset: 0;
-  z-index: 45;
+  z-index: 60;
+  visibility: hidden;
   pointer-events: none;
-}
-
-nmui-sheet[modal] {
-  pointer-events: auto;
-  background-color: color-mix(in srgb,
-    var(--md-sys-color-scrim, #000000) 32%, transparent);
+  transition: visibility 0s linear 350ms;
 }
 
 nmui-sheet[open] {
-  display: block;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+nmui-sheet > scrim {
+  position: absolute;
+  inset: 0;
+  background-color: var(--md-sys-color-scrim, #000000);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1));
+}
+
+nmui-sheet[open] > scrim {
+  opacity: 0.32;
+  pointer-events: auto;
 }
 
 nmui-sheet > surface {
-  pointer-events: auto;
   position: absolute;
-  inset-inline: 0;
-  bottom: 0;
-  max-height: 90vh;
-  overflow: auto;
-  padding: 16px 16px 24px;
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
-  border-radius: 28px 28px 0 0;
-  background-color: var(--md-sys-color-surface-container-low, #f7f2fa);
   color: var(--md-sys-color-on-surface, #1c1b1f);
-  box-shadow: var(--md-sys-elevation-level1, 0 1px 2px rgb(0 0 0 / 0.3));
+  pointer-events: auto;
+  overflow: hidden;
+  transition: transform var(--md-sys-motion-spring-default-spatial, 500ms cubic-bezier(0.2, 0, 0, 1));
 }
 
-/* drag handle */
-nmui-sheet > surface::before {
-  content: "";
+nmui-sheet > surface > content {
   display: block;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ---- bottom sheet -------------------------------------------- */
+
+nmui-sheet:not([side]) > surface {
+  bottom: 0;
+  left: 50%;
+  width: min(640px, 100%);
+  max-height: calc(100dvh - 72px);
+  background-color: var(--md-sys-color-surface-container-low, #f7f2fa);
+  border-radius: var(--md-sys-shape-corner-extra-large, 28px)
+    var(--md-sys-shape-corner-extra-large, 28px) 0 0;
+  box-shadow: var(--md-sys-elevation-level1, 0 1px 2px rgb(0 0 0 / 0.3));
+  transform: translate(-50%, 105%);
+}
+
+@media (min-width: 641px) {
+  nmui-sheet:not([side]) > surface {
+    width: min(640px, calc(100vw - 112px));
+    max-height: calc(100dvh - 56px);
+  }
+}
+
+nmui-sheet[open]:not([side]) > surface {
+  transform: translate(-50%, 0);
+}
+
+nmui-sheet[detent="half"]:not([side]) > surface {
+  max-height: 50dvh;
+}
+
+/* The drag handle: a real button (it leads the tab order and
+   cycles detents when selected). The zone is the top 48dp;
+   the pill is 32×4, on-surface-variant at 40%. */
+nmui-sheet > surface > button[handle] {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  height: 48px;
+  flex: none;
+  border: 0;
+  padding: 22px 0 0;
+  box-sizing: border-box;
+  background: transparent;
+  cursor: grab;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+nmui-sheet > surface > button[handle]:active {
+  cursor: grabbing;
+}
+
+nmui-sheet > surface > button[handle] > span[pill] {
   width: 32px;
   height: 4px;
-  margin: 0 auto 16px;
   border-radius: 2px;
   background-color: var(--md-sys-color-on-surface-variant, #49454f);
   opacity: 0.4;
 }
 
-nmui-sheet[open] > surface {
-  animation: nmui-sheet-up var(--md-sys-motion-spring-default-spatial, 400ms cubic-bezier(0.2, 0, 0, 1));
+nmui-sheet > surface > button[handle]:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: -2px;
 }
 
-@keyframes nmui-sheet-up {
-  from { transform: translateY(48px); opacity: 0; }
-  to { transform: none; opacity: 1; }
+nmui-sheet:not([side]) > surface > content {
+  padding: 0 24px 24px;
 }
 
-/* side sheet */
+/* ---- side sheet ---------------------------------------------- */
+
 nmui-sheet[side] > surface {
-  inset-inline: auto 0;
   top: 0;
   bottom: 0;
-  width: min(360px, 90vw);
-  border-radius: 16px 0 0 16px;
-  padding: 16px;
-}
-
-nmui-sheet[side] > surface::before {
-  display: none;
-}
-
-nmui-sheet[side][open] > surface {
-  animation: nmui-sheet-in var(--md-sys-motion-spring-default-spatial, 400ms cubic-bezier(0.2, 0, 0, 1));
-}
-
-@keyframes nmui-sheet-in {
-  from { transform: translateX(48px); opacity: 0; }
-  to { transform: none; opacity: 1; }
+  inset-inline-end: 0;
+  width: var(--nmui-sheet-width, 256px);
+  max-width: min(400px, 100vw);
+  transform: translateX(105%);
 }
 
 [dir="rtl"] nmui-sheet[side] > surface {
-  border-radius: 0 16px 16px 0;
+  transform: translateX(-105%);
+}
+
+nmui-sheet[side][open] > surface {
+  transform: translateX(0);
+}
+
+nmui-sheet[side]:not([modal]) > surface {
+  background-color: var(--md-sys-color-surface, #fef7ff);
+  border-inline-start: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+}
+
+nmui-sheet[side][modal] > surface {
+  background-color: var(--md-sys-color-surface-container-low, #f7f2fa);
+  border-start-start-radius: var(--md-sys-shape-corner-large, 16px);
+  border-end-start-radius: var(--md-sys-shape-corner-large, 16px);
+  box-shadow: var(--md-sys-elevation-level1, 0 1px 2px rgb(0 0 0 / 0.3));
+}
+
+nmui-sheet[side][modal][detached] > surface {
+  top: 16px;
+  bottom: 16px;
+  inset-inline-end: 16px;
+  border-radius: var(--md-sys-shape-corner-large, 16px);
+}
+
+/* Header: [back] + headline (title-large, on-surface-variant)
+   + close. Close/back are the component's plain icon buttons. */
+nmui-sheet[side] > surface > header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+  padding: 12px 12px 12px 24px;
+}
+
+nmui-sheet[side] > surface > header > [headline] {
+  flex: 1;
+  margin: 0;
+  font-size: var(--md-sys-typescale-title-large-size, 22px);
+  line-height: var(--md-sys-typescale-title-large-line-height, 28px);
+  font-weight: var(--md-sys-typescale-title-large-weight, 400);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+nmui-sheet[side] > surface > header button[close],
+nmui-sheet[side] > surface > header > [back] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border: 0;
+  padding: 0;
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+  background: transparent;
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+nmui-sheet[side] > surface > header button[close]:hover,
+nmui-sheet[side] > surface > header > [back]:hover {
+  background-color: color-mix(in srgb,
+    var(--md-sys-color-on-surface-variant, #49454f) 8%, transparent);
+}
+
+nmui-sheet[side] > surface > header button[close] > icon,
+nmui-sheet[side] > surface > header > [back] > icon {
+  font-size: 24px;
+}
+
+nmui-sheet[side] > surface > content {
+  padding: 0 24px 24px;
+}
+
+/* Action buttons: pinned at the bottom, divider above
+   (72dp area: 16dp top padding, 24dp bottom). */
+nmui-sheet[side] > surface > [actions] {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex: none;
+  margin-top: auto;
+  padding: 16px 24px 24px;
+  border-top: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  nmui-sheet > surface,
+  nmui-sheet > scrim {
+    transition: none;
+  }
 }
