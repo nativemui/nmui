@@ -1,0 +1,11 @@
+# Dev: serve this folder live inside nginx — edit files, refresh the
+# browser, no image rebuilds. The volume shadows the image's snapshot,
+# so the container always serves what's on disk right now.
+# (Rebuild only if Dockerfile or nginx.conf themselves change.)
+services:
+  nmui:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/usr/share/nginx/html:ro

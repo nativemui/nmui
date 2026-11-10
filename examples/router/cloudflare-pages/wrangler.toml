@@ -1,0 +1,8 @@
+# wrangler.toml — alternative to _redirects when deploying
+# static assets with Wrangler. TOML is INI-style config.
+name = "myapp"
+compatibility_date = "2024-06-01"
+
+[assets]
+directory = "."
+not_found_handling = "single-page-application"

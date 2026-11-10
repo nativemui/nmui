@@ -1,0 +1,10 @@
+# .htaccess variant for PHP on Apache/shared hosting with an API:
+# route /api/ to PHP first, then fall back to the SPA.
+# (Rename this file to .htaccess in the web root.)
+RewriteEngine On
+
+RewriteRule ^api/ api.php [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]

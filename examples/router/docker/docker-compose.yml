@@ -1,0 +1,10 @@
+# docker-compose.yml — dev version: bind-mount the folder into
+# the container, so edits are live with no rebuilds.
+# (Rebuild only if the Dockerfile or nginx.conf changes.)
+services:
+  app:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/usr/share/nginx/html:ro

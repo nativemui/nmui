@@ -1,0 +1,232 @@
+/* nmui-app-bar — M3 Expressive top app bar. Variants, per the
+   app-bars spec: small (default, single row, 64dp), medium
+   flexible (112dp, 136dp with a subtitle), large flexible (120dp,
+   152dp with a subtitle). Baseline medium/large are not
+   recommended in M3 Expressive and are not implemented — [medium]
+   and [large] ARE the flexible variants.
+
+   Spec values used: edge padding 4dp, icon-button spacing 0dp,
+   icon 24dp in a 48dp area, gap 4dp between an icon area and the
+   title, headline inset 16dp (container 4 + title 12) on
+   medium/large, icon row 48dp with 8dp above it and 12dp below
+   the headline block on medium/large, container surface,
+   on-scroll surface-container, title on-surface, subtitle
+   on-surface-variant, leading icon on-surface, trailing icon
+   on-surface-variant. Small top/bottom padding is 8dp each —
+   the token text doesn't list it, but the measurement diagram
+   shows the 48dp row centered in the 64dp bar, which is 8/8,
+   so the small bar carries it as code padding, not just
+   centering. Title/subtitle type: the spec's point
+   sizes coincide with existing typescale styles, so those tokens
+   carry them — small title-large / label-medium, medium
+   headline-medium / label-large, large display-small /
+   title-medium. (The spec dialogs don't name the styles; the
+   numbers match.)
+
+   Flexible means the height HUGS the text: the 112/120/136/152
+   figures are minimums, so they are min-height, not height — a
+   wrapping multi-line title grows the bar instead of clipping.
+   The one value the specs page does not print as a token is the
+   gap between headline and subtitle, so the rows distribute
+   whatever space is left via space-between.
+
+   Layout is one wrapping flex row, no JS restructuring: leading
+   children come before the title, trailing children after it.
+   Trailing children get order 1, the title order 10 on
+   medium/large (its own full-width row), the subtitle order 11
+   (its own row under the title).
+
+   Icon buttons in a bar are NOT default nmui icon buttons: the
+   spec's icon area is 48dp with a 24dp glyph, and no nmui button
+   size gives that (default is a 40dp box with a 20dp glyph), so
+   the bar enforces 48/24 here and pins the hit target to the box
+   (otherwise the default 4dp overshoot would overlap the
+   zero-gap neighbour buttons).
+
+   [center] centers the title text (the centered-text
+   configuration — center-aligned is merged into small in M3E).
+   [scrolled] paints the on-scroll fill; the app toggles it from
+   its own scroll handler, since the bar can't know which element
+   scrolls. The search app bar is a separate pass: its container
+   is easy, but its defining behavior (opening the search view)
+   is not this component. */
+
+nmui-app-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: space-between;
+  gap: 0;
+  min-height: 64px;
+  padding: 8px 4px;
+  box-sizing: border-box;
+  background-color: var(--md-sys-color-surface, #fef7ff);
+  color: var(--md-sys-color-on-surface, #1d1b20);
+}
+
+/* The title: <headline>, <nmui-title>, or any element with a
+   [title] attribute. Inside a bar the variant sets its type, so
+   don't size the headline yourself. The 4dp is the spec gap
+   between an icon area and the title. */
+nmui-app-bar > headline,
+nmui-app-bar > nmui-title,
+nmui-app-bar > [title] {
+  flex: 1;
+  margin: 0;
+  padding: 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--md-sys-color-on-surface, #1d1b20);
+  font: var(--md-sys-typescale-title-large, 400 22px/28px system-ui, sans-serif);
+}
+
+/* Bare icons (not buttons): 24dp glyph in a 48dp area. Leading
+   icons inherit the bar's on-surface; trailing ones take
+   on-surface-variant below. */
+nmui-app-bar > icon {
+  font-size: 24px;
+  padding: 12px;
+}
+
+/* Icon buttons in a bar: the spec's 48dp area with a 24dp glyph,
+   hit target pinned to the box (see the header comment). */
+nmui-app-bar > nmui-button[icon] > container {
+  height: 48px;
+}
+
+nmui-app-bar > nmui-button[icon] > container > icon {
+  font-size: 24px;
+}
+
+nmui-app-bar > nmui-button[icon]::after {
+  inset: 0;
+}
+
+/* Leading buttons take on-surface; the trailing rule below
+   re-asserts on-surface-variant for buttons after the title.
+   Button's own [selected]/hover rules still out-specify these,
+   so those states keep working. */
+nmui-app-bar > nmui-button[icon][standard] > container {
+  color: var(--md-sys-color-on-surface, #1d1b20);
+}
+
+/* Trailing children: everything after the title. */
+nmui-app-bar > headline ~ *,
+nmui-app-bar > nmui-title ~ *,
+nmui-app-bar > [title] ~ * {
+  order: 1;
+}
+
+nmui-app-bar > headline ~ icon,
+nmui-app-bar > nmui-title ~ icon,
+nmui-app-bar > [title] ~ icon {
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+nmui-app-bar > headline ~ nmui-button[icon][standard] > container,
+nmui-app-bar > nmui-title ~ nmui-button[icon][standard] > container,
+nmui-app-bar > [title] ~ nmui-button[icon][standard] > container {
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+/* The subtitle: its own full-width row under the title. This rule
+   must come after the trailing rule — same specificity, and the
+   subtitle is also "after the title". */
+nmui-app-bar > subtitle {
+  flex: 1 1 100%;
+  order: 11;
+  margin: 0;
+  padding-inline-start: 12px;
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  font: var(--md-sys-typescale-label-medium, 500 12px/16px system-ui, sans-serif);
+}
+
+nmui-app-bar > headline ~ subtitle,
+nmui-app-bar > nmui-title ~ subtitle,
+nmui-app-bar > [title] ~ subtitle {
+  order: 11;
+}
+
+/* Medium flexible: two rows — icon row on top, headline block at
+   the bottom. 8dp above the icon row, 12dp below the headline
+   block; taller with a subtitle, since it hugs its text. */
+nmui-app-bar[medium] {
+  min-height: 112px;
+  padding-top: 8px;
+  padding-bottom: 12px;
+}
+
+nmui-app-bar[medium]:has(> subtitle) {
+  min-height: 136px;
+}
+
+nmui-app-bar[medium] > headline,
+nmui-app-bar[medium] > nmui-title,
+nmui-app-bar[medium] > [title] {
+  flex: 1 1 100%;
+  order: 10;
+  padding-inline-start: 12px;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  font: var(--md-sys-typescale-headline-medium, 400 28px/36px system-ui, sans-serif);
+}
+
+nmui-app-bar[medium] > subtitle {
+  font: var(--md-sys-typescale-label-large, 500 14px/20px system-ui, sans-serif);
+}
+
+/* Large flexible: same structure, larger headline. */
+nmui-app-bar[large] {
+  min-height: 120px;
+  padding-top: 8px;
+  padding-bottom: 12px;
+}
+
+nmui-app-bar[large]:has(> subtitle) {
+  min-height: 152px;
+}
+
+nmui-app-bar[large] > headline,
+nmui-app-bar[large] > nmui-title,
+nmui-app-bar[large] > [title] {
+  flex: 1 1 100%;
+  order: 10;
+  padding-inline-start: 12px;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  font: var(--md-sys-typescale-display-small, 400 36px/44px system-ui, sans-serif);
+}
+
+nmui-app-bar[large] > subtitle {
+  font: var(--md-sys-typescale-title-medium, 500 16px/24px system-ui, sans-serif);
+}
+
+/* Centered-text configuration: the title (and subtitle) center
+   in their row. On medium/large the inset drops so the text is
+   truly centered — symmetric padding, or the center shifts. */
+nmui-app-bar[center] > headline,
+nmui-app-bar[center] > nmui-title,
+nmui-app-bar[center] > [title],
+nmui-app-bar[center] > subtitle {
+  text-align: center;
+}
+
+nmui-app-bar[center][medium] > headline,
+nmui-app-bar[center][medium] > nmui-title,
+nmui-app-bar[center][medium] > [title],
+nmui-app-bar[center][medium] > subtitle,
+nmui-app-bar[center][large] > headline,
+nmui-app-bar[center][large] > nmui-title,
+nmui-app-bar[center][large] > [title],
+nmui-app-bar[center][large] > subtitle {
+  padding-inline: 0;
+}
+
+/* On scroll the container fills with surface-container — no
+   shadow in M3, the fill is the separation. */
+nmui-app-bar[scrolled] {
+  background-color: var(--md-sys-color-surface-container, #f3edf7);
+}

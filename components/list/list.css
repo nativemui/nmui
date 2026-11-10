@@ -1,0 +1,226 @@
+/* nmui-list — M3 list.
+ *
+ * Container (bare host) + rows ([item]). Printed values from the
+ * baseline measurements table: label and leading element 16dp
+ * from the leading edge, trailing element 16dp gap and 24dp from
+ * the trailing edge, targets 48dp. Item height is set by content:
+ * 56dp one line, 72dp with supporting text, 88dp with overline +
+ * supporting text — and at 88dp the row goes top-aligned (the
+ * table's "label alignment when height is 88dp or taller: top",
+ * leading icon top padding 12dp there, 8dp below it).
+ *
+ * Colors follow the printed role list: container surface, label
+ * on-surface, supporting / trailing text / leading icon
+ * on-surface-variant, divider outline-variant, avatar container
+ * primary-container with on-primary-container content. A selected
+ * row is highlighted with secondary-container, the same selection
+ * fill the rail, bar, and filter chips use.
+ *
+ * The [segmented] container is the M3 Expressive style: filled
+ * rows (surface-container) separated by gaps instead of dividers,
+ * corners 16dp on the group's outer edges and 4dp between rows;
+ * a selected row morphs to 16dp all around ("shape morphing" in
+ * the specs). */
+
+nmui-list:not([item]) {
+  display: block;
+  padding: 8px 0;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+}
+
+nmui-list[segmented]:not([item]) {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0;
+}
+
+/* -- row ------------------------------------------------------------------ */
+
+nmui-list[item] {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 56px;
+  padding: 8px 24px 8px 16px;
+  box-sizing: border-box;
+  font: var(--md-sys-typescale-body-large, 400 16px/24px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+}
+
+/* Two lines: label + supporting text. */
+nmui-list[item]:has(> span > small) {
+  min-height: 72px;
+}
+
+/* Three lines (overline + supporting text): 88dp, top-aligned. */
+nmui-list[item]:has(> span > overline):has(> span > small) {
+  min-height: 88px;
+  align-items: flex-start;
+  padding-top: 12px;
+}
+
+/* State layers paint over whatever fill the row has (none, or the
+ * segmented / selected fills) without replacing it. */
+nmui-list[item]:hover {
+  background-image: linear-gradient(
+    color-mix(in srgb, var(--md-sys-color-on-surface, #1c1b1f) 8%, transparent),
+    color-mix(in srgb, var(--md-sys-color-on-surface, #1c1b1f) 8%, transparent));
+}
+
+nmui-list[item]:active {
+  background-image: linear-gradient(
+    color-mix(in srgb, var(--md-sys-color-on-surface, #1c1b1f) 12%, transparent),
+    color-mix(in srgb, var(--md-sys-color-on-surface, #1c1b1f) 12%, transparent));
+}
+
+nmui-list[item]:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary, #6750a4);
+  outline-offset: -2px;
+}
+
+nmui-list[item][selected] {
+  background-color: var(--md-sys-color-secondary-container, #e8def8);
+  color: var(--md-sys-color-on-secondary-container, #1d192b);
+}
+
+/* -- segmented rows --------------------------------------------------------- */
+
+nmui-list[segmented] > nmui-list[item] {
+  background-color: var(--md-sys-color-surface-container, #f3edf7);
+  border-radius: 4px;
+}
+
+nmui-list[segmented] > nmui-list[item]:first-child {
+  border-radius: 16px 16px 4px 4px;
+}
+
+nmui-list[segmented] > nmui-list[item]:last-child {
+  border-radius: 4px 4px 16px 16px;
+}
+
+nmui-list[segmented] > nmui-list[item]:only-child {
+  border-radius: 16px;
+}
+
+nmui-list[segmented] > nmui-list[item][selected] {
+  background-color: var(--md-sys-color-secondary-container, #e8def8);
+  border-radius: 16px;
+}
+
+/* -- leading ---------------------------------------------------------------- */
+
+nmui-list[item] > icon:first-child {
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  font-size: 24px;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+nmui-list[item][selected] > icon:first-child {
+  color: var(--md-sys-color-on-secondary-container, #1d192b);
+}
+
+/* Avatar: initials (or an <img>) in a 40dp primary-container circle. */
+nmui-list[item] > [avatar] {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--md-sys-color-primary-container, #eaddff);
+  color: var(--md-sys-color-on-primary-container, #4f378b);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: var(--md-sys-typescale-title-medium, 500 16px/24px system-ui, sans-serif);
+  overflow: hidden;
+}
+
+nmui-list[item] > img[avatar] {
+  object-fit: cover;
+}
+
+/* Media: a square thumbnail. */
+nmui-list[item] > img[media] {
+  flex: 0 0 auto;
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: var(--md-sys-shape-corner-small, 8px);
+}
+
+/* -- text column -------------------------------------------------------------- */
+
+/* Wrap headline + supporting text in a <span>; an <overline> and a
+ * <small> inside it are the overline and supporting text. */
+nmui-list[item] > span {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+nmui-list[item] > span > overline {
+  display: block;
+  font: var(--md-sys-typescale-label-small, 500 11px/16px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+nmui-list[item] > span > small,
+nmui-list[item] > small {
+  display: block;
+  font: var(--md-sys-typescale-body-medium, 400 14px/20px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  font-weight: 400;
+}
+
+/* -- trailing ----------------------------------------------------------------- */
+
+nmui-list[item] > [trailing] {
+  margin-inline-start: auto;
+  flex: 0 0 auto;
+  font: var(--md-sys-typescale-label-small, 500 11px/16px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+nmui-list[item] > nmui-badge,
+nmui-list[item] > nmui-checkbox,
+nmui-list[item] > nmui-switch,
+nmui-list[item] > nmui-button {
+  margin-inline-start: auto;
+  flex: 0 0 auto;
+}
+
+/* -- dragged ---------------------------------------------------------------------- */
+
+/* The specs' dragged state: the row lifts off the list while the
+ * app moves it (reordering itself is app behavior — the row only
+ * needs to look held). */
+nmui-list[item][dragging] {
+  box-shadow: var(--md-sys-elevation-level3,
+    0 4px 8px 3px rgb(0 0 0 / 0.15), 0 1px 3px rgb(0 0 0 / 0.3));
+  z-index: 1;
+}
+
+/* -- disabled ------------------------------------------------------------------- */
+
+/* Explicit 38% content colors, never host opacity (which would
+ * fade fills and state layers too). */
+nmui-list[item][disabled] {
+  cursor: default;
+  color: color-mix(in srgb, var(--md-sys-color-on-surface, #1c1b1f) 38%, transparent);
+}
+
+nmui-list[item][disabled] > icon:first-child,
+nmui-list[item][disabled] > span > small,
+nmui-list[item][disabled] > span > overline,
+nmui-list[item][disabled] > [trailing] {
+  color: color-mix(in srgb, var(--md-sys-color-on-surface, #1c1b1f) 38%, transparent);
+}
+
+nmui-list[item][disabled]:hover,
+nmui-list[item][disabled]:active {
+  background-image: none;
+}

@@ -1,0 +1,242 @@
+/* nmui-chip — M3 chips: assist, filter, input, suggestion.
+   Shared geometry (all four spec tables agree): 32dp height, 8dp
+   corners, 18dp icons, 8dp between elements, 16dp side padding
+   (8dp on a side that carries an icon). Label = label-large.
+   Minimum target 48dp (guidelines): the visible box is 32dp, so
+   the target extends 8dp past the box top and bottom via ::after.
+   State-layer opacities are the standard M3 scale (hover 8%,
+   pressed 12%) — the chips pages print the state NAMES
+   (enabled/disabled/hovered/focused/pressed/dragged), not
+   per-state numbers. The layer is painted as a background-image
+   gradient over the fill, so it composes with flat, elevated,
+   and selected fills alike; --_slc is the layer's color role:
+   on-surface by default, on-surface-variant for unselected
+   filter/input and suggestion, on-secondary-container when a
+   filter/input chip is selected. [dragged] is visual only
+   (level 1, like card's [dragging]); dragging is app behavior. */
+
+nmui-chip {
+  --_slc: var(--md-sys-color-on-surface, #1c1b1f);
+  --_sl: transparent;
+  position: relative;
+  display: inline-flex;
+  /* Chips align by their BOX, not their content: an inline-flex
+     box's baseline comes from its first item, and an icon's,
+     a check svg's, and a text run's baselines all differ — a
+     mixed row (icon chips next to text-only chips) would ride
+     at different heights. middle lines the boxes up. */
+  vertical-align: middle;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 16px;
+  box-sizing: border-box;
+  border-radius: var(--md-sys-shape-corner-small, 8px);
+  border: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+  background-color: transparent;
+  background-image: linear-gradient(var(--_sl), var(--_sl));
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  font: var(--md-sys-typescale-label-large, 500 14px/20px system-ui, sans-serif);
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1)),
+    border-color var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1)),
+    box-shadow var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1));
+}
+
+/* 48dp minimum target around a 32dp box. */
+nmui-chip::after {
+  content: "";
+  position: absolute;
+  inset: -8px 0;
+}
+
+/* A side carrying an icon/avatar/check pads 8dp, not 16dp. */
+nmui-chip:has(> icon:first-of-type),
+nmui-chip[filter][selected] {
+  padding-inline-start: 8px;
+}
+
+nmui-chip:has(> icon:last-of-type) {
+  padding-inline-end: 8px;
+}
+
+nmui-chip > icon {
+  font-size: 18px;
+  line-height: 1;
+  display: inline-flex;
+  flex: none;
+}
+
+/* Leading icons: primary on assist (its spec color list), the
+   guidelines' on-surface-variant alternative elsewhere. */
+nmui-chip > icon:first-of-type {
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+nmui-chip[assist] > icon:first-of-type {
+  color: var(--md-sys-color-primary, #6750a4);
+}
+
+/* Avatar: a leading <img avatar> — 24dp, 12dp corners, tighter
+   leading padding (4dp) per the input chip table. Any role can
+   carry one; the input chip is the canonical case. */
+nmui-chip > img[avatar] {
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex: none;
+}
+
+nmui-chip:has(> img[avatar]) {
+  padding-inline-start: 4px;
+}
+
+/* Elevated: surface-container-low fill, level 1, no outline
+   (for chips on images / dynamic backgrounds). */
+nmui-chip[elevated] {
+  background-color: var(--md-sys-color-surface-container-low, #f7f2fa);
+  border-color: transparent;
+  box-shadow: var(--md-sys-elevation-level1,
+    0 1px 2px rgb(0 0 0 / 0.3), 0 1px 3px 1px rgb(0 0 0 / 0.15));
+}
+
+nmui-chip[dragged] {
+  box-shadow: var(--md-sys-elevation-level1,
+    0 1px 2px rgb(0 0 0 / 0.3), 0 1px 3px 1px rgb(0 0 0 / 0.15));
+}
+
+/* Interaction states (enabled chips only). */
+nmui-chip:not([disabled]):hover {
+  --_sl: color-mix(in srgb, var(--_slc) 8%, transparent);
+}
+
+nmui-chip:not([disabled]):active {
+  --_sl: color-mix(in srgb, var(--_slc) 12%, transparent);
+}
+
+nmui-chip:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary, #6750a4);
+  outline-offset: 2px;
+}
+
+/* -- filter ------------------------------------------------------------------
+   Unselected: outline-variant ring, on-surface-variant label and
+   state layer. Selected: secondary-container fill, no ring,
+   on-secondary-container content, checkmark in place of any
+   authored leading icon. */
+
+nmui-chip[filter] {
+  --_slc: var(--md-sys-color-on-surface-variant, #49454f);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+nmui-chip[filter] > check {
+  display: none;
+  line-height: 0;
+  flex: none;
+}
+
+nmui-chip[filter][selected] {
+  --_slc: var(--md-sys-color-on-secondary-container, #4a4458);
+  background-color: var(--md-sys-color-secondary-container, #e8def8);
+  border-color: transparent;
+  color: var(--md-sys-color-on-secondary-container, #4a4458);
+}
+
+nmui-chip[filter][selected] > check {
+  display: inline-flex;
+}
+
+nmui-chip[filter][selected] > check svg {
+  width: 18px;
+  height: 18px;
+}
+
+nmui-chip[filter][selected] > icon:first-of-type {
+  display: none;
+}
+
+/* -- input -------------------------------------------------------------------
+   Unselected mirrors the filter unselected colors; selected fills
+   secondary-container. The trailing icon is the remove affordance
+   (its 48dp target is the chip's own extended target zone — see
+   the guidelines' 48×48 secondary-action note). */
+
+nmui-chip[input] {
+  --_slc: var(--md-sys-color-on-surface-variant, #49454f);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+nmui-chip[input][selected] {
+  --_slc: var(--md-sys-color-on-secondary-container, #4a4458);
+  background-color: var(--md-sys-color-secondary-container, #e8def8);
+  border-color: transparent;
+  color: var(--md-sys-color-on-secondary-container, #4a4458);
+}
+
+nmui-chip[input] > icon:last-of-type {
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+  /* The close icon is its own action with its own target (the
+     specs give it a 48dp minimum of its own), separate from the
+     chip body. It has to paint ABOVE the chip's ::after target
+     layer: that layer covers the whole chip, so without this the
+     press lands on the chip, the icon never sees it, and the
+     "close" branch of the click handler can never fire. */
+  position: relative;
+  z-index: 1;
+}
+
+/* The close icon's own 48dp target, centered on the 18dp glyph. */
+nmui-chip[input] > icon:last-of-type::after {
+  content: "";
+  position: absolute;
+  inset: -15px;
+}
+
+/* -- suggestion ----------------------------------------------------------------
+   The assist shape with an on-surface-variant label and state
+   layer; momentary, never selected. */
+
+nmui-chip[suggestion] {
+  --_slc: var(--md-sys-color-on-surface-variant, #49454f);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+/* -- disabled ------------------------------------------------------------------
+   Explicit spec colors, not host opacity: flat = on-surface 10%
+   outline + 38% label/icon; elevated = on-surface 12% fill + 38%
+   content; selected (filter/input) keeps its family:
+   secondary-container at 38% with its content at 38%. Rules come
+   last so disabled wins over selected. */
+
+nmui-chip[disabled] {
+  cursor: not-allowed;
+  border-color: color-mix(in srgb,
+    var(--md-sys-color-on-surface, #1c1b1f) 10%, transparent);
+  color: color-mix(in srgb,
+    var(--md-sys-color-on-surface, #1c1b1f) 38%, transparent);
+}
+
+nmui-chip[disabled] > icon:first-of-type {
+  color: color-mix(in srgb,
+    var(--md-sys-color-on-surface, #1c1b1f) 38%, transparent);
+}
+
+nmui-chip[elevated][disabled] {
+  background-color: color-mix(in srgb,
+    var(--md-sys-color-on-surface, #1c1b1f) 12%, transparent);
+  box-shadow: none;
+}
+
+nmui-chip[filter][selected][disabled],
+nmui-chip[input][selected][disabled] {
+  background-color: color-mix(in srgb,
+    var(--md-sys-color-secondary-container, #e8def8) 38%, transparent);
+  border-color: transparent;
+  color: color-mix(in srgb,
+    var(--md-sys-color-on-secondary-container, #4a4458) 38%, transparent);
+}

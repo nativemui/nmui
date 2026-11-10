@@ -1,0 +1,6 @@
+/* nmui theme aggregator. Add a theme: copy themes/light.css (or dark.css)
+   to a new file, change the values, import it here.
+   Then: <html theme="midnight">. That's the whole API. */
+
+@import "./themes/light.css";
+@import "./themes/dark.css";

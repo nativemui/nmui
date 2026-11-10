@@ -1,0 +1,40 @@
+/* nmui-loading — M3 Expressive loading indicator.
+ *
+ * 48dp component, 38dp shape area (the measurements the specs
+ * print); the shape is drawn in a 48-unit viewBox at radius 19,
+ * so sizing the host with CSS width/height (the specs allow
+ * 24–240dp) scales the whole indicator and keeps the ratio.
+ * Default: primary on the surface. [contained]: a circular
+ * primary-container with the shape in on-primary-container —
+ * for placement over other content. */
+
+nmui-loading {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  color: var(--md-sys-color-primary, #6750a4);
+}
+
+nmui-loading[contained] {
+  background-color: var(--md-sys-color-primary-container, #eaddff);
+  color: var(--md-sys-color-on-primary-container, #4f378b);
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+}
+
+nmui-loading > morph {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+nmui-loading > morph > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+  /* Rotation is driven from JS, pulsing with the morph —
+   * fast while the shape changes, slow as it settles. */
+}

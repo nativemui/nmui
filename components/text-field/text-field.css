@@ -1,0 +1,157 @@
+/* nmui-text-field — M3 text field over native input/textarea + label.
+   Floating label via :placeholder-shown (JS ensures the placeholder);
+   floated state via :focus-within / :has(). Label may sit before or
+   after the input in light DOM. */
+
+nmui-text-field {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 210px;
+  position: relative;
+}
+
+nmui-text-field > input,
+nmui-text-field > textarea {
+  font: inherit;
+  font-size: 16px;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  background-color: var(--md-sys-color-surface-container-highest, #e6e0e9);
+  border: 0;
+  border-bottom: 1px solid var(--md-sys-color-on-surface-variant, #49454f);
+  border-radius: var(--md-sys-shape-corner-extra-small, 4px) var(--md-sys-shape-corner-extra-small, 4px) 0 0;
+  padding: 24px 16px 8px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+nmui-text-field > textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+nmui-text-field > input:hover,
+nmui-text-field > textarea:hover {
+  background-color: color-mix(in srgb,
+    var(--md-sys-color-on-surface, #1c1b1f) 8%,
+    var(--md-sys-color-surface-container-highest, #e6e0e9));
+}
+
+nmui-text-field > input:focus,
+nmui-text-field > textarea:focus {
+  border-bottom: 2px solid var(--md-sys-color-primary, #6750a4);
+  padding-bottom: 7px;
+}
+
+nmui-text-field > label {
+  position: absolute;
+  top: 28px;
+  inset-inline-start: 16px;
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  font-size: 16px;
+  pointer-events: none;
+  transition:
+    top var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1)),
+    font-size var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1)),
+    color var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1));
+  max-width: calc(100% - 32px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* floated: focused or has a value */
+nmui-text-field:focus-within > label,
+nmui-text-field:has(> input:not(:placeholder-shown)) > label,
+nmui-text-field:has(> textarea:not(:placeholder-shown)) > label {
+  top: 8px;
+  font-size: 12px;
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+nmui-text-field:focus-within > label {
+  color: var(--md-sys-color-primary, #6750a4);
+}
+
+nmui-text-field > small {
+  font-size: 12px;
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  padding: 0 16px;
+}
+
+/* outlined */
+nmui-text-field[outlined] > input,
+nmui-text-field[outlined] > textarea {
+  background-color: transparent;
+  border: 1px solid var(--md-sys-color-outline, #79747e);
+  border-radius: var(--md-sys-shape-corner-extra-small, 4px);
+  padding: 16px;
+}
+
+nmui-text-field[outlined] > input:focus,
+nmui-text-field[outlined] > textarea:focus {
+  border: 2px solid var(--md-sys-color-primary, #6750a4);
+  padding: 15px;
+}
+
+nmui-text-field[outlined] > label {
+  top: 18px;
+  padding: 0 4px;
+}
+
+nmui-text-field[outlined]:focus-within > label,
+nmui-text-field[outlined]:has(> input:not(:placeholder-shown)) > label,
+nmui-text-field[outlined]:has(> textarea:not(:placeholder-shown)) > label {
+  top: -8px;
+  font-size: 12px;
+  background: var(--md-sys-color-surface, #fef7ff);
+}
+
+/* error */
+nmui-text-field[error] > input,
+nmui-text-field[error] > textarea {
+  border-color: var(--md-sys-color-error, #ba1a1a);
+}
+
+nmui-text-field[error]:focus-within > label,
+nmui-text-field[error] > label {
+  color: var(--md-sys-color-error, #ba1a1a);
+}
+
+nmui-text-field[error] > small {
+  color: var(--md-sys-color-error, #ba1a1a);
+}
+
+/* leading / trailing icons */
+nmui-text-field > icon {
+  position: absolute;
+  top: 28px;
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  font-size: 24px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+nmui-text-field > icon:first-child {
+  inset-inline-start: 12px;
+}
+
+nmui-text-field > icon:first-child ~ input,
+nmui-text-field > icon:first-child ~ textarea,
+nmui-text-field > icon:first-child ~ label {
+  padding-inline-start: 48px;
+}
+
+nmui-text-field > icon:first-child ~ label {
+  inset-inline-start: 0;
+}
+
+nmui-text-field > icon:last-child:not(:first-child) {
+  inset-inline-end: 12px;
+}
+
+nmui-text-field[disabled] {
+  opacity: 0.38;
+  pointer-events: none;
+}

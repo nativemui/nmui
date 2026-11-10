@@ -1,0 +1,155 @@
+/* nmui-checkbox — M3 checkbox over a native input.
+ *
+ * Spec values (m3.material.io/components/checkbox/specs):
+ *   container 18dp, corners 2dp, icon 18dp (centered),
+ *   state layer 40dp, target 48dp (the row height, via 15dp
+ *   padding-block around the 18dp box).
+ * State layer opacities follow the M3 state-layer scale:
+ * hover 8%, focus 12%, pressed 12%.
+ * Colors: unselected outline on-surface-variant, selected /
+ * indeterminate fill primary with on-primary icon, error
+ * variants in error / on-error, label on-surface always
+ * (38% when disabled). Disabled selected fill is on-surface
+ * at 38% with a surface icon. */
+
+nmui-checkbox {
+  display: inline-flex;
+  position: relative;
+  align-items: center;
+  gap: 12px;
+  padding-block: 15px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  font-size: var(--md-sys-typescale-body-large-size, 16px);
+  line-height: var(--md-sys-typescale-body-large-line-height, 24px);
+}
+
+nmui-checkbox > input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  pointer-events: none;
+}
+
+nmui-checkbox > mark {
+  position: relative;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+  border: 2px solid var(--md-sys-color-on-surface-variant, #49454f);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--md-sys-color-on-primary, #ffffff);
+  transition:
+    background-color var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1)),
+    border-color var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1));
+}
+
+/* State layer: 40dp circle centered on the box. */
+nmui-checkbox > mark::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--md-sys-color-on-surface, #1c1b1f);
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition: opacity var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1));
+  pointer-events: none;
+}
+
+nmui-checkbox:not([disabled]):hover > mark::before {
+  opacity: 0.08;
+}
+
+nmui-checkbox:has(> input[type="checkbox"]:focus-visible) > mark::before {
+  opacity: 0.12;
+}
+
+nmui-checkbox:not([disabled]):active > mark::before {
+  opacity: 0.12;
+}
+
+/* Selected / indeterminate state layer follows the fill. */
+nmui-checkbox[checked] > mark::before,
+nmui-checkbox[indeterminate] > mark::before {
+  background-color: var(--md-sys-color-primary, #6750a4);
+}
+
+nmui-checkbox > mark svg {
+  width: 18px;
+  height: 18px;
+  opacity: 0;
+  transform: scale(0.5);
+  transition:
+    opacity var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1)),
+    transform var(--md-sys-motion-spring-fast-spatial, 250ms cubic-bezier(0.2, 0, 0, 1));
+}
+
+nmui-checkbox[checked] > mark,
+nmui-checkbox[indeterminate] > mark {
+  background-color: var(--md-sys-color-primary, #6750a4);
+  border-color: var(--md-sys-color-primary, #6750a4);
+}
+
+nmui-checkbox[checked] > mark svg {
+  opacity: 1;
+  transform: scale(1);
+}
+
+nmui-checkbox[indeterminate] > mark svg {
+  display: none;
+}
+
+nmui-checkbox[indeterminate] > mark::after {
+  content: "";
+  width: 10px;
+  height: 2px;
+  border-radius: 1px;
+  background: currentColor;
+}
+
+/* Error: container and state layer in error, icon on-error. */
+nmui-checkbox[error] > mark {
+  border-color: var(--md-sys-color-error, #ba1a1a);
+}
+
+nmui-checkbox[error] > mark::before {
+  background-color: var(--md-sys-color-error, #ba1a1a);
+}
+
+nmui-checkbox[error][checked] > mark,
+nmui-checkbox[error][indeterminate] > mark {
+  background-color: var(--md-sys-color-error, #ba1a1a);
+  border-color: var(--md-sys-color-error, #ba1a1a);
+  color: var(--md-sys-color-on-error, #ffffff);
+}
+
+/* Disabled: explicit colors, no host opacity (which would
+   double-dim the label and the fill). */
+nmui-checkbox[disabled] {
+  cursor: not-allowed;
+  color: color-mix(in srgb, var(--md-sys-color-on-surface, #1c1b1f) 38%, transparent);
+}
+
+nmui-checkbox[disabled] > mark {
+  border-color: color-mix(in srgb, var(--md-sys-color-on-surface, #1c1b1f) 38%, transparent);
+}
+
+nmui-checkbox[disabled][checked] > mark,
+nmui-checkbox[disabled][indeterminate] > mark {
+  background-color: color-mix(in srgb, var(--md-sys-color-on-surface, #1c1b1f) 38%, transparent);
+  border-color: transparent;
+  color: var(--md-sys-color-surface, #fef7ff);
+}

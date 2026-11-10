@@ -1,0 +1,257 @@
+/* nmui-progress — M3 progress indicators.
+ *
+ * Two variants (linear default, [circular]) × two generations:
+ * the M3 baseline (flat, fixed 4dp) and M3 Expressive
+ * (configurable thickness via --nmui-progress-thickness, and
+ * the [wavy] active-indicator shape). Colors per the specs:
+ * active indicator and stop indicator in primary, track in
+ * secondary-container. A 4dp gap separates the active indicator
+ * from the stop; linear determinate carries the 4dp stop dot at
+ * the end of the track (accessibility: it marks the track's end
+ * when contrast is low, so it always ships). */
+
+nmui-progress {
+  --_t: var(--nmui-progress-thickness, 4);
+  display: inline-flex;
+  align-items: center;
+  color: var(--md-sys-color-primary, #6750a4);
+  vertical-align: middle;
+}
+
+/* -- linear, flat ------------------------------------------------------------ */
+
+nmui-progress:not([circular]):not([wavy]) {
+  display: inline-flex;
+  width: 100%;
+  min-width: 40px;
+}
+
+nmui-progress:not([circular]):not([wavy]) > track {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+
+nmui-progress:not([circular]):not([wavy]) > track > bar {
+  display: block;
+  flex: 1 1 auto;
+  height: calc(var(--_t) * 1px);
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+  /* The active fill stops 4px short of the progress point —
+   * the track color showing through is the spec's 4dp gap
+   * between the active indicator and the track remainder. */
+  background:
+    linear-gradient(90deg, currentColor calc(100% - 4px), transparent calc(100% - 4px)) left / calc(var(--p, 0) * 100%) 100% no-repeat,
+    var(--md-sys-color-secondary-container, #e8def8);
+  transition: background-size var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1));
+}
+
+/* Indeterminate: TWO segments chase along the track, each
+ * growing and shrinking — the animation from Google's own
+ * implementation (material-web / MDC), keyframe values and
+ * easings carried over exactly: each segment is a full-width
+ * bar starting off-track (translate keyframes) whose inner
+ * element scales (scale keyframes). 2s cycle. */
+nmui-progress:not([circular]):not([wavy]) > track > bar > seg {
+  display: none;
+}
+
+nmui-progress:not([circular]):not([wavy]):not([determinate]) > track > bar {
+  position: relative;
+  overflow: hidden;
+  background: var(--md-sys-color-secondary-container, #e8def8);
+}
+
+nmui-progress:not([circular]):not([wavy]):not([determinate]) > track > bar > seg {
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+nmui-progress:not([circular]):not([wavy]):not([determinate]) > track > bar > seg > i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+  background-color: currentColor;
+  transform-origin: left center;
+}
+
+nmui-progress:not([determinate]) > track > bar > seg:not([second]) {
+  left: -145.167%;
+  animation: nmui-progress-pri-translate 2s linear infinite;
+}
+
+nmui-progress:not([determinate]) > track > bar > seg:not([second]) > i {
+  animation: nmui-progress-pri-scale 2s linear infinite;
+}
+
+nmui-progress:not([determinate]) > track > bar > seg[second] {
+  left: -54.8889%;
+  animation: nmui-progress-sec-translate 2s linear infinite;
+}
+
+nmui-progress:not([determinate]) > track > bar > seg[second] > i {
+  animation: nmui-progress-sec-scale 2s linear infinite;
+}
+
+@keyframes nmui-progress-pri-translate {
+  0% { transform: translateX(0); }
+  20% { animation-timing-function: cubic-bezier(0.5, 0, 0.701732, 0.495819); transform: translateX(0); }
+  59.15% { animation-timing-function: cubic-bezier(0.302435, 0.381352, 0.55, 0.956352); transform: translateX(83.6714%); }
+  100% { transform: translateX(200.611%); }
+}
+
+@keyframes nmui-progress-pri-scale {
+  0% { transform: scaleX(0.08); }
+  36.65% { animation-timing-function: cubic-bezier(0.334731, 0.12482, 0.785844, 1); transform: scaleX(0.08); }
+  69.15% { animation-timing-function: cubic-bezier(0.06, 0.11, 0.6, 1); transform: scaleX(0.661479); }
+  100% { transform: scaleX(0.08); }
+}
+
+@keyframes nmui-progress-sec-translate {
+  0% { animation-timing-function: cubic-bezier(0.15, 0, 0.515058, 0.409685); transform: translateX(0); }
+  25% { animation-timing-function: cubic-bezier(0.31033, 0.284058, 0.8, 0.733712); transform: translateX(37.6519%); }
+  48.35% { animation-timing-function: cubic-bezier(0.4, 0.627035, 0.6, 0.902026); transform: translateX(84.3862%); }
+  100% { transform: translateX(160.278%); }
+}
+
+@keyframes nmui-progress-sec-scale {
+  0% { animation-timing-function: cubic-bezier(0.205028, 0.057051, 0.57661, 0.453971); transform: scaleX(0.08); }
+  19.15% { animation-timing-function: cubic-bezier(0.152313, 0.196432, 0.648374, 1.00432); transform: scaleX(0.457104); }
+  44.15% { animation-timing-function: cubic-bezier(0.257759, -0.003163, 0.211762, 1.38179); transform: scaleX(0.72796); }
+  100% { transform: scaleX(0.08); }
+}
+
+/* -- the stop indicator --------------------------------------------------------- */
+
+/* 4dp primary dot at the end of a determinate linear track.
+ * Indeterminate and circular indicators don't carry one. */
+nmui-progress:not([circular])[determinate] > track > stop {
+  flex: 0 0 auto;
+  width: 4px;
+  height: 4px;
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+  background-color: currentColor;
+}
+
+/* -- linear, wavy ------------------------------------------------------------------ */
+
+nmui-progress[wavy]:not([circular]) {
+  display: inline-flex;
+  width: 100%;
+  min-width: 40px;
+}
+
+nmui-progress[wavy]:not([circular]) > track {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  height: var(--_h, 8px);
+}
+
+nmui-progress[wavy]:not([circular]) > track > svg {
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+nmui-progress[wavy]:not([circular]) path.trk {
+  fill: none;
+  stroke: var(--md-sys-color-secondary-container, #e8def8);
+  stroke-width: var(--_t);
+  stroke-linecap: round;
+}
+
+nmui-progress[wavy]:not([circular]) path.act {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--_t);
+  stroke-linecap: round;
+  transition: stroke-dasharray var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1));
+}
+
+/* Indeterminate wavy: the clip window (a rect over the wave
+ * path, width set from JS to ~35% of the track) is animated
+ * with TRANSFORMS — the same mechanism as Google's two-bar
+ * animation, so it tweens smoothly: it grows in from the
+ * leading edge, travels along the track, and shrinks out at
+ * the trailing edge. Percentages are of the window's own
+ * width (transform-box: fill-box). */
+nmui-progress[wavy]:not([circular]) > track > svg rect.win {
+  transform-box: fill-box;
+  transform-origin: left center;
+}
+
+nmui-progress[wavy]:not([circular]):not([determinate]) > track > svg rect.win {
+  animation: nmui-progress-wave-window 2s linear infinite;
+}
+
+@keyframes nmui-progress-wave-window {
+  0% { transform: translateX(-105%) scaleX(0.2); }
+  20% { animation-timing-function: cubic-bezier(0.5, 0, 0.701732, 0.495819); transform: translateX(-105%) scaleX(0.2); }
+  45% { animation-timing-function: cubic-bezier(0.302435, 0.381352, 0.55, 0.956352); transform: translateX(60%) scaleX(1); }
+  75% { transform: translateX(200%) scaleX(1); }
+  100% { transform: translateX(290%) scaleX(0.2); }
+}
+
+/* -- circular ------------------------------------------------------------------------ */
+
+nmui-progress[circular] > track {
+  display: inline-flex;
+  width: 48px;
+  height: 48px;
+  line-height: 0;
+}
+
+nmui-progress[circular] svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+nmui-progress[circular] path.trk {
+  fill: none;
+  stroke: var(--md-sys-color-secondary-container, #e8def8);
+  stroke-width: var(--_t);
+}
+
+nmui-progress[circular] path.act {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--_t);
+  stroke-linecap: round;
+  transition: stroke-dasharray var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1));
+}
+
+/* Indeterminate circular: an arc spinning clockwise from the
+ * top that also grows and shrinks as it goes (the guidelines'
+ * indeterminate behavior), one resize cycle per turn. */
+nmui-progress[circular]:not([determinate]) > track {
+  animation: nmui-progress-spin 1.4s linear infinite;
+}
+
+/* The arc motion is the classic spinner cycle Google's
+ * implementation composes (arc expands toward 270° while its
+ * start advances, then the tail chases it around): in dash
+ * terms the arc grows from ~1 to ~72 of the ring while the
+ * offset sweeps it almost a full turn, under the linear spin. */
+nmui-progress[circular]:not([determinate]) path.act {
+  stroke-dasharray: 26 74;
+  animation: nmui-progress-arc 1.5s cubic-bezier(0.2, 0, 0, 1) infinite;
+}
+
+@keyframes nmui-progress-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes nmui-progress-arc {
+  0% { stroke-dasharray: 1 99; stroke-dashoffset: 0; }
+  50% { stroke-dasharray: 72 28; stroke-dashoffset: -28; }
+  100% { stroke-dasharray: 72 28; stroke-dashoffset: -99; }
+}

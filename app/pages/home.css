@@ -1,0 +1,69 @@
+/* Home page — landing. */
+
+.home {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px 96px;
+}
+
+.home-kicker {
+  display: block;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--md-sys-color-primary, #6750a4);
+  margin: 24px 0 8px;
+}
+
+.home-mark {
+  width: 96px;
+  height: auto;
+  margin-top: 48px;
+}
+
+.home-hero display {
+  display: block;
+  margin: 0 0 16px;
+  color: var(--md-sys-color-on-background, #1c1b1f);
+}
+
+.home-version {
+  margin-bottom: 16px;
+}
+
+.home-tagline {
+  display: block;
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  max-width: 32em;
+  margin: 0 0 32px;
+}
+
+.home-hero > nmui-button {
+  margin: 0 12px 64px 0;
+}
+
+.home-points {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.home-points nmui-card headline {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.home-points p,
+.home code {
+  font: var(--md-sys-typescale-body-medium, 400 14px/20px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  margin: 0;
+}
+
+.home code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: var(--md-sys-color-surface-container-high, #ece6f0);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  padding: 1px 6px;
+  border-radius: 4px;
+}

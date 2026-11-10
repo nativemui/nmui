@@ -1,0 +1,487 @@
+/* nmui layout — M3 adaptive primitives.
+ *
+ * M3 scaffold vocabulary (scaffold = "bars, rails, and panes"):
+ *   bars  → top bar region (app bar), bottom bar region (navigation bar)
+ *   rails → top/bottom rail regions on compact; leading/trailing side rails
+ *           on larger screens (navigation rail lives on the leading rail)
+ *   panes → layout containers: fixed, flexible, floating, or semi-permanent.
+ * (bars/rails components are next on the roadmap; panes ship now.)
+ *
+ * M3 breakpoints: compact <600px · medium 600–839px · expanded 840–1199px
+ *                 large 1200–1599px · extra-large 1600px+
+ *
+ * Pane rules (from the M3 spec):
+ *   compact / medium   → single pane
+ *   expanded / large   → two panes
+ *   extra-large        → three panes
+ * Margins: 16px compact, 24px above. Spacer (between panes): 24px.
+ *
+ * Panes respond to the space they're GIVEN, not the viewport: the App mount
+ * is a container, so nested layouts (dialogs, side sheets, embedded apps)
+ * adapt the same way. Grids mirror automatically in RTL, per the M3
+ * bidirectionality spec. */
+
+:root {
+  --nmui-breakpoint-medium: 600px;
+  --nmui-breakpoint-expanded: 840px;
+  --nmui-breakpoint-large: 1200px;
+  --nmui-breakpoint-xlarge: 1600px;
+
+  --nmui-margin-compact: 16px;
+  --nmui-margin: 24px;
+  --nmui-spacer: 24px;
+}
+
+app {
+  container-type: inline-size;
+  container-name: nmui-app;
+}
+
+/* Panes — M3 pane behaviors as pure CSS.
+ *
+ * <Panes> is both a grid and a container: it lays out its <Pane> children
+ * against the NEAREST ANCESTOR container's width (the App mount, a dialog,
+ * a demo frame…), and nested <Panes> respond to their parent <Panes>.
+ * No JavaScript involved — container queries do the work.
+ *
+ * Panes describe BEHAVIOR, not content. A "list-detail" is a content
+ * concept — the same panes could hold list-list.
+ *
+ * Sizing (every pane):   <Pane fixed> | <Pane flexible>      (default flexible)
+ * Lifetime:              <Pane temporary> | <Pane persistent> (default persistent)
+ *
+ * Display (non-primary panes) — where the pane lives:
+ *   coplanar (default) | <Pane floating> | <Pane docked>
+ * Floating centers like a dialog; docked pins to the bottom like a sheet.
+ * They're overlays, never grid items — put them last. The app toggles
+ * visibility with `hidden`.
+ *
+ * Adapt (non-primary panes) — what happens when space runs out:
+ *   showhide (default): below expanded, only the first pane shows
+ *   <Pane levitate="floating|docked">: co-planar when room allows,
+ *     levitates over everything when not
+ *   <Pane reflow>: stacks vertically instead of hiding
+ *
+ * Breakpoint display overrides, mobile-first (that breakpoint and up —
+ * base IS compact, so there's no compact=):
+ *   <Pane docked medium="floating" large="coplanar">
+ *
+ * 1–3 panes per layout, in order — the first is primary.
+ *
+ * Resizing needs JS: add `resizable` and import layout/panes.js, which
+ * inserts the drag handle between the two in-grid panes.
+ */
+
+Panes {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--nmui-spacer, 24px);
+  container-type: inline-size;
+  position: relative; /* drag handle anchors here */
+}
+
+Pane {
+  min-width: 0;
+}
+
+/* --- layouts ---
+   Derived from the panes — the container declares nothing. A pane that's
+   effectively floating/docked is out of the grid; effective display is
+   mobile-first (base < medium < expanded < large < xlarge), so each tier
+   re-derives from the overrides at and below it. (Vanilla CSS has no
+   mixins — the repetition below is the price of no build step.) */
+
+/* Tier expanded (840–1199): effective = expanded ?? medium ?? base. */
+@container (min-width: 840px) and (max-width: 1199px) {
+  /* split: two in-grid panes, no fixed in-grid pane */
+  Panes:not([feed]):has(> Pane:nth-child(2):not([hidden]):not(:is([floating]:not([medium="coplanar"]):not([expanded="coplanar"]), [docked]:not([medium="coplanar"]):not([expanded="coplanar"]), [medium="floating"]:not([expanded="coplanar"]), [medium="docked"]:not([expanded="coplanar"]), [expanded="floating"], [expanded="docked"]))):not(:has(> Pane[fixed]:not([hidden]):not(:is([floating]:not([medium="coplanar"]):not([expanded="coplanar"]), [docked]:not([medium="coplanar"]):not([expanded="coplanar"]), [medium="floating"]:not([expanded="coplanar"]), [medium="docked"]:not([expanded="coplanar"]), [expanded="floating"], [expanded="docked"])))) {
+    grid-template-columns: minmax(0, var(--panes-split, 50%)) minmax(0, 1fr);
+  }
+  /* fixed-and-flexible */
+  Panes:not([feed]):has(> Pane[fixed]:not([hidden]):not(:is([floating]:not([medium="coplanar"]):not([expanded="coplanar"]), [docked]:not([medium="coplanar"]):not([expanded="coplanar"]), [medium="floating"]:not([expanded="coplanar"]), [medium="docked"]:not([expanded="coplanar"]), [expanded="floating"], [expanded="docked"]))) {
+    grid-template-columns: var(--panes-fixed, 360px) minmax(0, 1fr);
+  }
+  Panes:not([feed]):has(> Pane[fixed]:not([hidden]):not(:is([floating]:not([medium="coplanar"]):not([expanded="coplanar"]), [docked]:not([medium="coplanar"]):not([expanded="coplanar"]), [medium="floating"]:not([expanded="coplanar"]), [medium="docked"]:not([expanded="coplanar"]), [expanded="floating"], [expanded="docked"])):last-of-type) {
+    grid-template-columns: minmax(0, 1fr) var(--panes-fixed, 360px);
+  }
+  /* collapsed fixed pane: the flexible pane takes the whole row */
+  Panes:not([feed]):has(> Pane[fixed]:not([hidden]):not(:is([floating]:not([medium="coplanar"]):not([expanded="coplanar"]), [docked]:not([medium="coplanar"]):not([expanded="coplanar"]), [medium="floating"]:not([expanded="coplanar"]), [medium="docked"]:not([expanded="coplanar"]), [expanded="floating"], [expanded="docked"])))[data-collapsed] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  Panes:not([feed]):has(> Pane[fixed]:not([hidden]):not(:is([floating]:not([medium="coplanar"]):not([expanded="coplanar"]), [docked]:not([medium="coplanar"]):not([expanded="coplanar"]), [medium="floating"]:not([expanded="coplanar"]), [medium="docked"]:not([expanded="coplanar"]), [expanded="floating"], [expanded="docked"])))[data-collapsed] > Pane[fixed] {
+    display: none;
+  }
+}
+
+/* Tier large (1200–1599): effective = large ?? expanded ?? medium ?? base. */
+@container (min-width: 1200px) and (max-width: 1599px) {
+  Panes:not([feed]):has(> Pane:nth-child(2):not([hidden]):not(:is([floating]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]), [docked]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]), [medium="floating"]:not([expanded="coplanar"]):not([large="coplanar"]), [medium="docked"]:not([expanded="coplanar"]):not([large="coplanar"]), [expanded="floating"]:not([large="coplanar"]), [expanded="docked"]:not([large="coplanar"]), [large="floating"], [large="docked"]))):not(:has(> Pane[fixed]:not([hidden]):not(:is([floating]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]), [docked]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]), [medium="floating"]:not([expanded="coplanar"]):not([large="coplanar"]), [medium="docked"]:not([expanded="coplanar"]):not([large="coplanar"]), [expanded="floating"]:not([large="coplanar"]), [expanded="docked"]:not([large="coplanar"]), [large="floating"], [large="docked"])))) {
+    grid-template-columns: minmax(0, var(--panes-split, 50%)) minmax(0, 1fr);
+  }
+  Panes:not([feed]):has(> Pane[fixed]:not([hidden]):not(:is([floating]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]), [docked]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]), [medium="floating"]:not([expanded="coplanar"]):not([large="coplanar"]), [medium="docked"]:not([expanded="coplanar"]):not([large="coplanar"]), [expanded="floating"]:not([large="coplanar"]), [expanded="docked"]:not([large="coplanar"]), [large="floating"], [large="docked"]))) {
+    grid-template-columns: var(--panes-fixed, 360px) minmax(0, 1fr);
+  }
+  Panes:not([feed]):has(> Pane[fixed]:not([hidden]):not(:is([floating]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]), [docked]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]), [medium="floating"]:not([expanded="coplanar"]):not([large="coplanar"]), [medium="docked"]:not([expanded="coplanar"]):not([large="coplanar"]), [expanded="floating"]:not([large="coplanar"]), [expanded="docked"]:not([large="coplanar"]), [large="floating"], [large="docked"])):last-of-type) {
+    grid-template-columns: minmax(0, 1fr) var(--panes-fixed, 360px);
+  }
+  Panes:not([feed]):has(> Pane[fixed]:not([hidden]):not(:is([floating]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]), [docked]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]), [medium="floating"]:not([expanded="coplanar"]):not([large="coplanar"]), [medium="docked"]:not([expanded="coplanar"]):not([large="coplanar"]), [expanded="floating"]:not([large="coplanar"]), [expanded="docked"]:not([large="coplanar"]), [large="floating"], [large="docked"])))[data-collapsed] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  Panes:not([feed]):has(> Pane[fixed]:not([hidden]):not(:is([floating]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]), [docked]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]), [medium="floating"]:not([expanded="coplanar"]):not([large="coplanar"]), [medium="docked"]:not([expanded="coplanar"]):not([large="coplanar"]), [expanded="floating"]:not([large="coplanar"]), [expanded="docked"]:not([large="coplanar"]), [large="floating"], [large="docked"])))[data-collapsed] > Pane[fixed] {
+    display: none;
+  }
+}
+
+/* Tier extra-large (1600+): effective = xlarge ?? large ?? expanded ?? medium ?? base. */
+@container (min-width: 1600px) {
+  Panes:not([feed]):has(> Pane:nth-child(2):not([hidden]):not(:is([floating]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [docked]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [medium="floating"]:not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [medium="docked"]:not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [expanded="floating"]:not([large="coplanar"]):not([xlarge="coplanar"]), [expanded="docked"]:not([large="coplanar"]):not([xlarge="coplanar"]), [large="floating"]:not([xlarge="coplanar"]), [large="docked"]:not([xlarge="coplanar"]), [xlarge="floating"], [xlarge="docked"]))):not(:has(> Pane[fixed]:not([hidden]):not(:is([floating]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [docked]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [medium="floating"]:not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [medium="docked"]:not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [expanded="floating"]:not([large="coplanar"]):not([xlarge="coplanar"]), [expanded="docked"]:not([large="coplanar"]):not([xlarge="coplanar"]), [large="floating"]:not([xlarge="coplanar"]), [large="docked"]:not([xlarge="coplanar"]), [xlarge="floating"], [xlarge="docked"])))) {
+    grid-template-columns: minmax(0, var(--panes-split, 50%)) minmax(0, 1fr);
+  }
+  Panes:not([feed]):has(> Pane[fixed]:not([hidden]):not(:is([floating]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [docked]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [medium="floating"]:not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [medium="docked"]:not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [expanded="floating"]:not([large="coplanar"]):not([xlarge="coplanar"]), [expanded="docked"]:not([large="coplanar"]):not([xlarge="coplanar"]), [large="floating"]:not([xlarge="coplanar"]), [large="docked"]:not([xlarge="coplanar"]), [xlarge="floating"], [xlarge="docked"]))) {
+    grid-template-columns: var(--panes-fixed, 360px) minmax(0, 1fr);
+  }
+  Panes:not([feed]):has(> Pane[fixed]:not([hidden]):not(:is([floating]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [docked]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [medium="floating"]:not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [medium="docked"]:not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [expanded="floating"]:not([large="coplanar"]):not([xlarge="coplanar"]), [expanded="docked"]:not([large="coplanar"]):not([xlarge="coplanar"]), [large="floating"]:not([xlarge="coplanar"]), [large="docked"]:not([xlarge="coplanar"]), [xlarge="floating"], [xlarge="docked"])):last-of-type) {
+    grid-template-columns: minmax(0, 1fr) var(--panes-fixed, 360px);
+  }
+  Panes:not([feed]):has(> Pane[fixed]:not([hidden]):not(:is([floating]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [docked]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [medium="floating"]:not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [medium="docked"]:not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [expanded="floating"]:not([large="coplanar"]):not([xlarge="coplanar"]), [expanded="docked"]:not([large="coplanar"]):not([xlarge="coplanar"]), [large="floating"]:not([xlarge="coplanar"]), [large="docked"]:not([xlarge="coplanar"]), [xlarge="floating"], [xlarge="docked"])))[data-collapsed] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  Panes:not([feed]):has(> Pane[fixed]:not([hidden]):not(:is([floating]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [docked]:not([medium="coplanar"]):not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [medium="floating"]:not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [medium="docked"]:not([expanded="coplanar"]):not([large="coplanar"]):not([xlarge="coplanar"]), [expanded="floating"]:not([large="coplanar"]):not([xlarge="coplanar"]), [expanded="docked"]:not([large="coplanar"]):not([xlarge="coplanar"]), [large="floating"]:not([xlarge="coplanar"]), [large="docked"]:not([xlarge="coplanar"]), [xlarge="floating"], [xlarge="docked"])))[data-collapsed] > Pane[fixed] {
+    display: none;
+  }
+}
+
+/* --- single-pane stack: show and hide ---
+   Below expanded, only the first pane shows — panes go in order, first is
+   primary. Overlays, levitating, and reflowing panes manage themselves. */
+@container (max-width: 599px) {
+  Panes:not([feed]):has(> Pane:nth-child(2)) > Pane:not(:first-of-type):not([levitate]):not([reflow]):not([floating]):not([docked]) {
+    display: none;
+  }
+}
+@container (min-width: 600px) and (max-width: 839px) {
+  Panes:not([feed]):has(> Pane:nth-child(2)) > Pane:not(:first-of-type):not([levitate]):not([reflow]):not([floating]):not([docked]):not([medium="floating"]):not([medium="docked"]) {
+    display: none;
+  }
+}
+
+/* --- display: floating / docked ---
+   Overlays — never grid items. Floating centers like a dialog; docked
+   pins to the bottom edge like a sheet. Visibility is the app's job
+   (toggle `hidden`); position refinements are the app's job (inset). */
+
+Pane[floating] {
+  position: fixed;
+  z-index: 24;
+  inset: 0;
+  margin: auto;
+  width: fit-content;
+  height: fit-content;
+  max-width: min(560px, calc(100cqw - 32px));
+  max-height: calc(100cqh - 32px);
+  overflow: auto;
+  background: var(--md-sys-color-surface-container-high, #ece6f0);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  border-radius: var(--md-sys-shape-corner-large, 16px);
+  box-shadow: var(--md-sys-elevation-level3, 0 4px 8px 3px rgb(0 0 0 / 0.15));
+  padding: 24px;
+}
+
+Pane[docked] {
+  position: fixed;
+  z-index: 24;
+  inset-inline: 0;
+  bottom: 0;
+  max-height: 80cqh;
+  overflow: auto;
+  background: var(--md-sys-color-surface-container-high, #ece6f0);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  border-radius: var(--md-sys-shape-corner-large, 16px) var(--md-sys-shape-corner-large, 16px) 0 0;
+  box-shadow: var(--md-sys-elevation-level3, 0 4px 8px 3px rgb(0 0 0 / 0.15));
+  padding: 24px;
+}
+
+/* --- breakpoint display overrides, mobile-first ---
+   Each tier persists upward until a later tier overrides it (later source
+   order wins at equal specificity). `="coplanar"` returns the pane to the
+   grid — the reset undoes the overlay geometry. */
+
+@container (min-width: 600px) {
+  Pane[medium="floating"] {
+    position: fixed;
+    z-index: 24;
+    inset: 0;
+    margin: auto;
+    width: fit-content;
+    height: fit-content;
+    max-width: min(560px, calc(100cqw - 32px));
+    max-height: calc(100cqh - 32px);
+    overflow: auto;
+    background: var(--md-sys-color-surface-container-high, #ece6f0);
+    color: var(--md-sys-color-on-surface, #1c1b1f);
+    border-radius: var(--md-sys-shape-corner-large, 16px);
+    box-shadow: var(--md-sys-elevation-level3, 0 4px 8px 3px rgb(0 0 0 / 0.15));
+    padding: 24px;
+  }
+  Pane[medium="docked"] {
+    position: fixed;
+    z-index: 24;
+    inset-inline: 0;
+    bottom: 0;
+    max-height: 80cqh;
+    overflow: auto;
+    background: var(--md-sys-color-surface-container-high, #ece6f0);
+    color: var(--md-sys-color-on-surface, #1c1b1f);
+    border-radius: var(--md-sys-shape-corner-large, 16px) var(--md-sys-shape-corner-large, 16px) 0 0;
+    box-shadow: var(--md-sys-elevation-level3, 0 4px 8px 3px rgb(0 0 0 / 0.15));
+    padding: 24px;
+  }
+  Pane[medium="coplanar"] {
+    position: static;
+    inset: auto;
+    margin: 0;
+    width: auto;
+    height: auto;
+    max-width: none;
+    max-height: none;
+    overflow: visible;
+    background: transparent;
+    color: inherit;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    z-index: auto;
+  }
+}
+
+@container (min-width: 840px) {
+  Pane[expanded="floating"] {
+    position: fixed;
+    z-index: 24;
+    inset: 0;
+    margin: auto;
+    width: fit-content;
+    height: fit-content;
+    max-width: min(560px, calc(100cqw - 32px));
+    max-height: calc(100cqh - 32px);
+    overflow: auto;
+    background: var(--md-sys-color-surface-container-high, #ece6f0);
+    color: var(--md-sys-color-on-surface, #1c1b1f);
+    border-radius: var(--md-sys-shape-corner-large, 16px);
+    box-shadow: var(--md-sys-elevation-level3, 0 4px 8px 3px rgb(0 0 0 / 0.15));
+    padding: 24px;
+  }
+  Pane[expanded="docked"] {
+    position: fixed;
+    z-index: 24;
+    inset-inline: 0;
+    bottom: 0;
+    max-height: 80cqh;
+    overflow: auto;
+    background: var(--md-sys-color-surface-container-high, #ece6f0);
+    color: var(--md-sys-color-on-surface, #1c1b1f);
+    border-radius: var(--md-sys-shape-corner-large, 16px) var(--md-sys-shape-corner-large, 16px) 0 0;
+    box-shadow: var(--md-sys-elevation-level3, 0 4px 8px 3px rgb(0 0 0 / 0.15));
+    padding: 24px;
+  }
+  Pane[expanded="coplanar"] {
+    position: static;
+    inset: auto;
+    margin: 0;
+    width: auto;
+    height: auto;
+    max-width: none;
+    max-height: none;
+    overflow: visible;
+    background: transparent;
+    color: inherit;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    z-index: auto;
+  }
+}
+
+@container (min-width: 1200px) {
+  Pane[large="floating"] {
+    position: fixed;
+    z-index: 24;
+    inset: 0;
+    margin: auto;
+    width: fit-content;
+    height: fit-content;
+    max-width: min(560px, calc(100cqw - 32px));
+    max-height: calc(100cqh - 32px);
+    overflow: auto;
+    background: var(--md-sys-color-surface-container-high, #ece6f0);
+    color: var(--md-sys-color-on-surface, #1c1b1f);
+    border-radius: var(--md-sys-shape-corner-large, 16px);
+    box-shadow: var(--md-sys-elevation-level3, 0 4px 8px 3px rgb(0 0 0 / 0.15));
+    padding: 24px;
+  }
+  Pane[large="docked"] {
+    position: fixed;
+    z-index: 24;
+    inset-inline: 0;
+    bottom: 0;
+    max-height: 80cqh;
+    overflow: auto;
+    background: var(--md-sys-color-surface-container-high, #ece6f0);
+    color: var(--md-sys-color-on-surface, #1c1b1f);
+    border-radius: var(--md-sys-shape-corner-large, 16px) var(--md-sys-shape-corner-large, 16px) 0 0;
+    box-shadow: var(--md-sys-elevation-level3, 0 4px 8px 3px rgb(0 0 0 / 0.15));
+    padding: 24px;
+  }
+  Pane[large="coplanar"] {
+    position: static;
+    inset: auto;
+    margin: 0;
+    width: auto;
+    height: auto;
+    max-width: none;
+    max-height: none;
+    overflow: visible;
+    background: transparent;
+    color: inherit;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    z-index: auto;
+  }
+}
+
+@container (min-width: 1600px) {
+  Pane[xlarge="floating"] {
+    position: fixed;
+    z-index: 24;
+    inset: 0;
+    margin: auto;
+    width: fit-content;
+    height: fit-content;
+    max-width: min(560px, calc(100cqw - 32px));
+    max-height: calc(100cqh - 32px);
+    overflow: auto;
+    background: var(--md-sys-color-surface-container-high, #ece6f0);
+    color: var(--md-sys-color-on-surface, #1c1b1f);
+    border-radius: var(--md-sys-shape-corner-large, 16px);
+    box-shadow: var(--md-sys-elevation-level3, 0 4px 8px 3px rgb(0 0 0 / 0.15));
+    padding: 24px;
+  }
+  Pane[xlarge="docked"] {
+    position: fixed;
+    z-index: 24;
+    inset-inline: 0;
+    bottom: 0;
+    max-height: 80cqh;
+    overflow: auto;
+    background: var(--md-sys-color-surface-container-high, #ece6f0);
+    color: var(--md-sys-color-on-surface, #1c1b1f);
+    border-radius: var(--md-sys-shape-corner-large, 16px) var(--md-sys-shape-corner-large, 16px) 0 0;
+    box-shadow: var(--md-sys-elevation-level3, 0 4px 8px 3px rgb(0 0 0 / 0.15));
+    padding: 24px;
+  }
+  Pane[xlarge="coplanar"] {
+    position: static;
+    inset: auto;
+    margin: 0;
+    width: auto;
+    height: auto;
+    max-width: none;
+    max-height: none;
+    overflow: visible;
+    background: transparent;
+    color: inherit;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    z-index: auto;
+  }
+}
+
+/* --- levitate ---
+   Co-planar when room allows; lifts over everything when not. */
+@container (max-width: 839px) {
+  Panes:not([feed]) > Pane[levitate="floating"] {
+    position: fixed;
+    z-index: 24;
+    inset: 0;
+    margin: auto;
+    width: fit-content;
+    height: fit-content;
+    max-width: min(560px, calc(100cqw - 32px));
+    max-height: calc(100cqh - 32px);
+    overflow: auto;
+    background: var(--md-sys-color-surface-container-high, #ece6f0);
+    color: var(--md-sys-color-on-surface, #1c1b1f);
+    border-radius: var(--md-sys-shape-corner-large, 16px);
+    box-shadow: var(--md-sys-elevation-level3, 0 4px 8px 3px rgb(0 0 0 / 0.15));
+    padding: 24px;
+  }
+  Panes:not([feed]) > Pane[levitate="docked"] {
+    position: fixed;
+    z-index: 24;
+    inset-inline: 0;
+    bottom: 0;
+    max-height: 80cqh;
+    overflow: auto;
+    background: var(--md-sys-color-surface-container-high, #ece6f0);
+    color: var(--md-sys-color-on-surface, #1c1b1f);
+    border-radius: var(--md-sys-shape-corner-large, 16px) var(--md-sys-shape-corner-large, 16px) 0 0;
+    box-shadow: var(--md-sys-elevation-level3, 0 4px 8px 3px rgb(0 0 0 / 0.15));
+    padding: 24px;
+  }
+}
+
+/* Feed: reflowing card grid — no queries needed. */
+Panes[feed] {
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+}
+
+/* --- drag handle (inserted by layout/panes.js for Panes[resizable]) --- */
+
+.panes-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 24px;
+  margin-inline-start: -12px;
+  cursor: col-resize;
+  z-index: 4;
+  touch-action: none;
+}
+
+.panes-handle::after {
+  content: "";
+  position: absolute;
+  inset: 12px 10px;
+  border-radius: 2px;
+  background: var(--md-sys-color-outline-variant, #cac4d0);
+  transition: background-color 150ms;
+}
+
+.panes-handle:hover::after,
+.panes-handle:focus-visible::after {
+  background: var(--md-sys-color-primary, #6750a4);
+}
+
+.panes-handle:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary, #6750a4);
+  outline-offset: -2px;
+}
+
+@container (max-width: 839px) {
+  .panes-handle {
+    display: none;
+  }
+}
+
+/* Back affordance: only in the single-pane stack. */
+Panes [data-back] {
+  display: none;
+}
+
+@container (max-width: 839px) {
+  Panes:not([feed]):has(> Pane:nth-child(2)) [data-back] {
+    display: inline-flex;
+  }
+}

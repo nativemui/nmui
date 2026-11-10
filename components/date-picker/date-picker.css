@@ -1,0 +1,582 @@
+/* nmui-date-picker — M3 date pickers: docked, modal, modal input.
+   Geometry (specs + the published component tokens): the calendar
+   surface is 360dp wide; day cells are 48dp targets carrying a 40dp
+   circle (an explicit 40×40 box, centered in its cell), in rows of
+   48dp under a 40dp weekday row, with 12dp of inline padding —
+   7 × 48 + 2 × 12 = 360.
+   Containers are surface-container-high: the docked panel at
+   corner-large (16dp), the modal dialog at corner-extra-large
+   (28dp) and elevation level 3. Selected dates fill primary;
+   today is a primary label with a primary ring just inside its
+   circle; the range band fills secondary-container behind the
+   endpoint circles; a selected month fills surface-variant (the
+   menu selected-item color); a selected year fills primary.
+   State layers are the library's standard scale (hover 8%,
+   pressed 12%), colored on-surface-variant for dates and years,
+   currentColor on selected/today cells. */
+
+nmui-date-picker {
+  position: relative;
+  display: inline-block;
+}
+
+/* -- the field ---------------------------------------------------------
+   An outlined text field (the spec's docked field, and the modal's
+   trigger): 56dp, corner-extra-small, 1px outline, floating label.
+   The same rules style the component-built fields of the modal's
+   input view (a <field> wrapper), whose labels always float so the
+   format pattern can sit in the field as its placeholder. */
+
+nmui-date-picker > input,
+nmui-date-picker field > input {
+  font: var(--md-sys-typescale-body-large, 400 16px/24px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  background-color: transparent;
+  border: 1px solid var(--md-sys-color-outline, #79747e);
+  border-radius: var(--md-sys-shape-corner-extra-small, 4px);
+  padding: 16px 52px 16px 16px;
+  outline: none;
+  width: 100%;
+  height: 56px;
+  box-sizing: border-box;
+}
+
+nmui-date-picker > input:hover,
+nmui-date-picker field > input:hover {
+  border-color: var(--md-sys-color-on-surface, #1c1b1f);
+}
+
+nmui-date-picker > input:focus,
+nmui-date-picker field > input:focus {
+  border-color: var(--md-sys-color-primary, #6750a4);
+  box-shadow: inset 0 0 0 1px var(--md-sys-color-primary, #6750a4);
+}
+
+nmui-date-picker > label,
+nmui-date-picker field > label {
+  position: absolute;
+  inset-inline-start: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0 4px;
+  font: var(--md-sys-typescale-body-large, 400 16px/24px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  pointer-events: none;
+  transition:
+    top var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1)),
+    transform var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1)),
+    font-size var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1)),
+    color var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1));
+}
+
+nmui-date-picker:focus-within > label,
+nmui-date-picker:has(> input:not(:placeholder-shown)) > label,
+nmui-date-picker field > label {
+  top: 0;
+  font-size: var(--md-sys-typescale-label-small-size, 11px);
+  background-color: var(--md-sys-color-surface, #fef7ff);
+}
+
+nmui-date-picker:focus-within > label {
+  color: var(--md-sys-color-primary, #6750a4);
+}
+
+nmui-date-picker[error] > input {
+  border-color: var(--md-sys-color-error, #ba1a1a);
+}
+
+nmui-date-picker[error] > input:focus {
+  border-color: var(--md-sys-color-error, #ba1a1a);
+  box-shadow: inset 0 0 0 1px var(--md-sys-color-error, #ba1a1a);
+}
+
+nmui-date-picker[error] > label,
+nmui-date-picker[error]:focus-within > label {
+  color: var(--md-sys-color-error, #ba1a1a);
+}
+
+nmui-date-picker field {
+  position: relative;
+  display: block;
+}
+
+input-view[error] > field > input {
+  border-color: var(--md-sys-color-error, #ba1a1a);
+}
+
+input-view[error] > field > label {
+  color: var(--md-sys-color-error, #ba1a1a);
+}
+
+/* The field's trailing icon button: 48dp target, 24dp glyph. It is a
+   real button painted over the field's end, never a layer above it. */
+nmui-date-picker > button[toggle] {
+  position: absolute;
+  top: 4px;
+  inset-inline-end: 4px;
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+  background: transparent;
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  cursor: pointer;
+}
+
+nmui-date-picker > button[toggle] icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+nmui-date-picker > button[toggle]:hover {
+  background-color: color-mix(in srgb,
+    var(--md-sys-color-on-surface-variant, #49454f) 8%, transparent);
+}
+
+nmui-date-picker > button[toggle]:disabled {
+  color: color-mix(in srgb,
+    var(--md-sys-color-on-surface, #1c1b1f) 38%, transparent);
+  cursor: default;
+}
+
+/* -- the surfaces ------------------------------------------------------- */
+
+nmui-date-picker > calendar {
+  display: none;
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + 4px);
+  inset-inline-start: 0;
+  width: 360px;
+  max-width: calc(100vw - 24px);
+  box-sizing: border-box;
+  border-radius: var(--md-sys-shape-corner-large, 16px);
+  background-color: var(--md-sys-color-surface-container-high, #ece6f0);
+  box-shadow: var(--md-sys-elevation-level2,
+    0 1px 2px rgb(0 0 0 / 0.3), 0 2px 6px 2px rgb(0 0 0 / 0.15));
+}
+
+nmui-date-picker[open] > calendar {
+  display: block;
+  animation: nmui-dp-in var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1));
+}
+
+nmui-date-picker > dialog {
+  width: 360px;
+  max-width: calc(100vw - 48px);
+  padding: 0;
+  border: 0;
+  border-radius: var(--md-sys-shape-corner-extra-large, 28px);
+  background-color: var(--md-sys-color-surface-container-high, #ece6f0);
+  box-shadow: var(--md-sys-elevation-level3,
+    0 4px 8px 3px rgb(0 0 0 / 0.15), 0 1px 3px rgb(0 0 0 / 0.3));
+  overflow: hidden;
+}
+
+nmui-date-picker > dialog::backdrop {
+  background-color: color-mix(in srgb,
+    var(--md-sys-color-scrim, #000000) 32%, transparent);
+}
+
+nmui-date-picker > dialog[open] {
+  animation: nmui-dp-in var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1));
+}
+
+@keyframes nmui-dp-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  nmui-date-picker[open] > calendar,
+  nmui-date-picker > dialog[open] {
+    animation: none;
+  }
+}
+
+/* -- modal header -------------------------------------------------------- */
+
+nmui-date-picker dialog > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 16px 12px 0 24px;
+}
+
+nmui-date-picker dialog supporting {
+  display: block;
+  font: var(--md-sys-typescale-label-large, 500 14px/20px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+nmui-date-picker dialog headline {
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+/* The range headline steps down to title-large (the specs' range
+   header) — the dates it carries are longer than a single date. */
+nmui-date-picker dialog headline[range] {
+  font: var(--md-sys-typescale-title-large, 400 22px/28px system-ui, sans-serif);
+}
+
+nmui-date-picker dialog > divider {
+  display: block;
+  height: 1px;
+  margin-top: 12px;
+  background-color: var(--md-sys-color-outline-variant, #cac4d0);
+}
+
+/* -- calendar header ------------------------------------------------------ */
+
+nmui-date-picker cal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px 0;
+  box-sizing: border-box;
+}
+
+/* Docked header: the month and year selectors split the 360dp
+   surface in half (~168dp each, the published docked-header grid).
+   Each group is arrow / menu button / arrow in that fixed order,
+   so nothing in the header can grow past the panel's edge — the
+   menu button takes whatever the two 48dp arrows leave. */
+nmui-date-picker cal-head:has(> [head-group]) {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+nmui-date-picker cal-head [head-group] {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+nmui-date-picker cal-head [head-group] [menu-btn] {
+  flex: 1;
+  justify-content: center;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+nmui-date-picker cal-head [head-group] [icon-btn] {
+  flex: none;
+}
+
+nmui-date-picker cal-head [nav-btns] {
+  display: inline-flex;
+}
+
+nmui-date-picker [menu-btn] {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 48px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+  background: transparent;
+  font: var(--md-sys-typescale-label-large, 500 14px/20px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  cursor: pointer;
+}
+
+nmui-date-picker [menu-btn] icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+nmui-date-picker [menu-btn]:hover {
+  background-color: color-mix(in srgb,
+    var(--md-sys-color-on-surface-variant, #49454f) 8%, transparent);
+}
+
+nmui-date-picker [icon-btn] {
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+  background: transparent;
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  cursor: pointer;
+}
+
+nmui-date-picker [icon-btn] icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+nmui-date-picker [icon-btn]:hover {
+  background-color: color-mix(in srgb,
+    var(--md-sys-color-on-surface-variant, #49454f) 8%, transparent);
+}
+
+/* -- day grid -------------------------------------------------------------- */
+
+nmui-date-picker grid {
+  display: grid;
+  grid-template-columns: repeat(7, 48px);
+  padding: 0 12px;
+  /* Horizontal swipes page the month (JS pointer handlers), so the
+     browser must not claim them for scrolling; vertical page
+     scroll stays available. */
+  touch-action: pan-y;
+}
+
+nmui-date-picker dow {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: var(--md-sys-typescale-body-large, 400 16px/24px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+}
+
+nmui-date-picker day {
+  position: relative;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* The range band: a 40dp strip behind the circles, running cell to
+   cell. Endpoints only grow their inner half, and only once both
+   endpoints exist (the :has checks). */
+nmui-date-picker day::before {
+  content: "";
+  position: absolute;
+  inset-block: 4px;
+  inset-inline: 0;
+}
+
+nmui-date-picker day[inrange]::before {
+  background-color: var(--md-sys-color-secondary-container, #e8def8);
+}
+
+nmui-date-picker grid:has(> day[starts]):has(> day[ends]) > day[starts]::before {
+  inset-inline-start: 50%;
+  background-color: var(--md-sys-color-secondary-container, #e8def8);
+}
+
+nmui-date-picker grid:has(> day[starts]):has(> day[ends]) > day[ends]::before {
+  inset-inline-end: 50%;
+  background-color: var(--md-sys-color-secondary-container, #e8def8);
+}
+
+/* The visible circle is its own explicit 40×40 box (border-radius
+   50%), centered in the 48dp cell — no border/clip trick, so nothing
+   in the box model can stretch it into an oval. The ::after extends
+   the press target to the full 48dp cell. */
+nmui-date-picker day > button {
+  --_sl: transparent;
+  position: relative;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  background-color: transparent;
+  background-image: linear-gradient(var(--_sl), var(--_sl));
+  font: var(--md-sys-typescale-body-large, 400 16px/24px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+nmui-date-picker day > button::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+}
+
+nmui-date-picker day > button:hover {
+  --_sl: color-mix(in srgb,
+    var(--md-sys-color-on-surface-variant, #49454f) 8%, transparent);
+}
+
+nmui-date-picker day > button:active {
+  --_sl: color-mix(in srgb,
+    var(--md-sys-color-on-surface-variant, #49454f) 12%, transparent);
+}
+
+nmui-date-picker day[outside] > button {
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+nmui-date-picker day[inrange] > button {
+  color: var(--md-sys-color-on-secondary-container, #4a4458);
+}
+
+nmui-date-picker day[today] > button {
+  color: var(--md-sys-color-primary, #6750a4);
+  border: 1px solid var(--md-sys-color-primary, #6750a4);
+}
+
+nmui-date-picker day[starts] > button,
+nmui-date-picker day[ends] > button {
+  background-color: var(--md-sys-color-primary, #6750a4);
+  color: var(--md-sys-color-on-primary, #ffffff);
+}
+
+nmui-date-picker day[starts] > button:hover,
+nmui-date-picker day[ends] > button:hover {
+  --_sl: color-mix(in srgb,
+    var(--md-sys-color-on-primary, #ffffff) 8%, transparent);
+}
+
+nmui-date-picker day > button:disabled {
+  color: color-mix(in srgb,
+    var(--md-sys-color-on-surface, #1c1b1f) 38%, transparent);
+  cursor: default;
+  --_sl: transparent;
+}
+
+/* After the today/selected rules so the focus ring wins on a
+   focused today or selected day. */
+nmui-date-picker day > button:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary, #6750a4);
+  outline-offset: 2px;
+}
+
+/* -- month list (docked) ---------------------------------------------------- */
+
+nmui-date-picker months {
+  display: block;
+  padding-bottom: 8px;
+}
+
+nmui-date-picker months > button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 48px;
+  padding: 0 24px;
+  border: 0;
+  background: transparent;
+  font: var(--md-sys-typescale-body-large, 400 16px/24px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+nmui-date-picker months > button:hover {
+  background-color: color-mix(in srgb,
+    var(--md-sys-color-on-surface, #1c1b1f) 8%, transparent);
+}
+
+nmui-date-picker months > button[selected] {
+  background-color: var(--md-sys-color-surface-variant, #e7e0ec);
+}
+
+nmui-date-picker months > button icon {
+  font-size: 18px;
+  line-height: 1;
+  margin-inline-start: auto;
+}
+
+nmui-date-picker months > button:disabled {
+  color: color-mix(in srgb,
+    var(--md-sys-color-on-surface, #1c1b1f) 38%, transparent);
+  cursor: default;
+}
+
+/* -- year grid ---------------------------------------------------------------- */
+
+nmui-date-picker years {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-content: start;
+  height: 328px;
+  overflow-y: auto;
+  padding: 8px 12px;
+  box-sizing: border-box;
+}
+
+nmui-date-picker years > button {
+  justify-self: center;
+  width: 72px;
+  height: 36px;
+  margin: 6px 0;
+  border: 0;
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+  background: transparent;
+  font: var(--md-sys-typescale-body-large, 400 16px/24px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  cursor: pointer;
+}
+
+nmui-date-picker years > button:hover {
+  background-color: color-mix(in srgb,
+    var(--md-sys-color-on-surface-variant, #49454f) 8%, transparent);
+}
+
+nmui-date-picker years > button[today] {
+  color: var(--md-sys-color-primary, #6750a4);
+}
+
+nmui-date-picker years > button[selected] {
+  background-color: var(--md-sys-color-primary, #6750a4);
+  color: var(--md-sys-color-on-primary, #ffffff);
+}
+
+nmui-date-picker years > button[selected]:hover {
+  background-color: var(--md-sys-color-primary, #6750a4);
+  background-image: linear-gradient(color-mix(in srgb,
+    var(--md-sys-color-on-primary, #ffffff) 8%, transparent),
+    color-mix(in srgb,
+    var(--md-sys-color-on-primary, #ffffff) 8%, transparent));
+}
+
+/* -- input view (modal) -------------------------------------------------------- */
+
+nmui-date-picker input-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 24px 8px;
+}
+
+/* -- actions -------------------------------------------------------------------- */
+
+nmui-date-picker actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 8px 12px 12px;
+}
+
+nmui-date-picker [text-btn] {
+  height: 40px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+  background: transparent;
+  font: var(--md-sys-typescale-label-large, 500 14px/20px system-ui, sans-serif);
+  color: var(--md-sys-color-primary, #6750a4);
+  cursor: pointer;
+}
+
+nmui-date-picker [text-btn]:hover {
+  background-color: color-mix(in srgb,
+    var(--md-sys-color-primary, #6750a4) 8%, transparent);
+}
+
+nmui-date-picker [text-btn]:focus-visible,
+nmui-date-picker [menu-btn]:focus-visible,
+nmui-date-picker [icon-btn]:focus-visible,
+nmui-date-picker months > button:focus-visible,
+nmui-date-picker years > button:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary, #6750a4);
+  outline-offset: 2px;
+}

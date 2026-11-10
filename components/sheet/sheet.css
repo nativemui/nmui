@@ -1,0 +1,82 @@
+/* nmui-sheet — M3 bottom sheet / side sheet. */
+
+nmui-sheet {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  pointer-events: none;
+}
+
+nmui-sheet[modal] {
+  pointer-events: auto;
+  background-color: color-mix(in srgb,
+    var(--md-sys-color-scrim, #000000) 32%, transparent);
+}
+
+nmui-sheet[open] {
+  display: block;
+}
+
+nmui-sheet > surface {
+  pointer-events: auto;
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  max-height: 90vh;
+  overflow: auto;
+  padding: 16px 16px 24px;
+  box-sizing: border-box;
+  border-radius: 28px 28px 0 0;
+  background-color: var(--md-sys-color-surface-container-low, #f7f2fa);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  box-shadow: var(--md-sys-elevation-level1, 0 1px 2px rgb(0 0 0 / 0.3));
+}
+
+/* drag handle */
+nmui-sheet > surface::before {
+  content: "";
+  display: block;
+  width: 32px;
+  height: 4px;
+  margin: 0 auto 16px;
+  border-radius: 2px;
+  background-color: var(--md-sys-color-on-surface-variant, #49454f);
+  opacity: 0.4;
+}
+
+nmui-sheet[open] > surface {
+  animation: nmui-sheet-up var(--md-sys-motion-spring-default-spatial, 400ms cubic-bezier(0.2, 0, 0, 1));
+}
+
+@keyframes nmui-sheet-up {
+  from { transform: translateY(48px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+/* side sheet */
+nmui-sheet[side] > surface {
+  inset-inline: auto 0;
+  top: 0;
+  bottom: 0;
+  width: min(360px, 90vw);
+  border-radius: 16px 0 0 16px;
+  padding: 16px;
+}
+
+nmui-sheet[side] > surface::before {
+  display: none;
+}
+
+nmui-sheet[side][open] > surface {
+  animation: nmui-sheet-in var(--md-sys-motion-spring-default-spatial, 400ms cubic-bezier(0.2, 0, 0, 1));
+}
+
+@keyframes nmui-sheet-in {
+  from { transform: translateX(48px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+[dir="rtl"] nmui-sheet[side] > surface {
+  border-radius: 0 16px 16px 0;
+}

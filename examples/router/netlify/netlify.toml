@@ -1,0 +1,10 @@
+# netlify.toml — the same rule as _redirects, in TOML
+# (TOML is the INI format, formalized: [sections], key = value).
+# Use one or the other, not both.
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

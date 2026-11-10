@@ -1,0 +1,3 @@
+# Cloudflare Pages _redirects — put this file in the output folder.
+# The 200 makes it a rewrite (URL unchanged), not a redirect.
+/*    /index.html    200

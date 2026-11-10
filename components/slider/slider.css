@@ -1,0 +1,82 @@
+/* nmui-slider — M3 slider over a native range input.
+   --p (0–100%) is the fill; set from JS on input. */
+
+nmui-slider {
+  --p: 50%;
+  display: inline-flex;
+  align-items: center;
+  min-width: 160px;
+  height: 40px;
+  touch-action: none;
+}
+
+nmui-slider > input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 40px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+nmui-slider > input[type="range"]::-webkit-slider-runnable-track {
+  height: 16px;
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+  background:
+    linear-gradient(to right,
+      var(--md-sys-color-primary, #6750a4) 0 var(--p),
+      var(--md-sys-color-surface-container-highest, #e6e0e9) var(--p) 100%);
+}
+
+nmui-slider > input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 4px;
+  height: 44px;
+  margin-top: -14px;
+  border-radius: 2px;
+  background: var(--md-sys-color-primary, #6750a4);
+}
+
+nmui-slider > input[type="range"]::-moz-range-track {
+  height: 16px;
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+  background: var(--md-sys-color-surface-container-highest, #e6e0e9);
+}
+
+nmui-slider > input[type="range"]::-moz-range-progress {
+  height: 16px;
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+  background: var(--md-sys-color-primary, #6750a4);
+}
+
+nmui-slider > input[type="range"]::-moz-range-thumb {
+  width: 4px;
+  height: 44px;
+  border: 0;
+  border-radius: 2px;
+  background: var(--md-sys-color-primary, #6750a4);
+}
+
+/* discrete: tick marks from the step count */
+nmui-slider[discrete] > input[type="range"]::-webkit-slider-runnable-track {
+  background:
+    linear-gradient(to right,
+      var(--md-sys-color-primary, #6750a4) 0 var(--p),
+      transparent var(--p) 100%),
+    repeating-linear-gradient(to right,
+      var(--md-sys-color-primary, #6750a4) 0 2px,
+      transparent 2px calc(100% / var(--ticks, 4))),
+    var(--md-sys-color-surface-container-highest, #e6e0e9);
+}
+
+nmui-slider > input[type="range"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.38;
+}
+
+nmui-slider > input[type="range"]:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary, #6750a4);
+  outline-offset: -2px;
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+}

@@ -1,0 +1,7 @@
+# Caddyfile — Caddy v2. HTTPS is automatic.
+example.com {
+    root * /var/www/myapp
+    encode gzip
+    try_files {path} {path}/ /index.html
+    file_server
+}

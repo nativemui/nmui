@@ -1,0 +1,53 @@
+/* Layout docs page — demo pane visuals (not part of the library). */
+
+.demo-pane {
+  background: var(--md-sys-color-surface-container-low, #f7f2fa);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.demo-pane strong {
+  display: block;
+  font: var(--md-sys-typescale-title-small, 500 14px/20px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  margin-bottom: 8px;
+}
+
+.demo-pane p {
+  font: var(--md-sys-typescale-body-medium, 400 14px/20px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  margin: 4px 0;
+}
+
+.demo-pane [data-back] {
+  font: var(--md-sys-typescale-label-large, 500 14px/20px system-ui, sans-serif);
+  color: var(--md-sys-color-primary, #6750a4);
+  text-decoration: none;
+  margin-bottom: 12px;
+}
+
+button[data-back] {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Inbox demo list rows. */
+.demo-inbox-list button[data-convo] {
+  display: block;
+  width: 100%;
+  text-align: start;
+  background: none;
+  border: 0;
+  border-radius: 8px;
+  padding: 12px;
+  font: var(--md-sys-typescale-body-large, 400 16px/24px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  cursor: pointer;
+}
+
+.demo-inbox-list button[data-convo]:hover {
+  background: color-mix(in srgb,
+    var(--md-sys-color-primary, #6750a4) 8%, transparent);
+}

@@ -1,0 +1,60 @@
+/* nmui-tooltip — M3 tooltip. Absolutely positioned in its anchor. */
+
+nmui-tooltip {
+  display: none;
+  position: absolute;
+  z-index: 70;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 240px;
+  padding: 4px 8px;
+  border-radius: var(--md-sys-shape-corner-extra-small, 4px);
+  background-color: var(--md-sys-color-inverse-surface, #322f35);
+  color: var(--md-sys-color-inverse-on-surface, #f5eff7);
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* the anchor gets positioning context automatically */
+*:has(> nmui-tooltip) {
+  position: relative;
+}
+
+nmui-tooltip[open] {
+  display: block;
+  animation: nmui-tooltip-in 150ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+@keyframes nmui-tooltip-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* rich tooltip: title, text, actions */
+nmui-tooltip[rich] {
+  white-space: normal;
+  min-width: 200px;
+  padding: 12px 8px 8px 16px;
+  border-radius: var(--md-sys-shape-corner-extra-small, 4px);
+  pointer-events: auto;
+  font-size: 14px;
+}
+
+nmui-tooltip[rich] strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+nmui-tooltip[rich] actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+nmui-tooltip[rich] nmui-button[text] > container {
+  color: var(--md-sys-color-inverse-primary, #d0bcff);
+}

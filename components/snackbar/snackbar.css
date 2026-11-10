@@ -1,0 +1,41 @@
+/* nmui-snackbar — M3 snackbar. */
+
+nmui-snackbar {
+  display: none;
+  position: fixed;
+  z-index: 60;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 288px;
+  max-width: min(560px, calc(100vw - 48px));
+  box-sizing: border-box;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px 6px 16px;
+  border-radius: var(--md-sys-shape-corner-extra-small, 4px);
+  background-color: var(--md-sys-color-inverse-surface, #322f35);
+  color: var(--md-sys-color-inverse-on-surface, #f5eff7);
+  box-shadow: var(--md-sys-elevation-level3, 0 4px 8px 3px rgb(0 0 0 / 0.15));
+  font-size: 14px;
+}
+
+nmui-snackbar[open] {
+  display: flex;
+  animation: nmui-snackbar-in var(--md-sys-motion-spring-default-spatial, 400ms cubic-bezier(0.2, 0, 0, 1));
+}
+
+@keyframes nmui-snackbar-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(16px); }
+  to { opacity: 1; transform: translateX(-50%); }
+}
+
+nmui-snackbar > span {
+  flex: 1;
+  padding: 8px 0;
+}
+
+nmui-snackbar nmui-button[text] > container,
+nmui-snackbar button {
+  color: var(--md-sys-color-inverse-primary, #d0bcff);
+}

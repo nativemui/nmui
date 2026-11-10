@@ -1,0 +1,661 @@
+/* Docs pages — plain page CSS, not part of the library. */
+
+.docs {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px 96px;
+}
+
+.docs-header {
+  margin: 48px 0 48px;
+}
+
+.docs-header h1 {
+  font: var(--md-sys-typescale-display-small, 400 36px/44px system-ui, sans-serif);
+  margin: 0 0 8px;
+  color: var(--md-sys-color-on-background, #1c1b1f);
+}
+
+.docs-header p {
+  font: var(--md-sys-typescale-title-large, 400 22px/28px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  margin: 0;
+}
+
+.docs-section {
+  margin-bottom: 64px;
+}
+
+.docs-section h2 {
+  font: var(--md-sys-typescale-headline-medium, 400 28px/36px system-ui, sans-serif);
+  margin: 0 0 16px;
+  color: var(--md-sys-color-on-background, #1c1b1f);
+}
+
+.docs-section h3 {
+  font: var(--md-sys-typescale-title-medium, 500 16px/24px system-ui, sans-serif);
+  margin: 32px 0 12px;
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+.docs-section p {
+  font: var(--md-sys-typescale-body-large, 400 16px/24px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  max-width: 44em;
+  margin: 0 0 16px;
+}
+
+.docs-section code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: var(--md-sys-color-surface-container-high, #ece6f0);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.docs-section pre {
+  background: var(--md-sys-color-surface-container-low, #f7f2fa);
+  border: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+  border-radius: 12px;
+  padding: 20px;
+  overflow-x: auto;
+  margin: 0 0 16px;
+}
+
+.docs-section pre code {
+  background: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.docs-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.docs-row-baseline {
+  align-items: flex-end;
+}
+
+.docs-note {
+  border-inline-start: 3px solid var(--md-sys-color-primary, #6750a4);
+  padding-inline-start: 16px;
+}
+
+.docs-list {
+  font: var(--md-sys-typescale-body-large, 400 16px/24px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  max-width: 44em;
+  padding-inline-start: 24px;
+}
+
+.docs-list li {
+  margin-bottom: 8px;
+}
+
+.docs-output {
+  font: var(--md-sys-typescale-body-medium, 400 14px/20px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  background: var(--md-sys-color-surface-container-low, #f7f2fa);
+  border-radius: 8px;
+  padding: 8px 16px;
+  min-height: 20px;
+}
+
+.docs-card {
+  display: block;
+  text-decoration: none;
+  border: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+  border-radius: 12px;
+  padding: 20px 24px;
+  min-width: 220px;
+  transition: background-color 200ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.docs-card:hover {
+  background: color-mix(in srgb,
+    var(--md-sys-color-primary, #6750a4) 8%, transparent);
+}
+
+.docs-card strong {
+  display: block;
+  font: var(--md-sys-typescale-title-medium, 500 16px/24px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  margin-bottom: 4px;
+}
+
+.docs-card span {
+  font: var(--md-sys-typescale-body-medium, 400 14px/20px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+.docs-footer {
+  border-top: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+  padding-top: 24px;
+  font: var(--md-sys-typescale-body-medium, 400 14px/20px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+.docs-footer a {
+  color: var(--md-sys-color-primary, #6750a4);
+}
+
+/* Events reference table (demo.js evTable). */
+.docs-evtable {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0 0 16px;
+  font: var(--md-sys-typescale-body-medium, 400 14px/20px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+.docs-evtable th,
+.docs-evtable td {
+  border: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+  padding: 8px 12px;
+  text-align: start;
+  vertical-align: top;
+}
+
+.docs-evtable th {
+  font: var(--md-sys-typescale-label-large, 500 14px/20px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  background: var(--md-sys-color-surface-container-low, #f7f2fa);
+}
+
+.docs-evtable td code {
+  white-space: nowrap;
+}
+
+/* Live demo stage — the output half of an output+code pair. */
+.docs-demo {
+  border: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 12px;
+  background: var(--md-sys-color-surface-container-lowest, #ffffff);
+}
+
+/* A demo box holding an app bar sits on surface-container instead
+   of white: the bar itself is surface, so on white its edges —
+   and therefore its padding — are invisible. The container fill
+   makes the bar read as a region you can measure. */
+.docs-demo:has(> nmui-app-bar) {
+  background: var(--md-sys-color-surface-container, #f3edf7);
+}
+
+/* Resizable frame — drag the corner and watch container queries reflow. */
+.demo-frame {
+  container-type: inline-size;
+  resize: horizontal;
+  overflow: auto;
+  min-width: 320px;
+  max-width: 100%;
+  border: 1px dashed var(--md-sys-color-outline-variant, #cac4d0);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 4px;
+  background: var(--md-sys-color-surface-container-lowest, #ffffff);
+}
+
+.demo-hint {
+  font: var(--md-sys-typescale-body-small, 400 12px/16px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  margin: 0 0 12px;
+}
+
+/* Button family sub-nav (one page per button type). */
+.docs-family {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.docs-family a {
+  font: var(--md-sys-typescale-label-large, 500 14px/20px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  text-decoration: none;
+  padding: 6px 14px;
+  border: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+}
+
+.docs-family a:hover {
+  color: var(--md-sys-color-primary, #6750a4);
+}
+
+.docs-family a[aria-current="page"] {
+  background: var(--md-sys-color-secondary-container, #e8def8);
+  color: var(--md-sys-color-on-secondary-container, #4a4458);
+  border-color: transparent;
+}
+
+/* Split button demo: placeholder dropdown (the real menu component
+   gets its own pass later). */
+.split-demo {
+  position: relative;
+  display: inline-block;
+}
+
+.split-fake-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  inset-inline-end: 0;
+  z-index: 20;
+  min-width: 200px;
+  max-width: calc(100vw - 32px);
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  border-radius: 12px;
+  background: var(--md-sys-color-surface-container, #f3edf7);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  box-shadow: var(--md-sys-elevation-level2,
+    0 1px 2px rgb(0 0 0 / 0.3), 0 2px 6px 2px rgb(0 0 0 / 0.15));
+}
+
+.split-fake-menu[hidden] {
+  display: none;
+}
+
+/* Flipped by the demo script when the natural spot would leave the
+   window (menus stay in the viewport; see split button guidelines). */
+.split-fake-menu.flip-up {
+  top: auto;
+  bottom: calc(100% + 4px);
+}
+
+.split-fake-menu.align-start {
+  inset-inline-end: auto;
+  inset-inline-start: 0;
+}
+
+.split-fake-menu button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  font: var(--md-sys-typescale-body-large, 400 16px/24px system-ui, sans-serif);
+  color: inherit;
+  text-align: start;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.split-fake-menu button:hover {
+  background: color-mix(in srgb,
+    var(--md-sys-color-on-surface, #1c1b1f) 8%, transparent);
+}
+
+/* Navigation rail demos: a framed stage with the rail beside a
+   stand-in content area. */
+.nav-demo {
+  display: flex;
+  height: 460px;
+  border: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--md-sys-color-surface-container-lowest, #ffffff);
+  margin-bottom: 12px;
+}
+
+.nav-demo nmui-navigation[rail] {
+  border-inline-end: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+}
+
+.nav-demo-body {
+  flex: 1;
+  padding: 24px;
+  font: var(--md-sys-typescale-body-large, 400 16px/24px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+/* Router config cards (app/pages/docs/router.js) — one small
+   rectangular card per stack, all at one level: brand logo on a
+   white chip (so black and light logos read in both themes) over
+   the stack's name. Each card opens that stack's dialog. */
+.router-cfg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.router-cfg-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 8px 12px;
+  border: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+  border-radius: 12px;
+  background: var(--md-sys-color-surface-container-lowest, #ffffff);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  font: var(--md-sys-typescale-label-large, 500 14px/20px system-ui, sans-serif);
+  cursor: pointer;
+}
+
+.router-cfg-card:hover {
+  background: color-mix(in srgb,
+    var(--md-sys-color-on-surface, #1c1b1f) 8%,
+    var(--md-sys-color-surface-container-lowest, #ffffff));
+}
+
+.router-cfg-card:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary, #6750a4);
+  outline-offset: 2px;
+}
+
+.router-cfg-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 8px 12px;
+  box-sizing: border-box;
+  border: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.router-cfg-logo {
+  display: block;
+  height: 34px;
+  width: auto;
+  max-width: 76px;
+}
+
+/* Router config dialogs (app/pages/docs/router.js) — the stack
+   sections moved into <nmui-dialog>s, which sit outside any
+   .docs-section, so the dialog content re-declares the section's
+   typography and code-block styling here. Config files are wide,
+   so these surfaces widen past the dialog component's 560dp
+   default, up to the viewport. */
+nmui-dialog.router-dialog > surface {
+  width: min(880px, calc(100vw - 48px));
+  max-width: min(880px, calc(100vw - 48px));
+}
+
+.router-dialog h3 {
+  font: var(--md-sys-typescale-title-medium, 500 16px/24px system-ui, sans-serif);
+  margin: 32px 0 12px;
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+.router-dialog p {
+  font: var(--md-sys-typescale-body-large, 400 16px/24px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  margin: 0 0 16px;
+}
+
+.router-dialog code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: var(--md-sys-color-surface-container-high, #ece6f0);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.router-dialog pre {
+  background: var(--md-sys-color-surface-container-low, #f7f2fa);
+  border: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+  border-radius: 12px;
+  padding: 20px;
+  overflow-x: auto;
+  margin: 0 0 16px;
+}
+
+.router-dialog pre code {
+  background: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* Theming tool (app/pages/docs/theming.js) — the editor chrome reads
+   the APP's theme; only the preview surface takes the working one. */
+.theme-roles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 8px 32px;
+  margin-bottom: 8px;
+}
+
+.theme-role {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.theme-role-name {
+  flex: 1;
+  font: var(--md-sys-typescale-body-medium, 400 14px/20px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+}
+
+.theme-swatch {
+  width: 44px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+  flex: none;
+}
+
+.theme-hex {
+  width: 84px;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 13px;
+  padding: 6px 8px;
+  border: 1px solid var(--md-sys-color-outline, #79747e);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  flex: none;
+}
+
+.theme-touched {
+  width: 10px;
+  color: var(--md-sys-color-primary, #6750a4);
+  visibility: hidden;
+  flex: none;
+}
+
+.theme-role.is-touched .theme-touched {
+  visibility: visible;
+}
+
+.theme-range {
+  flex: 1;
+  min-width: 90px;
+  accent-color: var(--md-sys-color-primary, #6750a4);
+}
+
+.theme-px {
+  width: 56px;
+}
+
+.theme-preview {
+  border: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--md-sys-color-surface, #fffbfe);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+}
+
+.theme-preview-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  background: var(--md-sys-color-surface-container-low, #f7f2fa);
+}
+
+.theme-preview nmui-navigation[bar] {
+  border-radius: var(--md-sys-shape-corner-medium, 12px);
+}
+
+.theme-contrast {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 8px;
+}
+
+.theme-pair {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.theme-pair-chip {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+  border-radius: 8px;
+  font: var(--md-sys-typescale-title-medium, 500 16px/24px system-ui, sans-serif);
+}
+
+.theme-pair-name {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  font: var(--md-sys-typescale-body-medium, 400 14px/20px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+}
+
+.theme-pair-name small {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 11px;
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+.theme-pair-ratio {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 13px;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+}
+
+.theme-pair-badge {
+  font: var(--md-sys-typescale-label-medium, 500 12px/16px system-ui, sans-serif);
+  padding: 4px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.theme-pair[data-state="pass"] .theme-pair-badge {
+  background: #1a7f37;
+  color: #ffffff;
+}
+
+.theme-pair[data-state="warn"] {
+  border-color: #b58900;
+  border-width: 2px;
+}
+
+.theme-pair[data-state="warn"] .theme-pair-badge {
+  background: #b58900;
+  color: #ffffff;
+}
+
+.theme-pair[data-state="fail"] {
+  border-color: var(--md-sys-color-error, #b3261e);
+  border-width: 2px;
+}
+
+.theme-pair[data-state="fail"] .theme-pair-badge {
+  background: var(--md-sys-color-error, #b3261e);
+  color: var(--md-sys-color-on-error, #ffffff);
+}
+
+.theme-alarm {
+  border: 2px solid var(--md-sys-color-error, #b3261e);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  background: color-mix(in srgb,
+    var(--md-sys-color-error, #b3261e) 8%, transparent);
+  font: var(--md-sys-typescale-body-large, 400 16px/24px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+}
+
+.theme-export-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.theme-name,
+.theme-file {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: var(--md-sys-typescale-body-medium, 400 14px/20px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+}
+
+.theme-name input {
+  font: var(--md-sys-typescale-body-large, 400 16px/24px system-ui, sans-serif);
+  padding: 8px 12px;
+  border: 1px solid var(--md-sys-color-outline, #79747e);
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+}
+
+.theme-status {
+  font: var(--md-sys-typescale-body-medium, 400 14px/20px system-ui, sans-serif);
+  color: var(--md-sys-color-primary, #6750a4);
+  min-height: 20px;
+}
+
+/* Reordering list demo: drag handles + the guidelines' content
+ * color note — the dragged row takes a vibrant tint from its
+ * cover art for the duration of the interaction. */
+.docs-demo [data-drag] {
+  margin-inline-start: auto;
+  flex: 0 0 auto;
+  font-size: 24px;
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  cursor: grab;
+  touch-action: none;
+}
+
+.docs-demo nmui-list[item][dragging] {
+  background-color: var(--tint, var(--md-sys-color-surface-container-high, #ece6f0));
+}
+
+#reorder-list {
+  position: relative;
+}
+
+.docs-demo .reorder-ph {
+  display: block;
+}
+
+.docs-demo [data-drag] {
+  padding: 10px;
+  margin: -10px -10px -10px auto;
+}
+
+.docs-demo nmui-list[item][dragging] [data-drag] {
+  cursor: grabbing;
+}

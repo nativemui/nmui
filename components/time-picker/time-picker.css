@@ -1,0 +1,78 @@
+/* nmui-time-picker — M3 time field over a native time input. */
+
+nmui-time-picker {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 210px;
+  position: relative;
+}
+
+nmui-time-picker > input {
+  font: inherit;
+  font-size: 16px;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  color-scheme: light;
+  background-color: var(--md-sys-color-surface-container-highest, #e6e0e9);
+  border: 0;
+  border-bottom: 1px solid var(--md-sys-color-on-surface-variant, #49454f);
+  border-radius: var(--md-sys-shape-corner-extra-small, 4px) var(--md-sys-shape-corner-extra-small, 4px) 0 0;
+  padding: 24px 48px 8px 16px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+[theme="dark"] nmui-time-picker > input {
+  color-scheme: dark;
+}
+
+nmui-time-picker > input:focus {
+  border-bottom: 2px solid var(--md-sys-color-primary, #6750a4);
+  padding-bottom: 7px;
+}
+
+nmui-time-picker > label {
+  position: absolute;
+  top: 8px;
+  inset-inline-start: 16px;
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  font-size: 12px;
+  pointer-events: none;
+}
+
+nmui-time-picker:focus-within > label {
+  color: var(--md-sys-color-primary, #6750a4);
+}
+
+nmui-time-picker > icon {
+  position: absolute;
+  top: 20px;
+  inset-inline-end: 12px;
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  line-height: 0;
+  pointer-events: none;
+}
+
+nmui-time-picker > icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+nmui-time-picker[outlined] > input {
+  background-color: transparent;
+  border: 1px solid var(--md-sys-color-outline, #79747e);
+  border-radius: var(--md-sys-shape-corner-extra-small, 4px);
+  padding: 16px 48px 16px 16px;
+}
+
+nmui-time-picker[outlined] > input:focus {
+  border: 2px solid var(--md-sys-color-primary, #6750a4);
+  padding: 15px 47px 15px 15px;
+}
+
+nmui-time-picker[outlined] > label {
+  top: -8px;
+  padding: 0 4px;
+  background: var(--md-sys-color-surface, #fef7ff);
+}
