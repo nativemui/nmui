@@ -180,11 +180,7 @@ class NMUINavigation extends HTMLElement {
       if (!dest || dest.closest("destinations") !== destinations) return;
       const group = dest.nextElementSibling;
       if (group?.tagName === "SECTION") {
-        group.toggleAttribute("open");
-        dest.setAttribute(
-          "aria-expanded",
-          group.hasAttribute("open") ? "true" : "false"
-        );
+        this.#toggleGroup(group, dest);
         return;
       }
       this.#select(dest);
@@ -247,6 +243,52 @@ class NMUINavigation extends HTMLElement {
     });
 
     this.#inited = true;
+  }
+
+  // Group sections SLIDE open and closed: the section's height
+  // animates between 0 and its natural height (clipped while it
+  // moves) on the same 250ms spring as the caret flip, instead
+  // of the display flip's instant pop. A re-click mid-slide
+  // reverses from the current height. Reduced-motion (and the
+  // collapsed rail, where sections never show) toggles at once.
+  #toggleGroup(group, parent) {
+    const opening = !group.hasAttribute("open");
+    parent.setAttribute("aria-expanded", opening ? "true" : "false");
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if (
+      reduced ||
+      !this.hasAttribute("expanded") ||
+      typeof group.animate !== "function"
+    ) {
+      group.toggleAttribute("open", opening);
+      return;
+    }
+    // Capture the on-screen height BEFORE cancelling any
+    // in-flight slide, so a mid-slide reversal starts from
+    // where the group actually is. (A closed group measures 0,
+    // a settled open one its natural height.)
+    const from = group.getBoundingClientRect().height;
+    group._anim?.cancel();
+    const finish = (landed) => {
+      group.style.overflow = "";
+      if (!landed) group.removeAttribute("open");
+    };
+    let to;
+    if (opening) {
+      group.setAttribute("open", "");
+      to = group.offsetHeight;
+    } else {
+      to = 0;
+    }
+    group.style.overflow = "hidden";
+    group._anim = group.animate(
+      [{ height: `${from}px` }, { height: `${to}px` }],
+      { duration: 250, easing: "cubic-bezier(0.2, 0, 0, 1)" }
+    );
+    group._anim.onfinish = () => finish(opening);
+    group._anim.oncancel = () => finish(opening);
   }
 
   #select(dest) {
