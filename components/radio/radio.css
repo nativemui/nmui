@@ -42,6 +42,8 @@ nmui-radio > mark {
   height: 20px;
   box-sizing: border-box;
   border: 2px solid var(--md-sys-color-on-surface-variant, #49454f);
+  /* <mark> has a yellow UA background — the radio ring is hollow. */
+  background: transparent;
   border-radius: var(--md-sys-shape-corner-full, 999px);
   display: inline-flex;
   align-items: center;
