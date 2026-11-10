@@ -75,8 +75,7 @@ class NMUIMenu extends HTMLElement {
   #typeTimer = 0;
   #subOpenTimer = 0;
   #subCloseTimer = 0;
-  _parentMenu = null;
-  _parentItem = null;
+  #hoverBtn = null;
 
   #onDocDown = (e) => {
     if (!this.hasAttribute("open")) return;
@@ -146,8 +145,27 @@ class NMUIMenu extends HTMLElement {
 
   #root() {
     let m = this;
-    while (m._parentMenu) m = m._parentMenu;
+    while (m.#parentMenu()) m = m.#parentMenu();
     return m;
+  }
+
+  // Submenu linkage is DERIVED from the DOM, never stored: a
+  // submenu is a direct child of its parent menu, sitting
+  // directly after its parent item. Stored properties were
+  // wiped when a submenu element finished upgrading after its
+  // parent's first decorate pass — the class field
+  // initializers overwrote them with null, leaving a parent
+  // item that looked linked (arrow drawn) but acted like a
+  // leaf (hover dead, click fired change and closed the menu).
+  #parentMenu() {
+    const p = this.parentElement;
+    return p?.tagName === "NMUI-MENU" ? p : null;
+  }
+
+  #parentItem() {
+    if (!this.#parentMenu()) return null;
+    const prev = this.previousElementSibling;
+    return prev?.tagName === "BUTTON" ? prev : null;
   }
 
   // This menu's own items — buttons whose nearest menu is this
@@ -160,7 +178,7 @@ class NMUIMenu extends HTMLElement {
 
   #submenus() {
     return [...this.querySelectorAll("nmui-menu")].filter(
-      (m) => m._parentMenu === this
+      (m) => m.#parentMenu() === this
     );
   }
 
@@ -191,11 +209,11 @@ class NMUIMenu extends HTMLElement {
       btn.setAttribute("tabindex", "-1");
       // A menu directly after the item = its submenu.
       const sib = btn.nextElementSibling;
-      if (sib?.tagName === "NMUI-MENU" && sib._parentItem !== btn) {
-        sib._parentItem = btn;
-        sib._parentMenu = this;
+      if (sib?.tagName === "NMUI-MENU") {
         btn.setAttribute("aria-haspopup", "true");
-        btn.setAttribute("aria-expanded", "false");
+        if (!btn.hasAttribute("aria-expanded")) {
+          btn.setAttribute("aria-expanded", "false");
+        }
         if (!btn.querySelector(":scope > icon.sub-arrow")) {
           const arrow = document.createElement("icon");
           arrow.className = "sub-arrow";
@@ -251,9 +269,8 @@ class NMUIMenu extends HTMLElement {
     this.#place();
     const anchor = this.#anchor();
     if (anchor) anchor.setAttribute("aria-expanded", "true");
-    if (this._parentItem) {
-      this._parentItem.setAttribute("aria-expanded", "true");
-    }
+    const pi = this.#parentItem();
+    if (pi) pi.setAttribute("aria-expanded", "true");
     this.dispatchEvent(
       new CustomEvent("open", {
         detail: { menu: this },
@@ -272,14 +289,18 @@ class NMUIMenu extends HTMLElement {
 
   #closed() {
     this.#point = null;
+    this.#hoverBtn = null;
+    // A closing submenu re-arms its parent item's hover, so
+    // hovering the same item again reopens it.
+    const pm = this.#parentMenu();
+    if (pm) pm.#hoverBtn = null;
     for (const sub of this.#submenus()) {
       if (sub.hasAttribute("open")) sub.close();
     }
     const anchor = this.#anchor();
     if (anchor) anchor.setAttribute("aria-expanded", "false");
-    if (this._parentItem) {
-      this._parentItem.setAttribute("aria-expanded", "false");
-    }
+    const pi = this.#parentItem();
+    if (pi) pi.setAttribute("aria-expanded", "false");
     this.dispatchEvent(
       new CustomEvent("close", {
         detail: { menu: this },
@@ -288,7 +309,7 @@ class NMUIMenu extends HTMLElement {
       })
     );
     if (this.contains(document.activeElement)) {
-      (this._parentItem ?? this.#anchor())?.focus();
+      (this.#parentItem() ?? this.#anchor())?.focus();
     }
   }
 
@@ -309,11 +330,11 @@ class NMUIMenu extends HTMLElement {
       origin = `${y + h > vh - 8 ? "bottom" : "top"} ${
         x + w > vw - 8 ? "right" : "left"
       }`;
-    } else if (this._parentItem && this._parentMenu) {
-      const pr = this._parentMenu.getBoundingClientRect();
-      const ir = this._parentItem.getBoundingClientRect();
+    } else if (this.#parentMenu() && this.#parentItem()) {
+      const pr = this.#parentMenu().getBoundingClientRect();
+      const ir = this.#parentItem().getBoundingClientRect();
       const padTop =
-        parseFloat(getComputedStyle(this._parentMenu).paddingTop) || 0;
+        parseFloat(getComputedStyle(this.#parentMenu()).paddingTop) || 0;
       left = pr.right + 4;
       if (left + w > vw - 8) {
         left = pr.left - w - 4;
@@ -381,7 +402,7 @@ class NMUIMenu extends HTMLElement {
   }
 
   #submenuOf(btn) {
-    return this.#submenus().find((m) => m._parentItem === btn) ?? null;
+    return this.#submenus().find((m) => m.#parentItem() === btn) ?? null;
   }
 
   #activate(btn) {
@@ -448,8 +469,8 @@ class NMUIMenu extends HTMLElement {
     if (e.key === "Escape") {
       e.preventDefault();
       e.stopPropagation();
-      if (this._parentMenu) {
-        const item = this._parentItem;
+      if (this.#parentMenu()) {
+        const item = this.#parentItem();
         this.close();
         item?.focus();
       } else {
@@ -489,9 +510,9 @@ class NMUIMenu extends HTMLElement {
         break;
       }
       case "ArrowLeft":
-        if (this._parentMenu) {
+        if (this.#parentMenu()) {
           e.preventDefault();
-          const item = this._parentItem;
+          const item = this.#parentItem();
           this.close();
           item?.focus();
         } else {
@@ -534,6 +555,12 @@ class NMUIMenu extends HTMLElement {
       clearTimeout(this.#subCloseTimer);
       return;
     }
+    // pointerover refires on every child boundary inside the
+    // item (icon, label span) — without this guard, ordinary
+    // micro-movement kept restarting the intent timer and the
+    // submenu never opened.
+    if (btn === this.#hoverBtn) return;
+    this.#hoverBtn = btn;
     clearTimeout(this.#subOpenTimer);
     const sub = this.#submenuOf(btn);
     if (sub) {
