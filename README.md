@@ -42,8 +42,9 @@ plus a theming tool that exports theme files.
 **Docker, live (no rebuilds):**
 
 ```sh
-docker compose up               # serves THIS folder via a bind mount —
-```                               # edit files, refresh, done
+docker compose up    # serves THIS folder via a bind mount —
+                     # edit files, refresh, done
+```
 
 Then open http://localhost:8080. The demo app is built with the library itself.
 Rebuild (`docker compose up --build`) only when the Dockerfile or
