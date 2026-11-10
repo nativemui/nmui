@@ -64,8 +64,9 @@ export function render(mount, nmui) {
       </section>
 
       <section class="docs-section">
-        <h2>Submenu</h2>
-        <p class="demo-hint">A menu placed directly after an item becomes its submenu — the item gains a trailing arrow and opens it on click, ArrowRight, or hover. The submenu opens beside the item, flipping to the other side at the window edge.</p>
+        <h2>Submenus</h2>
+        <p class="demo-hint">A menu placed directly after an item becomes its submenu — the item gains a trailing arrow and opens it on click, ArrowRight, or hover. The submenu opens next to the parent menu item without overlapping it, flipping to the other side at the window edge.</p>
+        <p class="demo-hint">Per the guidelines, submenus are best used on large screens where there's space. On compact windows use an alternative instead — take the user to a new surface (a page or a sheet) rather than cascading.</p>
         ${demo(`<nmui-button id="m-sub-btn" tonal>File</nmui-button>
 <nmui-menu anchor="m-sub-btn" id="m-sub">
   <button value="new"><icon>note_add</icon>New</button>
@@ -158,8 +159,8 @@ export function render(mount, nmui) {
       </section>
 
       <section class="docs-section">
-        <h2>Submenu in a vertical menu</h2>
-        <p class="demo-hint">The guidelines' submenu rule — it opens next to the parent item without overlapping it (and flips to the other side at the window edge). Same mechanism as the File demo above, in the vertical variant: Line spacing opens its own menu beside it.</p>
+        <h2>Submenus — vertical variant</h2>
+        <p class="demo-hint">The same Submenus behavior in the vertical variant: Line spacing opens its own menu beside it, next to the parent item without overlapping it.</p>
         ${demo(`<nmui-button id="m-vsub-btn" tonal>Paragraph</nmui-button>
 <nmui-menu anchor="m-vsub-btn" id="m-vsub" vertical>
   <button value="bullets"><icon>format_list_bulleted</icon>Bullets</button>
