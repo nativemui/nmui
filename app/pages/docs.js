@@ -215,7 +215,7 @@ export function render(mount, nmui) {
           </a>
           <a data-link href="/docs/snackbar" class="docs-card">
             <strong>Snackbar</strong>
-            <span>Brief message with action</span>
+            <span>Brief message, optional action — one at a time</span>
           </a>
           <a data-link href="/docs/switch" class="docs-card">
             <strong>Switch</strong>

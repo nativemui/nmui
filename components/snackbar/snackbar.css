@@ -1,14 +1,23 @@
-/* nmui-snackbar — M3 snackbar. */
+/* nmui-snackbar — M3 snackbar.
+   Container: inverse-surface, corner-extra-small (4dp),
+   elevation level 3, min-height 48dp single-line.
+   Supporting text: body-medium, inverse-on-surface.
+   Action: label-large, inverse-primary. Close icon: 24dp,
+   inverse-on-surface. Entrance/exit ride the monotonic
+   medium-effects curve — the spatial spring overshoots,
+   which is wrong for a bar that docks at the screen edge. */
 
 nmui-snackbar {
+  --_tx: -50%;
   display: none;
   position: fixed;
   z-index: 60;
   bottom: 24px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(var(--_tx));
   min-width: 288px;
   max-width: min(560px, calc(100vw - 48px));
+  min-height: 48px;
   box-sizing: border-box;
   align-items: center;
   gap: 8px;
@@ -16,26 +25,109 @@ nmui-snackbar {
   border-radius: var(--md-sys-shape-corner-extra-small, 4px);
   background-color: var(--md-sys-color-inverse-surface, #322f35);
   color: var(--md-sys-color-inverse-on-surface, #f5eff7);
-  box-shadow: var(--md-sys-elevation-level3, 0 4px 8px 3px rgb(0 0 0 / 0.15));
-  font-size: 14px;
+  box-shadow: var(--md-sys-elevation-level3,
+    0 4px 8px 3px rgb(0 0 0 / 0.15), 0 1px 3px rgb(0 0 0 / 0.3));
+  font: var(--md-sys-typescale-body-medium, 400 14px/20px "Roboto", sans-serif);
+}
+
+nmui-snackbar[start] {
+  --_tx: 0px;
+  left: 24px;
+}
+
+/* Compact: fixed 8dp distance from the screen edges. */
+@media (max-width: 599px) {
+  nmui-snackbar {
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    min-width: 0;
+    max-width: none;
+    transform: none;
+  }
 }
 
 nmui-snackbar[open] {
   display: flex;
-  animation: nmui-snackbar-in var(--md-sys-motion-spring-default-spatial, 400ms cubic-bezier(0.2, 0, 0, 1));
+  animation: nmui-snackbar-in var(--md-sys-motion-spring-medium-effects, 250ms cubic-bezier(0.2, 0, 0, 1));
+}
+
+nmui-snackbar[closing] {
+  display: flex;
+  opacity: 0;
+  transform: translateX(var(--_tx)) translateY(8px);
+  transition:
+    opacity 200ms ease,
+    transform var(--md-sys-motion-spring-medium-effects, 250ms cubic-bezier(0.2, 0, 0, 1));
+}
+
+@media (max-width: 599px) {
+  nmui-snackbar[closing] {
+    transform: translateY(8px);
+  }
 }
 
 @keyframes nmui-snackbar-in {
-  from { opacity: 0; transform: translateX(-50%) translateY(16px); }
-  to { opacity: 1; transform: translateX(-50%); }
+  from {
+    opacity: 0;
+    transform: translateX(var(--_tx)) translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(var(--_tx)) translateY(0);
+  }
 }
 
-nmui-snackbar > span {
+@media (max-width: 599px) {
+  @keyframes nmui-snackbar-in {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  nmui-snackbar[open] {
+    animation: none;
+  }
+  nmui-snackbar[closing] {
+    transition: none;
+  }
+}
+
+/* Supporting text */
+nmui-snackbar > :not(nmui-button):not(button):not([close]) {
   flex: 1;
   padding: 8px 0;
 }
 
-nmui-snackbar nmui-button[text] > container,
-nmui-snackbar button {
+/* Action: a text button in inverse-primary — never filled
+   or elevated inside a snackbar (guidelines). */
+nmui-snackbar nmui-button,
+nmui-snackbar > button:not([close]) {
   color: var(--md-sys-color-inverse-primary, #d0bcff);
+  flex: none;
+}
+
+/* Long action: drops to its own line, right-aligned. */
+nmui-snackbar[long-action] {
+  flex-wrap: wrap;
+}
+
+nmui-snackbar[long-action] > :not(nmui-button):not(button):not([close]) {
+  flex-basis: 100%;
+}
+
+nmui-snackbar[long-action] nmui-button,
+nmui-snackbar[long-action] > button:not([close]) {
+  margin-left: auto;
+}
+
+/* Close affordance: 24dp icon, inverse-on-surface. */
+nmui-snackbar [close] {
+  flex: none;
+  color: var(--md-sys-color-inverse-on-surface, #f5eff7);
+}
+
+nmui-snackbar [close] icon {
+  font-size: 24px;
 }
