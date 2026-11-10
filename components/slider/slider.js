@@ -98,9 +98,19 @@ class NMUISlider extends HTMLElement {
 
     for (const input of this.#inputs) {
       input.addEventListener("input", () => this.#sync());
-      input.addEventListener("focus", () =>
-        this.setAttribute("data-focus", input.dataset.handle)
-      );
+      input.addEventListener("focus", () => {
+        // The focus halo is a keyboard indicator only
+        // (:focus-visible semantics). Keying it off the raw
+        // focus event painted the ring on every mouse press
+        // too, where it reads as a stray outline.
+        let visible = false;
+        try {
+          visible = input.matches(":focus-visible");
+        } catch {
+          visible = true;
+        }
+        if (visible) this.setAttribute("data-focus", input.dataset.handle);
+      });
       input.addEventListener("blur", () => {
         if (this.getAttribute("data-focus") === input.dataset.handle) {
           this.removeAttribute("data-focus");
