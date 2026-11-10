@@ -1,16 +1,29 @@
-/* nmui-radio — M3 radio button over a native input. */
+/* nmui-radio — M3 radio button over a native input.
+ *
+ * Spec values (m3.material.io/components/radio-button/specs):
+ *   icon 20dp (2dp ring, 10dp dot), state layer 40dp,
+ *   target 48dp (the row height, via 14dp padding-block
+ *   around the 20dp icon).
+ * State layer opacities follow the M3 state-layer scale:
+ * hover 8%, focus 12%, pressed 12%.
+ * Colors: selected ring + dot primary; unselected ring
+ * on-surface-variant; state layer on-surface unselected,
+ * primary selected. Label on-surface always (38% when
+ * disabled, as are ring and dot — explicit color-mix colors,
+ * never a host opacity, which would double-dim). */
 
 nmui-radio {
   display: inline-flex;
   position: relative;
   align-items: center;
   gap: 12px;
+  padding-block: 14px;
   cursor: pointer;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   color: var(--md-sys-color-on-surface, #1c1b1f);
-  font-size: 14px;
-  min-height: 40px;
+  font-size: var(--md-sys-typescale-body-large-size, 16px);
+  line-height: var(--md-sys-typescale-body-large-line-height, 24px);
 }
 
 nmui-radio > input[type="radio"] {
@@ -23,6 +36,7 @@ nmui-radio > input[type="radio"] {
 }
 
 nmui-radio > mark {
+  position: relative;
   flex: 0 0 auto;
   width: 20px;
   height: 20px;
@@ -35,6 +49,40 @@ nmui-radio > mark {
   transition: border-color var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1));
 }
 
+/* State layer: 40dp circle centered on the icon. */
+nmui-radio > mark::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--md-sys-color-on-surface, #1c1b1f);
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition: opacity var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1));
+  pointer-events: none;
+}
+
+nmui-radio:not([disabled]):hover > mark::before {
+  opacity: 0.08;
+}
+
+nmui-radio:has(> input[type="radio"]:focus-visible) > mark::before {
+  opacity: 0.12;
+}
+
+nmui-radio:not([disabled]):active > mark::before {
+  opacity: 0.12;
+}
+
+/* Selected state layer follows the selection color. */
+nmui-radio[checked] > mark::before {
+  background-color: var(--md-sys-color-primary, #6750a4);
+}
+
+/* The dot: 10dp, primary, scales in on selection. */
 nmui-radio > mark::after {
   content: "";
   width: 10px;
@@ -53,12 +101,17 @@ nmui-radio[checked] > mark::after {
   transform: scale(1);
 }
 
-nmui-radio > input[type="radio"]:focus-visible + mark {
-  outline: 2px solid var(--md-sys-color-primary, #6750a4);
-  outline-offset: 2px;
-}
-
+/* Disabled: ring, dot, and label all on-surface at 38%,
+   spelled out per part. */
 nmui-radio[disabled] {
   cursor: not-allowed;
-  opacity: 0.38;
+  color: color-mix(in srgb, var(--md-sys-color-on-surface, #1c1b1f) 38%, transparent);
+}
+
+nmui-radio[disabled] > mark {
+  border-color: color-mix(in srgb, var(--md-sys-color-on-surface, #1c1b1f) 38%, transparent);
+}
+
+nmui-radio[disabled] > mark::after {
+  background-color: color-mix(in srgb, var(--md-sys-color-on-surface, #1c1b1f) 38%, transparent);
 }
