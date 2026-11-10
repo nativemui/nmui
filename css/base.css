@@ -54,6 +54,26 @@ app {
   display: none;
 }
 
+/* The NATIVE MUI wordmark: live text in the logo's own colors —
+   NATIVE in deep indigo, MUI in plum (sampled from the supplied
+   logo art). Lightened under the dark theme so it stays legible. */
+.brand-word {
+  color: #233670;
+  letter-spacing: 0.02em;
+}
+
+.brand-word > span {
+  color: #751f81;
+}
+
+:root[theme="dark"] .brand-word {
+  color: #93a5e8;
+}
+
+:root[theme="dark"] .brand-word > span {
+  color: #d78ede;
+}
+
 #app-rail[collapsed] .rail-brand-row {
   padding-inline: 0;
 }

@@ -10,7 +10,7 @@ if (!mount) {
 }
 
 const nmui = {
-  version: "0.30.1",
+  version: "0.30.2",
 
   // Dead-simple theming: the theme is one attribute on <html>, so it
   // cascades into every component through CSS variables. Persisted.
@@ -45,7 +45,7 @@ mount.innerHTML = `
     <header>
       <div class="rail-brand-row">
         <img class="rail-brand" src="/assets/mark.svg" alt="">
-        <headline small class="rail-title">nmui</headline>
+        <headline small class="rail-title brand-word">NATIVE <span>MUI</span></headline>
       </div>
       <div class="rail-tools">
         <nmui-button icon standard id="rail-collapse" aria-label="Collapse rail">menu_open</nmui-button>

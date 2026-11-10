@@ -5,7 +5,7 @@ if (!document.adoptedStyleSheets.includes(homeStyles)) {
   document.adoptedStyleSheets.push(homeStyles);
 }
 
-export const title = "nmui — native Material 3";
+export const title = "Native MUI";
 
 export function render(mount, nmui) {
   mount.innerHTML = `
@@ -13,8 +13,7 @@ export function render(mount, nmui) {
     ${nav("/")}
     <header class="home-hero">
       <img class="home-mark" src="/assets/mark.svg" alt="">
-      <label large class="home-kicker">native material ui</label>
-      <display large>nmui</display>
+      <display large class="brand-word">NATIVE <span>MUI</span></display>
       <nmui-chip class="home-version">v${nmui.version}</nmui-chip>
       <headline small class="home-tagline">
         Material&nbsp;3 Expressive, in vanilla JS/HTML/CSS.
