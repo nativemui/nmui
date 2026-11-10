@@ -60,6 +60,8 @@ app {
 .brand-word {
   color: #233670;
   letter-spacing: 0.02em;
+  font-weight: bold;
+  font-stretch: semi-expanded;
 }
 
 .brand-word > span {
