@@ -1,0 +1,15 @@
+# .htaccess — SPA fallback for Apache and shared hosting
+# (DreamHost, cPanel, …). Put this file in the web root, next to
+# index.html. Needs mod_rewrite, which is on by default on most
+# shared hosts.
+RewriteEngine On
+
+# If the app lives under a subfolder, e.g. example.com/app/,
+# uncomment the next line and set your folder:
+# RewriteBase /app/
+
+# Serve real files and folders as-is…
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+# …everything else is a client-side route.
+RewriteRule ^ index.html [L]
