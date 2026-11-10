@@ -56,24 +56,28 @@ app {
 
 /* The NATIVE MUI wordmark: live text in the logo's own colors —
    NATIVE in deep indigo, MUI in plum (sampled from the supplied
-   logo art). Lightened under the dark theme so it stays legible. */
+   logo art). Lightened under the dark theme so it stays legible.
+   These are HARD RULES (!important on purpose): the wordmark sits
+   on type elements whose typescale `font:` shorthand resets
+   weight/stretch and whose section rules set their own color, so
+   plain declarations lose. Nothing overrides the brand. */
 .brand-word {
-  color: #233670;
+  color: #233670 !important;
   letter-spacing: 0.02em;
-  font-weight: bold;
-  font-stretch: semi-expanded;
+  font-weight: bold !important;
+  font-stretch: semi-expanded !important;
 }
 
 .brand-word > span {
-  color: #751f81;
+  color: #751f81 !important;
 }
 
 :root[theme="dark"] .brand-word {
-  color: #93a5e8;
+  color: #93a5e8 !important;
 }
 
 :root[theme="dark"] .brand-word > span {
-  color: #d78ede;
+  color: #d78ede !important;
 }
 
 #app-rail[collapsed] .rail-brand-row {
