@@ -80,9 +80,9 @@ export function render(mount, nmui) {
       <section class="docs-section">
         <h2>Events</h2>
         ${evTable([
-          ["open", "{ snackbar }", "the bar finished opening"],
-          ["close", "{ snackbar }", "the bar finished closing — timeout, action, close affordance, Escape, or replacement"],
-          ["action", "{ action, snackbar, event }", "the action was clicked; the bar dismisses itself right after"],
+          ["open", "the snackbar (bubbles)", "{ snackbar }", "the bar finished opening"],
+          ["close", "the snackbar (bubbles)", "{ snackbar }", "the bar finished closing — timeout, action, close affordance, Escape, or replacement"],
+          ["action", "the snackbar (bubbles)", "{ action, snackbar, event }", "the action was clicked; the bar dismisses itself right after"],
         ])}
         <pre><code>snack.addEventListener("action", () =&gt; undoArchive());
 snack.show();              // stays: it has an action
