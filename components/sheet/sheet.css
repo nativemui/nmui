@@ -50,7 +50,12 @@ nmui-sheet > surface {
   color: var(--md-sys-color-on-surface, #1c1b1f);
   pointer-events: auto;
   overflow: hidden;
-  transition: transform var(--md-sys-motion-spring-default-spatial, 500ms cubic-bezier(0.2, 0, 0, 1));
+  /* NOT the spatial spring: it overshoots, which lifts a
+     bottom sheet past its dock and drops it back (the rail
+     hit the same bounce in v0.10.6). The medium-effects
+     curve is monotonic — the sheet lands exactly on its
+     detent and its edge never leaves the screen edge. */
+  transition: transform var(--md-sys-motion-spring-medium-effects, 250ms cubic-bezier(0.2, 0, 0, 1));
 }
 
 nmui-sheet > surface > content {

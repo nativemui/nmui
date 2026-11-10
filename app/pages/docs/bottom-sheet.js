@@ -21,7 +21,7 @@ export function render(mount, nmui) {
     <main>
       <section class="docs-section">
         <h2>Modal bottom sheet</h2>
-        <p>The mobile menu alternative. It opens at the <b>half detent</b> — a modal sheet's initial position is capped at 50% of the screen height — and the drag handle takes it the rest of the way: click it (or focus it and press Space) to cycle half → full → closed, or drag it. That cycle is the accessibility story: resizing never requires a drag. Picking an action dismisses the sheet, as do the scrim and Escape.</p>
+        <p>The mobile menu alternative. It opens at the <b>half detent</b> — a modal sheet's initial position is capped at 50% of the screen height — and the drag handle takes it the rest of the way: click it (or focus it and press Space) to cycle half → full → closed, or drag it. That cycle is the accessibility story: resizing never requires a drag. Picking an action dismisses the sheet, as do the scrim, Escape, and dragging it down.</p>
         ${demo(`<nmui-button tonal id="demo-share-open">Share photo</nmui-button>
 <output id="demo-share-out" class="docs-output">nothing shared yet</output>
 <nmui-sheet modal id="demo-share">
@@ -40,7 +40,7 @@ export function render(mount, nmui) {
 
       <section class="docs-section">
         <h2>Standard bottom sheet</h2>
-        <p>No scrim, no blocking: the sheet co-exists with the page, the way a music player rides along while you browse. It opens at the full detent (its content height), and its handle cycles full → half → full instead of closing — a persistent surface is closed by the app, not by its handle. Watch the readout for <code>detentchange</code>.</p>
+        <p>No scrim, no blocking: the sheet co-exists with the page, the way a music player rides along while you browse. It opens at the full detent (its content height), and its handle cycles full → half → closed. Dragging it down dismisses it too — from full it snaps to half first, and a drag that pulls it under a fifth of the screen closes it from either detent. Watch the readout for <code>detentchange</code>.</p>
         ${demo(`<nmui-button tonal id="demo-player-toggle">Toggle player</nmui-button>
 <output id="demo-player-out" class="docs-output">player closed</output>
 <nmui-sheet id="demo-player">

@@ -24,8 +24,9 @@ if (!document.adoptedStyleSheets.includes(sheetStyles)) {
  * never requires a drag. Dragging it works too; on release the
  * sheet snaps to the nearest detent, or closes if pulled far
  * enough down. The modal bottom sheet opens at the half detent
- * (its initial position is capped at 50% of the screen); the
- * standard one opens full. [nohandle] omits the handle.
+ * (its initial position is capped at 50% of the screen) and
+ * cycles half → full → closed; the standard one opens full and
+ * cycles full → half → closed. [nohandle] omits the handle.
  * Detent changes fire detentchange {detent, sheet}.
  *
  * Side sheets follow their own anatomy: an optional [back]
@@ -221,8 +222,12 @@ class NMUISheet extends HTMLElement {
   }
 
   #cycleDetent() {
+    // Each variant cycles through its detents and out: the
+    // modal sheet opens at half (half → full → closed), the
+    // standard sheet opens at full (full → half → closed).
     if (this.#detent === "half") {
-      this.#setDetent("full");
+      if (this.hasAttribute("modal")) this.#setDetent("full");
+      else this.close();
     } else if (this.hasAttribute("modal")) {
       this.close();
     } else {
@@ -256,8 +261,7 @@ class NMUISheet extends HTMLElement {
       this.#suppressClick = true;
       setTimeout(() => (this.#suppressClick = false), 0);
       if (lastH < window.innerHeight * 0.2) {
-        if (this.hasAttribute("modal")) this.close();
-        else this.#setDetent("half");
+        this.close();
       } else if (lastH > window.innerHeight * 0.75) {
         this.#setDetent("full");
       } else {
