@@ -10,7 +10,7 @@ if (!mount) {
 }
 
 const nmui = {
-  version: "0.35.0",
+  version: "0.35.1",
 
   // Dead-simple theming: the theme is one attribute on <html>, so it
   // cascades into every component through CSS variables. Persisted.
@@ -78,7 +78,11 @@ mount.innerHTML = `
       </section>
       <a data-link href="/docs/radio"><icon>radio_button_checked</icon>Radio</a>
       <a data-link href="/docs/search"><icon>search</icon>Search</a>
-      <a data-link href="/docs/sheet"><icon>dock_to_bottom</icon>Sheets</a>
+      <a data-link href="/docs/bottom-sheet"><icon>dock_to_bottom</icon>Sheets</a>
+      <section>
+        <a data-link href="/docs/bottom-sheet"><icon>dock_to_bottom</icon>Bottom sheets</a>
+        <a data-link href="/docs/side-sheet"><icon>dock_to_right</icon>Side sheets</a>
+      </section>
     </section>
     <a data-link href="/docs/layout"><icon>menu_book</icon>Guides</a>
     <section>

@@ -199,11 +199,15 @@ export function render(mount, nmui) {
           </a>
           <a data-link href="/docs/search" class="docs-card">
             <strong>Search</strong>
-            <span>Search bar with clear</span>
+            <span>Bar + docked/full-screen view</span>
           </a>
-          <a data-link href="/docs/sheet" class="docs-card">
-            <strong>Sheet</strong>
-            <span>Bottom and side sheets</span>
+          <a data-link href="/docs/bottom-sheet" class="docs-card">
+            <strong>Bottom sheets</strong>
+            <span>Standard + modal, with detents</span>
+          </a>
+          <a data-link href="/docs/side-sheet" class="docs-card">
+            <strong>Side sheets</strong>
+            <span>Standard + modal, edge-anchored</span>
           </a>
           <a data-link href="/docs/slider" class="docs-card">
             <strong>Slider</strong>
