@@ -219,7 +219,7 @@ export function render(mount, nmui) {
           </a>
           <a data-link href="/docs/switch" class="docs-card">
             <strong>Switch</strong>
-            <span>Native checkbox, thumb icons</span>
+            <span>Immediate settings, optional handle icons</span>
           </a>
           <a data-link href="/docs/tabs" class="docs-card">
             <strong>Tabs</strong>
