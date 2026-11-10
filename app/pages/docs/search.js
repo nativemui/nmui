@@ -15,7 +15,7 @@ export function render(mount, nmui) {
     <header class="docs-header">
       <h1>Search</h1>
       <p>M3 search in the contained style: a search bar that opens a view of suggestions or results. The component decorates a native input and provides the chrome — the view's content is yours, authored as a list (the container is empty by default; use <code>&lt;nmui-list&gt;</code>).</p>
-      <p class="docs-note">Spec geometry: the bar is 56dp tall with full corners, filled surface-container-high at elevation level 1; the input text is on-surface and the hinted text (the input's <code>placeholder</code>, which is also the view's accessible label) is on-surface-variant. Trailing: at most two icon actions, plus an avatar at 30dp. The open docked view shares the bar's filled container at elevation level 2, min height 240dp, results capped at 2/3 of the screen height.</p>
+      <p class="docs-note">Spec geometry: the bar is 56dp tall with full corners, filled surface-container-high with no cast shadow — the tonal fill is the separation. The input text is on-surface and the hinted text (the input's <code>placeholder</code>, which is also the view's accessible label) is on-surface-variant. Trailing: at most two icon actions, plus an avatar at 30dp. The open docked view shares the bar's filled container, min height 240dp, results capped at 2/3 of the screen height.</p>
       <p class="docs-note">Two things are deliberately not built. The divided (baseline) style, because M3 Expressive marks it "not recommended — use contained." And the search app bar, which is a separate component (an app bar variant), not part of search itself.</p>
     </header>
 
