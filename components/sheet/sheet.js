@@ -49,6 +49,9 @@ class NMUISheet extends HTMLElement {
   #detent = null;
   #lastFocus = null;
   #prevOverflow = "";
+  #exitTimer = null;
+  #exitOnEnd = null;
+  #detentTimer = null;
 
   get detent() {
     return this.#detent;
@@ -156,6 +159,14 @@ class NMUISheet extends HTMLElement {
   }
 
   show() {
+    // Reopening mid-exit cancels the exit where it stands.
+    if (this.#exitTimer) {
+      this.#clearExitHooks();
+      if (this.#surface) {
+        this.#surface.style.transform = "";
+        this.#surface.style.maxHeight = "";
+      }
+    }
     this.setAttribute("open", "");
   }
 
@@ -169,6 +180,7 @@ class NMUISheet extends HTMLElement {
   }
 
   #opened() {
+    clearTimeout(this.#detentTimer);
     if (!this.hasAttribute("side")) {
       this.#setDetent(this.hasAttribute("modal") ? "half" : "full");
     }
@@ -191,9 +203,18 @@ class NMUISheet extends HTMLElement {
   }
 
   #closed() {
+    this.#clearExitHooks();
     this.#detent = null;
-    this.removeAttribute("detent");
-    if (this.#surface) this.#surface.style.maxHeight = "";
+    // The detent attribute (and its max-height cap) outlives
+    // the exit slide by a beat — clearing it immediately
+    // would let the surface grow back to full height while
+    // it is supposed to be sliding away.
+    clearTimeout(this.#detentTimer);
+    this.#detentTimer = setTimeout(() => this.removeAttribute("detent"), 300);
+    if (this.#surface) {
+      this.#surface.style.maxHeight = "";
+      this.#surface.style.transform = "";
+    }
     if (this.hasAttribute("modal")) {
       document.body.style.overflow = this.#prevOverflow;
       this.#lastFocus?.focus?.();
@@ -244,6 +265,9 @@ class NMUISheet extends HTMLElement {
     let lastH = startH;
     let moved = false;
     this.#handle.setPointerCapture?.(e.pointerId);
+    // Transitions off while dragging: the surface must track
+    // the pointer exactly, not chase it through an easing.
+    this.setAttribute("data-dragging", "");
     const move = (ev) => {
       if (Math.abs(ev.clientY - startY) > 6) moved = true;
       if (!moved) return;
@@ -254,23 +278,60 @@ class NMUISheet extends HTMLElement {
       this.#handle.removeEventListener("pointermove", move);
       this.#handle.removeEventListener("pointerup", up);
       this.#handle.removeEventListener("pointercancel", up);
+      this.removeAttribute("data-dragging");
       // A plain click (no real drag) belongs to the cycle.
       if (!moved) return;
-      surface.style.maxHeight = "";
       // A drag that ends in a click must not also cycle.
       this.#suppressClick = true;
       setTimeout(() => (this.#suppressClick = false), 0);
       if (lastH < window.innerHeight * 0.2) {
-        this.close();
-      } else if (lastH > window.innerHeight * 0.75) {
-        this.#setDetent("full");
+        // Close FROM the dragged position: the inline height
+        // stays put and only the slide-out runs. (Clearing the
+        // height first — the old behavior — snapped the sheet
+        // back to full height before it started closing.)
+        this.#closeFromDrag();
       } else {
-        this.#setDetent("half");
+        // Snap: the height animates from the dragged value to
+        // the detent's cap (max-height is transitioned).
+        surface.style.maxHeight = "";
+        this.#setDetent(lastH > window.innerHeight * 0.75 ? "full" : "half");
       }
     };
     this.#handle.addEventListener("pointermove", move);
     this.#handle.addEventListener("pointerup", up);
     this.#handle.addEventListener("pointercancel", up);
+  }
+
+  // Slide the surface out from wherever the drag left it,
+  // then finalize the close. [open] stays on during the
+  // slide so the attribute observer doesn't clear the
+  // dragged height out from under the animation.
+  #closeFromDrag() {
+    const surface = this.#surface;
+    surface.style.transform = "translate(-50%, 105%)";
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      this.#clearExitHooks();
+      this.close();
+    };
+    this.#exitOnEnd = (e) => {
+      if (e.propertyName === "transform") finish();
+    };
+    surface.addEventListener("transitionend", this.#exitOnEnd);
+    this.#exitTimer = setTimeout(finish, 350);
+  }
+
+  #clearExitHooks() {
+    if (this.#exitTimer) {
+      clearTimeout(this.#exitTimer);
+      this.#exitTimer = null;
+    }
+    if (this.#exitOnEnd && this.#surface) {
+      this.#surface.removeEventListener("transitionend", this.#exitOnEnd);
+      this.#exitOnEnd = null;
+    }
   }
 
   #suppressClick = false;
