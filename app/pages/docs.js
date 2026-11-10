@@ -223,7 +223,7 @@ export function render(mount, nmui) {
           </a>
           <a data-link href="/docs/tabs" class="docs-card">
             <strong>Tabs</strong>
-            <span>Animated indicator</span>
+            <span>Primary + secondary, wired panels</span>
           </a>
           <a data-link href="/docs/text-field" class="docs-card">
             <strong>Text field</strong>
