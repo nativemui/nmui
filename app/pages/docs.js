@@ -63,6 +63,10 @@ export function render(mount, nmui) {
       <section class="docs-section" id="guides">
         <h2>Guides</h2>
         <div class="docs-row">
+          <a data-link href="/docs/getting-started" class="docs-card">
+            <strong>Getting started</strong>
+            <span>Use the library without this site: get the files, import a component, theme it</span>
+          </a>
           <a data-link href="/docs/router" class="docs-card">
             <strong>Router</strong>
             <span>Not M3 — this site's router, plus SPA server fallback for every stack</span>

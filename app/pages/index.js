@@ -14,6 +14,7 @@ export const routes = {
   "/docs/extended-fab": () => import("./docs/extended-fab.js"),
   "/docs/fab-menu": () => import("./docs/fab-menu.js"),
   "/docs/layout": () => import("./docs/layout.js"),
+  "/docs/getting-started": () => import("./docs/getting-started.js"),
   "/docs/app-bar": () => import("./docs/app-bar.js"),
   "/docs/badge": () => import("./docs/badge.js"),
   "/docs/card": () => import("./docs/card.js"),

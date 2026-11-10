@@ -5,7 +5,39 @@
 Material 3 Expressive, in vanilla JS/HTML/CSS. No framework. No build step.
 No dependencies. Spec: https://m3.material.io/
 
-## Run it
+## Use the library
+
+This repo holds two things: **the library** — `components/`, `css/`, and
+`layout/` — and **this documentation site** (`app/`, `app.js`, `index.html`),
+which is built with the library but isn't part of it. To use nmui in your
+own project you only need the library folders:
+
+```sh
+git clone https://github.com/nativemui/nmui.git
+# copy components/ and css/ into your project (layout/ too, for Panes)
+```
+
+Importing a component registers it; that's the whole setup. Then the tag
+just works, in any HTML page:
+
+```html
+<script type="module">
+  import "./components/button/button.js";
+</script>
+
+<nmui-button tonal>Save draft</nmui-button>
+```
+
+Or take everything at once with the barrel: `import "./components/index.js"`.
+Variants are bare attributes (`tonal`, `outlined`, `xxlarge`, `rounded`) —
+never classes or config objects. Components read the standard M3 color
+roles (`--md-sys-color-*`) and ship with baseline fallbacks, so they look
+right with no theme at all; for the full light/dark themes, link
+`css/themes.css` and set `<html theme="dark">`. The docs site has a
+**Getting started** guide (`/docs/getting-started`) with the same walkthrough,
+plus a theming tool that exports theme files.
+
+## Run the docs site
 
 **Docker, live (no rebuilds):**
 
@@ -181,5 +213,11 @@ exported file's header. Color math is hand-rolled — no color library.
 
 ## Versions
 
-Zips are versioned: `nmui.0.1.0.zip`, `nmui.0.2.0.zip`, … (also busts caches).
-Current version is in `nmui.version` at runtime.
+Source of truth is this repo — new builds land as commits on `main`.
+(The project was previously delivered as versioned zips,
+`nmui.0.1.0.zip`, `nmui.0.2.0.zip`, …; the current version is in
+`nmui.version` at runtime.)
+
+## License
+
+MIT — see `LICENSE`.
