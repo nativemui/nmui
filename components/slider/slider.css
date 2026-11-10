@@ -1,82 +1,376 @@
-/* nmui-slider — M3 slider over a native range input.
-   --p (0–100%) is the fill; set from JS on input. */
+/* nmui-slider — M3 Expressive slider over native range
+   input(s). The input overlays the host invisibly and takes
+   the interaction (single) or is driven by the host's
+   pointer routing (range); the component renders the track
+   segments, stops, handles and value indicator and syncs
+   them from the input. Segment geometry travels through
+   --pos / --len custom properties set from JS, so the same
+   values drive horizontal (left/width) and vertical
+   (bottom/height) layouts.
+   Sizes (specs table): track height / handle height /
+   track shape / inset icon —
+   XS 16/44/8/–, S 24/44/8/–, M 40/52/12/24, L 56/68/16/24,
+   XL 96/108/28/32. Handle width 4dp, 2dp pressed. */
 
 nmui-slider {
-  --p: 50%;
-  display: inline-flex;
-  align-items: center;
+  --_th: 16px;
+  --_hh: 44px;
+  --_shape: 8px;
+  --_inner: 2px;
+  --_icon: 0px;
+  --_stop: 2px;
+  position: relative;
+  display: block;
+  height: var(--_hh);
   min-width: 160px;
-  height: 40px;
-  touch-action: none;
 }
+
+nmui-slider[small] {
+  --_th: 24px;
+}
+
+nmui-slider[medium] {
+  --_th: 40px;
+  --_hh: 52px;
+  --_shape: 12px;
+  --_inner: 3px;
+  --_icon: 24px;
+  --_stop: 3px;
+}
+
+nmui-slider[large] {
+  --_th: 56px;
+  --_hh: 68px;
+  --_shape: 16px;
+  --_inner: 4px;
+  --_icon: 24px;
+  --_stop: 4px;
+}
+
+nmui-slider[xlarge] {
+  --_th: 96px;
+  --_hh: 108px;
+  --_shape: 28px;
+  --_inner: 7px;
+  --_icon: 32px;
+  --_stop: 4px;
+}
+
+nmui-slider[vertical] {
+  --_cross: max(48px, var(--_hh));
+  width: var(--_cross);
+  min-width: 0;
+  height: var(--nmui-slider-length, 200px);
+}
+
+nmui-slider > track {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+/* --- track segments ------------------------------------- */
+
+nmui-slider > track > seg {
+  position: absolute;
+  top: 50%;
+  left: var(--pos, 0%);
+  width: var(--len, 0%);
+  height: var(--_th);
+  transform: translateY(-50%);
+  box-sizing: border-box;
+}
+
+nmui-slider > track > seg[data-kind="active"] {
+  background: var(--md-sys-color-primary, #6750a4);
+}
+
+nmui-slider > track > seg[data-kind="inactive"] {
+  background: var(--md-sys-color-secondary-container, #e8def8);
+}
+
+/* Radii are by slot: the outer end takes the track shape,
+   the end facing a handle takes the small inner radius. */
+nmui-slider > track > seg.before {
+  border-radius: var(--_shape) var(--_inner) var(--_inner) var(--_shape);
+}
+
+nmui-slider > track > seg.active {
+  border-radius: var(--_inner);
+}
+
+nmui-slider > track > seg.after {
+  border-radius: var(--_inner) var(--_shape) var(--_shape) var(--_inner);
+}
+
+nmui-slider[vertical] > track > seg {
+  top: auto;
+  left: 50%;
+  bottom: var(--pos, 0%);
+  width: var(--_th);
+  height: var(--len, 0%);
+  transform: translateX(-50%);
+}
+
+nmui-slider[vertical] > track > seg.before {
+  border-radius: var(--_inner) var(--_inner) var(--_shape) var(--_shape);
+}
+
+nmui-slider[vertical] > track > seg.active {
+  border-radius: var(--_inner);
+}
+
+nmui-slider[vertical] > track > seg.after {
+  border-radius: var(--_shape) var(--_shape) var(--_inner) var(--_inner);
+}
+
+/* --- stops ------------------------------------------------ */
+
+nmui-slider > track > stops,
+nmui-slider > track > stops > dot {
+  display: block;
+}
+
+nmui-slider > track > stops > dot,
+nmui-slider > track > endstop {
+  position: absolute;
+  top: 50%;
+  width: var(--_stop);
+  height: var(--_stop);
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+  transform: translate(-50%, -50%);
+  background: var(--md-sys-color-on-secondary-container, #4a4459);
+  pointer-events: none;
+}
+
+nmui-slider > track > stops > dot {
+  left: var(--pos);
+}
+
+nmui-slider > track > stops > dot[on] {
+  background: var(--md-sys-color-on-primary, #ffffff);
+}
+
+nmui-slider > track > endstop {
+  display: block;
+}
+
+nmui-slider > track > endstop.at-end {
+  left: calc(100% - var(--_th) / 2);
+}
+
+nmui-slider > track > endstop.at-start {
+  left: calc(var(--_th) / 2);
+}
+
+nmui-slider[vertical] > track > stops > dot,
+nmui-slider[vertical] > track > endstop {
+  top: auto;
+  left: 50%;
+  transform: translate(-50%, 50%);
+}
+
+nmui-slider[vertical] > track > stops > dot {
+  bottom: var(--pos);
+}
+
+nmui-slider[vertical] > track > endstop.at-end {
+  bottom: calc(100% - var(--_th) / 2);
+}
+
+nmui-slider[vertical] > track > endstop.at-start {
+  bottom: calc(var(--_th) / 2);
+}
+
+/* --- handle ------------------------------------------------ */
+
+nmui-slider > track > handle {
+  position: absolute;
+  top: 50%;
+  left: var(--pos, 0%);
+  width: 4px;
+  height: var(--_hh);
+  transform: translate(-50%, -50%);
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+  background: var(--md-sys-color-primary, #6750a4);
+  pointer-events: none;
+  transition: width 100ms ease;
+}
+
+/* The handle narrows while its input is pressed/dragged. */
+nmui-slider[data-pressing][data-active="start"] > track > handle.start,
+nmui-slider[data-pressing][data-active="end"] > track > handle.end {
+  width: 2px;
+}
+
+/* State-layer halo for the keyboard-focused handle. */
+nmui-slider[data-focus="start"] > track > handle.start,
+nmui-slider[data-focus="end"] > track > handle.end {
+  box-shadow: 0 0 0 10px
+    color-mix(in srgb, var(--md-sys-color-primary, #6750a4) 12%, transparent);
+}
+
+nmui-slider[vertical] > track > handle {
+  top: auto;
+  left: 50%;
+  bottom: var(--pos, 0%);
+  width: var(--_hh);
+  height: 4px;
+  transform: translate(-50%, 50%);
+}
+
+nmui-slider[vertical][data-pressing][data-active="start"] > track > handle.start,
+nmui-slider[vertical][data-pressing][data-active="end"] > track > handle.end {
+  width: var(--_hh);
+  height: 2px;
+}
+
+/* --- value indicator --------------------------------------- */
+
+nmui-slider > track > value {
+  position: absolute;
+  bottom: calc(50% + var(--_th) / 2 + 4px);
+  left: var(--pos, 0%);
+  transform: translateX(-50%);
+  min-width: 48px;
+  height: 44px;
+  padding-inline: 10px;
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+  background: var(--md-sys-color-inverse-surface, #322f35);
+  color: var(--md-sys-color-inverse-on-surface, #f5eff7);
+  font: var(--md-sys-typescale-label-large, 500 14px/20px "Roboto", sans-serif);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 150ms ease;
+  z-index: 2;
+}
+
+nmui-slider[label]:is(:hover, :focus-within, [data-pressing]) > track > value {
+  opacity: 1;
+}
+
+/* Range: one indicator at a time — the handle in play. */
+nmui-slider[label][range] > track > value {
+  opacity: 0;
+}
+
+nmui-slider[label][range][data-near="start"]:is(:hover, [data-pressing]) > track > value.start,
+nmui-slider[label][range][data-near="end"]:is(:hover, [data-pressing]) > track > value.end,
+nmui-slider[label][range][data-focus="start"]:focus-within > track > value.start,
+nmui-slider[label][range][data-focus="end"]:focus-within > track > value.end {
+  opacity: 1;
+}
+
+nmui-slider[vertical] > track > value {
+  bottom: var(--pos, 0%);
+  left: auto;
+  right: calc(50% + var(--_th) / 2 + 8px);
+  transform: translateY(50%);
+}
+
+/* --- inset icon --------------------------------------------- */
+
+nmui-slider > track > icon[inset] {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--_th) / 2);
+  transform: translate(-50%, -50%);
+  font-size: var(--_icon);
+  color: var(--md-sys-color-on-secondary-container, #4a4459);
+  pointer-events: none;
+}
+
+/* On the active track once there's room for it there. */
+nmui-slider[data-icon-on] > track > icon[inset] {
+  color: var(--md-sys-color-on-primary, #ffffff);
+}
+
+/* Inset icons are an M / L / XL configuration. */
+nmui-slider:not([medium]):not([large]):not([xlarge]) > track > icon[inset] {
+  display: none;
+}
+
+nmui-slider[vertical] > track > icon[inset] {
+  top: auto;
+  left: 50%;
+  bottom: calc(var(--_th) / 2);
+  transform: translate(-50%, 50%);
+}
+
+/* --- the native input(s) ------------------------------------- */
 
 nmui-slider > input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: 40px;
+  height: 100%;
   margin: 0;
+  padding: 0;
   background: transparent;
+  opacity: 0;
   cursor: pointer;
 }
 
-nmui-slider > input[type="range"]::-webkit-slider-runnable-track {
-  height: 16px;
-  border-radius: var(--md-sys-shape-corner-full, 999px);
-  background:
-    linear-gradient(to right,
-      var(--md-sys-color-primary, #6750a4) 0 var(--p),
-      var(--md-sys-color-surface-container-highest, #e6e0e9) var(--p) 100%);
+nmui-slider[data-pressing] > input[type="range"] {
+  cursor: grabbing;
 }
 
-nmui-slider > input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 4px;
-  height: 44px;
-  margin-top: -14px;
-  border-radius: 2px;
-  background: var(--md-sys-color-primary, #6750a4);
+/* Range drags are routed by the host (see slider.js). */
+nmui-slider[range] > input[type="range"] {
+  pointer-events: none;
 }
 
-nmui-slider > input[type="range"]::-moz-range-track {
-  height: 16px;
-  border-radius: var(--md-sys-shape-corner-full, 999px);
-  background: var(--md-sys-color-surface-container-highest, #e6e0e9);
-}
-
-nmui-slider > input[type="range"]::-moz-range-progress {
-  height: 16px;
-  border-radius: var(--md-sys-shape-corner-full, 999px);
-  background: var(--md-sys-color-primary, #6750a4);
-}
-
-nmui-slider > input[type="range"]::-moz-range-thumb {
-  width: 4px;
-  height: 44px;
-  border: 0;
-  border-radius: 2px;
-  background: var(--md-sys-color-primary, #6750a4);
-}
-
-/* discrete: tick marks from the step count */
-nmui-slider[discrete] > input[type="range"]::-webkit-slider-runnable-track {
-  background:
-    linear-gradient(to right,
-      var(--md-sys-color-primary, #6750a4) 0 var(--p),
-      transparent var(--p) 100%),
-    repeating-linear-gradient(to right,
-      var(--md-sys-color-primary, #6750a4) 0 2px,
-      transparent 2px calc(100% / var(--ticks, 4))),
-    var(--md-sys-color-surface-container-highest, #e6e0e9);
-}
-
-nmui-slider > input[type="range"]:disabled {
-  cursor: not-allowed;
-  opacity: 0.38;
+/* Vertical: the input is rotated over the host so native
+   dragging maps to the vertical axis in every browser. */
+nmui-slider[vertical] > input[type="range"] {
+  inset: auto;
+  left: 50%;
+  top: 50%;
+  width: var(--nmui-slider-length, 200px);
+  height: var(--_cross);
+  transform: translate(-50%, -50%) rotate(-90deg);
 }
 
 nmui-slider > input[type="range"]:focus-visible {
-  outline: 2px solid var(--md-sys-color-primary, #6750a4);
-  outline-offset: -2px;
-  border-radius: var(--md-sys-shape-corner-full, 999px);
+  outline: none;
+}
+
+/* --- disabled (explicit per-part colors, never opacity
+   on the host) ------------------------------------------- */
+
+nmui-slider[disabled] > track > seg[data-kind="active"] {
+  background: var(--md-sys-color-on-surface, #1d1b20);
+  opacity: 0.38;
+}
+
+nmui-slider[disabled] > track > seg[data-kind="inactive"] {
+  background: var(--md-sys-color-on-surface, #1d1b20);
+  opacity: 0.12;
+}
+
+nmui-slider[disabled] > track > handle {
+  background: var(--md-sys-color-on-surface, #1d1b20);
+  opacity: 0.38;
+  box-shadow: none;
+}
+
+nmui-slider[disabled] > track > stops > dot,
+nmui-slider[disabled] > track > endstop,
+nmui-slider[disabled] > track > icon[inset] {
+  background: var(--md-sys-color-on-surface, #1d1b20);
+  opacity: 0.38;
+}
+
+nmui-slider[disabled] > track > icon[inset] {
+  background: transparent;
+  color: var(--md-sys-color-on-surface, #1d1b20);
+}
+
+nmui-slider[disabled] > input[type="range"] {
+  cursor: not-allowed;
 }

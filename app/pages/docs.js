@@ -211,7 +211,7 @@ export function render(mount, nmui) {
           </a>
           <a data-link href="/docs/slider" class="docs-card">
             <strong>Slider</strong>
-            <span>Continuous and discrete</span>
+            <span>Standard, centered, and range — five sizes</span>
           </a>
           <a data-link href="/docs/snackbar" class="docs-card">
             <strong>Snackbar</strong>
