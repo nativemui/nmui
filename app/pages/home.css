@@ -67,3 +67,19 @@
   padding: 1px 6px;
   border-radius: 4px;
 }
+
+/* Compact windows: shrink the hero to phone scale. */
+@media (max-width: 599px) {
+  .home {
+    padding: 0 16px 64px;
+  }
+
+  .home-mark {
+    width: 64px;
+    margin-top: 24px;
+  }
+
+  .home-hero display {
+    font: var(--md-sys-typescale-display-small, 400 36px/44px system-ui, sans-serif);
+  }
+}

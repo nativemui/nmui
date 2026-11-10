@@ -10,7 +10,7 @@ if (!mount) {
 }
 
 const nmui = {
-  version: "0.39.0",
+  version: "0.40.0",
 
   // Dead-simple theming: the theme is one attribute on <html>, so it
   // cascades into every component through CSS variables. Persisted.
@@ -39,9 +39,32 @@ window.nmui = nmui;
 // The demo app's chrome is our own expanded navigation rail. Pages
 // render into <main>; the rail owns Home / Docs / component links, the
 // collapse toggle, and the theme toggle.
+//
+// Compact windows (<600px) get the M3 phone pattern instead: a top bar
+// (menu, brand, theme) and the rail as a MODAL overlay — a 96dp rail
+// eating a phone's width helps nobody. The mode is chosen before the
+// markup lands so the rail connects already knowing it's modal, and
+// re-applied if the window crosses the breakpoint while open.
+
+const compactQuery = window.matchMedia("(max-width: 599px)");
+let railPref = "expanded";
+try {
+  if (localStorage.getItem("nmui-rail") === "collapsed") railPref = "collapsed";
+} catch (e) { /* private mode */ }
+const bootRailAttrs = compactQuery.matches
+  ? "rail expanded modal"
+  : railPref === "collapsed"
+    ? "rail collapsed"
+    : "rail expanded";
 
 mount.innerHTML = `
-  <nmui-navigation rail expanded id="app-rail">
+  <div class="app-topbar">
+    <nmui-button icon standard id="topbar-menu" aria-label="Open navigation">menu</nmui-button>
+    <img class="rail-brand" src="/assets/mark.svg" alt="">
+    <headline small class="topbar-title brand-word">NATIVE <span>MUI</span></headline>
+    <nmui-button icon standard id="topbar-theme" aria-label="Toggle theme">dark_mode</nmui-button>
+  </div>
+  <nmui-navigation ${bootRailAttrs} id="app-rail">
     <header>
       <div class="rail-brand-row">
         <img class="rail-brand" src="/assets/mark.svg" alt="">
@@ -102,6 +125,8 @@ const main = mount.querySelector("#app-main");
 const rail = mount.querySelector("#app-rail");
 const collapseBtn = rail.querySelector("#rail-collapse");
 const themeBtn = rail.querySelector("#rail-theme");
+const topbarMenuBtn = mount.querySelector("#topbar-menu");
+const topbarThemeBtn = mount.querySelector("#topbar-theme");
 
 function setRailIcon(btn, name) {
   const icon = btn.querySelector("icon");
@@ -132,38 +157,69 @@ function spinRailIcon(btn, name) {
   };
 }
 
-// Restore the rail's shape and the theme icon from the last session.
-try {
-  if (localStorage.getItem("nmui-rail") === "collapsed") {
-    rail.removeAttribute("expanded");
-    rail.setAttribute("collapsed", "");
-    setRailIcon(collapseBtn, "menu");
+function syncThemeIcons() {
+  const name = nmui.themeName === "dark" ? "light_mode" : "dark_mode";
+  setRailIcon(themeBtn, name);
+  setRailIcon(topbarThemeBtn, name);
+}
+
+// Apply the shell mode for the current window size. Compact: the
+// rail is a modal overlay (expanded width, opened from the top
+// bar) and its header button closes it. Wider: the rail docks at
+// the user's saved preference and its header button collapses it.
+function applyShellMode() {
+  if (compactQuery.matches) {
+    rail.setAttribute("modal", "");
+    rail.setAttribute("expanded", "");
+    rail.removeAttribute("collapsed");
+    setRailIcon(collapseBtn, "close");
+    collapseBtn.setAttribute("aria-label", "Close navigation");
+  } else {
+    rail.close();
+    rail.removeAttribute("modal");
+    rail.toggleAttribute("expanded", railPref === "expanded");
+    rail.toggleAttribute("collapsed", railPref !== "expanded");
+    setRailIcon(collapseBtn, railPref === "expanded" ? "menu_open" : "menu");
+    collapseBtn.setAttribute(
+      "aria-label",
+      railPref === "expanded" ? "Collapse rail" : "Expand rail"
+    );
   }
-} catch (e) { /* private mode */ }
-setRailIcon(themeBtn, nmui.themeName === "dark" ? "light_mode" : "dark_mode");
+  syncThemeIcons();
+  // Selection is mode-specific (parents carry the pill only when
+  // collapsed), so re-sync against the current route.
+  syncRail(location.pathname);
+}
+compactQuery.addEventListener("change", applyShellMode);
 
 function setRailExpanded(expanded) {
+  railPref = expanded ? "expanded" : "collapsed";
   rail.toggleAttribute("expanded", expanded);
   rail.toggleAttribute("collapsed", !expanded);
   spinRailIcon(collapseBtn, expanded ? "menu_open" : "menu");
   collapseBtn.setAttribute("aria-label", expanded ? "Collapse rail" : "Expand rail");
   try {
-    localStorage.setItem("nmui-rail", expanded ? "expanded" : "collapsed");
+    localStorage.setItem("nmui-rail", railPref);
   } catch (e) { /* private mode */ }
-  // Selection is mode-specific (parents carry the pill only when
-  // collapsed), so re-sync against the current route.
   syncRail(location.pathname);
 }
 
 collapseBtn.addEventListener("click", () => {
+  if (compactQuery.matches) {
+    rail.close();
+    return;
+  }
   setRailExpanded(!rail.hasAttribute("expanded"));
 });
 
-themeBtn.addEventListener("click", () => {
+function toggleTheme() {
   const next = nmui.themeName === "dark" ? "light" : "dark";
   nmui.theme(next);
-  setRailIcon(themeBtn, next === "dark" ? "light_mode" : "dark_mode");
-});
+  syncThemeIcons();
+}
+themeBtn.addEventListener("click", toggleTheme);
+topbarThemeBtn.addEventListener("click", toggleTheme);
+topbarMenuBtn.addEventListener("click", () => rail.show());
 
 // The rail's [selected] follows the route: exact matches win,
 // otherwise the longest matching prefix. Group parents (a
@@ -245,6 +301,12 @@ function syncRail(path) {
     }
   });
 }
+
+// Boot: the markup already carries the right attributes for the
+// current size; this sets the header icons to match the mode.
+// (Called here, not above: syncRail reads BUTTON_FAMILY, which
+// is only initialized once this section has run.)
+applyShellMode();
 
 // -- tiny router ------------------------------------------------------------
 // history.pushState for in-app links, popstate for back/forward, and the

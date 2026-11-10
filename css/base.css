@@ -84,6 +84,42 @@ app {
   padding-inline: 0;
 }
 
+/* Compact shell: a top bar stands in for the rail (which becomes
+   a modal overlay under 600px — see applyShellMode in app.js).
+   Hidden at every wider size, where the docked rail's own header
+   carries the brand and the tools. */
+.app-topbar {
+  display: none;
+}
+
+@media (max-width: 599px) {
+  app {
+    flex-direction: column;
+  }
+
+  .app-topbar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 0 0 auto;
+    height: 56px;
+    padding-inline: 4px 8px;
+    box-sizing: border-box;
+    background: var(--md-sys-color-surface, #fef7ff);
+    border-bottom: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+  }
+
+  .app-topbar .rail-brand {
+    width: 28px;
+    height: auto;
+    display: block;
+  }
+
+  .app-topbar .topbar-title {
+    margin-inline-end: auto;
+  }
+}
+
 /* Icons — Material Symbols ligatures in an <icon> element. The font is
    loaded by the app (see index.html). Filled is the default;
    <icon outline> flips the FILL axis off. */

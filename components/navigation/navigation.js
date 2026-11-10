@@ -64,6 +64,7 @@ class NMUINavigation extends HTMLElement {
   #inited = false;
   #switchTimer = null;
   #labelTimer = null;
+  #scrim = null;
 
   static observedAttributes = ["expanded", "collapsed"];
 
@@ -189,9 +190,7 @@ class NMUINavigation extends HTMLElement {
 
     // Modal rails live on a scrim, dismissed by it or by Escape.
     if (this.hasAttribute("modal")) {
-      const scrim = document.createElement("scrim");
-      this.after(scrim);
-      scrim.addEventListener("click", () => this.close());
+      this.#ensureScrim();
       if (this.hasAttribute("open")) {
         document.addEventListener("keydown", this.#onKey);
       }
@@ -339,8 +338,20 @@ class NMUINavigation extends HTMLElement {
     if (e.key === "Escape") this.close();
   };
 
+  // The scrim is built lazily: [modal] can be added at runtime
+  // (an app shell switching to a modal rail on a compact window),
+  // not just authored before connect.
+  #ensureScrim() {
+    if (this.#scrim?.isConnected) return;
+    const scrim = document.createElement("scrim");
+    scrim.addEventListener("click", () => this.close());
+    this.after(scrim);
+    this.#scrim = scrim;
+  }
+
   show() {
     if (!this.hasAttribute("modal")) return;
+    this.#ensureScrim();
     this.setAttribute("open", "");
     document.addEventListener("keydown", this.#onKey);
   }

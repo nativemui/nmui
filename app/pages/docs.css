@@ -671,3 +671,32 @@ nmui-dialog.router-dialog > surface {
 .menu-context p {
   margin: 0 0 8px;
 }
+
+/* Compact windows: the desktop type (36px titles, 22px ledes,
+   48px header margins) crowds a phone even with the content at
+   full width. Step the docs type down a rung under 600px. */
+@media (max-width: 599px) {
+  .docs {
+    padding: 0 16px 64px;
+  }
+
+  .docs-header {
+    margin: 24px 0 32px;
+  }
+
+  .docs-header h1 {
+    font: var(--md-sys-typescale-headline-large, 400 32px/40px system-ui, sans-serif);
+  }
+
+  .docs-header p {
+    font: var(--md-sys-typescale-title-medium, 500 16px/24px system-ui, sans-serif);
+  }
+
+  .docs-section {
+    margin-bottom: 48px;
+  }
+
+  .docs-section h2 {
+    font: var(--md-sys-typescale-headline-small, 400 24px/32px system-ui, sans-serif);
+  }
+}
