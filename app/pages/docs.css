@@ -659,3 +659,15 @@ nmui-dialog.router-dialog > surface {
 .docs-demo nmui-list[item][dragging] [data-drag] {
   cursor: grabbing;
 }
+
+/* Menu page: the context-menu playground box. */
+.menu-context {
+  border: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+  border-radius: 12px;
+  padding: 16px;
+  max-width: 560px;
+}
+
+.menu-context p {
+  margin: 0 0 8px;
+}

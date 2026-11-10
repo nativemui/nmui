@@ -62,9 +62,14 @@ function nextTypeahead(labels, buffer, from) {
  * Keyboard inside: arrows move (disabled items included),
  * Home/End jump, letters typeahead, Escape closes the
  * innermost menu, Tab closes and moves on.
+ *
+ * Context menus: a menu with no anchor can be opened at a
+ * pointer position with showAt(x, y) — wire it to a
+ * contextmenu handler and preventDefault the native menu.
  */
 class NMUIMenu extends HTMLElement {
   #ready = false;
+  #point = null; // {x, y} for context menus (showAt), else null
   #wantFocus = null; // "first" | "last" | null, consumed on open
   #typeBuffer = "";
   #typeTimer = 0;
@@ -266,6 +271,7 @@ class NMUIMenu extends HTMLElement {
   }
 
   #closed() {
+    this.#point = null;
     for (const sub of this.#submenus()) {
       if (sub.hasAttribute("open")) sub.close();
     }
@@ -294,7 +300,16 @@ class NMUIMenu extends HTMLElement {
     let left;
     let top;
     let origin = "top left";
-    if (this._parentItem && this._parentMenu) {
+    if (this.#point) {
+      // Context menu: open at the pointer, shifted back inside
+      // the window when it would overflow an edge.
+      const { x, y } = this.#point;
+      left = Math.max(8, Math.min(x, vw - w - 8));
+      top = Math.max(8, Math.min(y, vh - h - 8));
+      origin = `${y + h > vh - 8 ? "bottom" : "top"} ${
+        x + w > vw - 8 ? "right" : "left"
+      }`;
+    } else if (this._parentItem && this._parentMenu) {
       const pr = this._parentMenu.getBoundingClientRect();
       const ir = this._parentItem.getBoundingClientRect();
       const padTop =
@@ -326,9 +341,19 @@ class NMUIMenu extends HTMLElement {
   }
 
   show(focus = "first") {
+    this.#point = null;
     if (this.hasAttribute("open")) return;
     this.#wantFocus = focus;
     this.setAttribute("open", "");
+  }
+
+  // Open at a viewport position (context menus). Re-calling it
+  // while open moves the menu to the new point.
+  showAt(x, y) {
+    this.#point = { x, y };
+    this.#wantFocus = "first";
+    if (this.hasAttribute("open")) this.#place();
+    else this.setAttribute("open", "");
   }
 
   close() {
