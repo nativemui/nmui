@@ -252,7 +252,12 @@ class NMUINavigation extends HTMLElement {
   // reverses from the current height. Reduced-motion (and the
   // collapsed rail, where sections never show) toggles at once.
   #toggleGroup(group, parent) {
-    const opening = !group.hasAttribute("open");
+    // The target state, not the [open] attribute: [open] stays
+    // on for the whole closing slide, so deriving direction
+    // from it would make a mid-slide click "close" again
+    // instead of reversing.
+    const opening = !(group._openTarget ?? group.hasAttribute("open"));
+    group._openTarget = opening;
     parent.setAttribute("aria-expanded", opening ? "true" : "false");
     const reduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
@@ -262,19 +267,23 @@ class NMUINavigation extends HTMLElement {
       !this.hasAttribute("expanded") ||
       typeof group.animate !== "function"
     ) {
+      group._openTarget = undefined;
       group.toggleAttribute("open", opening);
       return;
     }
     // Capture the on-screen height BEFORE cancelling any
-    // in-flight slide, so a mid-slide reversal starts from
-    // where the group actually is. (A closed group measures 0,
-    // a settled open one its natural height.)
+    // in-flight slide, so a reversal starts from where the
+    // group actually is. (A closed group measures 0, a settled
+    // open one its natural height.)
     const from = group.getBoundingClientRect().height;
-    group._anim?.cancel();
-    const finish = (landed) => {
-      group.style.overflow = "";
-      if (!landed) group.removeAttribute("open");
-    };
+    // Invalidate the previous slide's callbacks BEFORE
+    // cancelling it: a cancelled animation's handlers can fire
+    // late, and the old code let a stale finish clear the clip
+    // mid-close — the closing text then painted unclipped over
+    // the items sliding up beneath it.
+    const token = (group._animToken = (group._animToken ?? 0) + 1);
+    if (group._anim?.playState === "running") group._anim.cancel();
+    group._anim = null;
     let to;
     if (opening) {
       group.setAttribute("open", "");
@@ -282,13 +291,25 @@ class NMUINavigation extends HTMLElement {
     } else {
       to = 0;
     }
-    group.style.overflow = "hidden";
-    group._anim = group.animate(
+    group.setAttribute("data-sliding", "");
+    const anim = group.animate(
       [{ height: `${from}px` }, { height: `${to}px` }],
       { duration: 250, easing: "cubic-bezier(0.2, 0, 0, 1)" }
     );
-    group._anim.onfinish = () => finish(opening);
-    group._anim.oncancel = () => finish(opening);
+    group._anim = anim;
+    anim.onfinish = () => {
+      if (group._animToken !== token) return; // superseded
+      group._anim = null;
+      group._openTarget = undefined;
+      group.removeAttribute("data-sliding");
+      if (!opening) group.removeAttribute("open");
+    };
+    anim.oncancel = () => {
+      if (group._animToken !== token) return; // a newer slide owns it
+      group._anim = null;
+      group._openTarget = undefined;
+      group.removeAttribute("data-sliding");
+    };
   }
 
   #select(dest) {

@@ -254,6 +254,14 @@ nmui-navigation[rail][expanded] > destinations section[open] {
   gap: 6px;
 }
 
+/* While a group is sliding (height animating in the component),
+   its content is clipped to the box — without this, the rows
+   paint past the shrinking bottom edge and overlap the
+   destinations moving up underneath. */
+nmui-navigation[rail][expanded] > destinations section[data-sliding] {
+  overflow: hidden;
+}
+
 nmui-navigation[rail][expanded] > destinations section[title]::before {
   content: attr(title);
   font: var(--md-sys-typescale-title-small, 500 14px/20px system-ui, sans-serif);
