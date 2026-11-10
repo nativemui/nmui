@@ -1,74 +1,177 @@
-/* nmui-search — M3 search bar over a native input. */
+/* nmui-search — M3 search (bar + view), contained style.
+ *
+ * Spec values (m3.material.io/components/search/specs):
+ *   bar 56dp tall, full corners, surface-container-high,
+ *   elevation level 1 (level 2 for the open docked view);
+ *   bar width 360–720dp (a layout range — the host caps at
+ *   720 and the page supplies the rest); avatar 30dp.
+ *   Docked container: min height 240dp (bar + view), view
+ *   capped at 2/3 of the screen height. Full-screen
+ *   container: surface-container-low, full bleed.
+ * Text: input on-surface, hint on-surface-variant, icons
+ * on-surface-variant. */
 
 nmui-search {
-  display: inline-flex;
+  display: block;
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  box-sizing: border-box;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+  transition:
+    background-color var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1)),
+    border-radius var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1));
+}
+
+nmui-search > bar {
+  display: flex;
   align-items: center;
   gap: 4px;
-  min-width: 240px;
   height: 56px;
-  padding: 0 8px 0 4px;
+  padding-inline: 4px;
   box-sizing: border-box;
   border-radius: var(--md-sys-shape-corner-full, 999px);
   background-color: var(--md-sys-color-surface-container-high, #ece6f0);
-  color: var(--md-sys-color-on-surface, #1c1b1f);
+  box-shadow: var(--md-sys-elevation-level1, 0 1px 2px rgb(0 0 0 / 0.3));
+  transition: background-color var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1));
 }
 
-nmui-search > icon[lead] {
+nmui-search > bar:hover {
+  background-color: color-mix(in srgb,
+    var(--md-sys-color-on-surface, #1c1b1f) 8%,
+    var(--md-sys-color-surface-container-high, #ece6f0));
+}
+
+/* Leading: a 48dp slot centering a 24dp icon (or the authored
+   leading control). */
+nmui-search > bar > leading {
   display: inline-flex;
-  padding: 8px;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex: none;
   color: var(--md-sys-color-on-surface-variant, #49454f);
-  line-height: 0;
 }
 
-nmui-search > icon[lead] svg {
-  width: 24px;
-  height: 24px;
+nmui-search > bar > leading > icon {
+  font-size: 24px;
 }
 
-nmui-search > input {
+nmui-search > bar > leading[hidden] {
+  display: none;
+}
+
+nmui-search > bar > input {
   flex: 1;
   min-width: 0;
   border: 0;
   outline: 0;
   background: transparent;
-  font: inherit;
-  font-size: 16px;
-  color: inherit;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  font-size: var(--md-sys-typescale-body-large-size, 16px);
+  line-height: var(--md-sys-typescale-body-large-line-height, 24px);
 }
 
-nmui-search > input::placeholder {
+nmui-search > bar > input::placeholder {
   color: var(--md-sys-color-on-surface-variant, #49454f);
 }
 
-nmui-search > input::-webkit-search-cancel-button {
+nmui-search > bar > input::-webkit-search-cancel-button {
   display: none;
 }
 
-nmui-search > button[clear] {
+/* The component's own bar buttons (clear, back): 40dp circles
+   with the variant state layer on hover. */
+nmui-search > bar > button[clear],
+nmui-search > bar > button[back] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
   border: 0;
+  padding: 0;
+  border-radius: var(--md-sys-shape-corner-full, 999px);
   background: transparent;
   color: var(--md-sys-color-on-surface-variant, #49454f);
-  border-radius: var(--md-sys-shape-corner-full, 999px);
-  padding: 8px;
   cursor: pointer;
-  line-height: 0;
-  display: inline-flex;
+  -webkit-tap-highlight-color: transparent;
 }
 
-nmui-search > button[clear]:hover {
+nmui-search > bar > button[clear]:hover,
+nmui-search > bar > button[back]:hover {
   background-color: color-mix(in srgb,
     var(--md-sys-color-on-surface-variant, #49454f) 8%, transparent);
 }
 
-nmui-search > button[clear] svg {
-  width: 20px;
-  height: 20px;
+nmui-search > bar > button[clear] > icon,
+nmui-search > bar > button[back] > icon {
+  font-size: 24px;
 }
 
-nmui-search > button[clear][hidden] {
+nmui-search > bar > button[clear][hidden],
+nmui-search > bar > button[back][hidden] {
   display: none;
 }
 
-nmui-search:focus-within {
-  box-shadow: var(--md-sys-elevation-level1, 0 1px 2px rgb(0 0 0 / 0.3));
+/* Trailing avatar: 30dp circle (spec). */
+nmui-search > bar > img[avatar] {
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+  object-fit: cover;
+  margin-inline-end: 6px;
+}
+
+/* ---- the view ------------------------------------------------ */
+
+nmui-search > view {
+  display: none;
+}
+
+nmui-search[open] {
+  background-color: var(--md-sys-color-surface-container-high, #ece6f0);
+  border-radius: var(--md-sys-shape-corner-extra-large, 28px);
+  box-shadow: var(--md-sys-elevation-level2, 0 1px 2px rgb(0 0 0 / 0.3), 0 2px 6px 2px rgb(0 0 0 / 0.15));
+  min-height: 240px;
+}
+
+nmui-search[open] > bar {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+nmui-search[open] > bar:hover {
+  background-color: transparent;
+}
+
+nmui-search[open] > view {
+  display: block;
+  padding: 4px 8px 12px;
+  max-height: calc(66vh - 56px);
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+/* ---- full-screen layout -------------------------------------- */
+
+nmui-search[fullscreen][open] {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  max-width: none;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--md-sys-color-surface-container-low, #f7f2fa);
+  border-radius: 0;
+}
+
+nmui-search[fullscreen][open] > view {
+  flex: 1;
+  max-height: none;
 }
