@@ -39,10 +39,10 @@ export function render(mount, nmui) {
 
       <section class="docs-section">
         <h2>Where NMUI wins</h2>
-        <p><strong>Actual components.</strong> Tailwind gives you classes; you build every dialog, menu, and nav rail yourself — behavior included. NMUI ships the components.</p>
-        <p><strong>M3 built in.</strong> Tailwind has no opinion about Material. Getting to M3 means designing every component's states, motion, and elevation yourself.</p>
-        <p><strong>No build step.</strong> Tailwind's build scans your markup to generate CSS. NMUI is an import statement.</p>
-        <p><strong>Behavior, not just looks.</strong> Ripples, focus, keyboard, selection, dialogs — NMUI components do things, not just look like things.</p>
+        <p><strong>Total control, answered.</strong> NMUI keeps the control where it matters — themes are CSS variables, components take attributes — without making you build every component from utilities first.</p>
+        <p><strong>Fast once fluent, answered.</strong> Fluent in Tailwind means fluent in a class vocabulary. Fluent in NMUI means fluent in HTML — which you already are.</p>
+        <p><strong>No JS opinions, answered.</strong> NMUI has no JS opinions either — it has no JS framework at all. The components are custom elements; the rest of your JavaScript is yours.</p>
+        <p><strong>Behavior, not just looks.</strong> Ripples, focus, keyboard, selection, dialogs — NMUI components do things, not just look like things. Tailwind gives you the classes; you still build all of that yourself.</p>
       </section>
 
       <section class="docs-section">

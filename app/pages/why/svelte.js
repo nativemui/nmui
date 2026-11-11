@@ -40,9 +40,10 @@ export function render(mount, nmui) {
 
       <section class="docs-section">
         <h2>Where NMUI wins</h2>
-        <p><strong>No compiler at all.</strong> Svelte still needs a build step — a compiler, a config, a dev server. NMUI is an import statement.</p>
-        <p><strong>M3 built in.</strong> Svelte gives you the framework; a Material component library is still something you add on top.</p>
-        <p><strong>No framework concepts.</strong> No stores, no runes, no Svelte-specific API to keep up with. The platform is the API.</p>
+        <p><strong>Tiny runtime, answered.</strong> NMUI's runtime is zero — not tiny, zero. There is nothing to compile away, because there is nothing to compile.</p>
+        <p><strong>Less boilerplate, answered.</strong> NMUI has less still: an element and its attributes. No component script block, no reactive declarations, no framework syntax of any kind.</p>
+        <p><strong>Fast, answered.</strong> Compiled output is fast; no output is faster. No hydration, no runtime diffing — the browser renders the markup directly.</p>
+        <p><strong>SvelteKit, answered.</strong> Routing, SSR, and adapters are a framework around the compiler. NMUI's answer is <a data-link href="/docs/router">the Router guide</a>: a tiny router and static hosting.</p>
       </section>
 
       <section class="docs-section">

@@ -40,10 +40,10 @@ export function render(mount, nmui) {
 
       <section class="docs-section">
         <h2>Where NMUI wins</h2>
-        <p><strong>No build step.</strong> Single-file components need a compiler. NMUI is an import statement.</p>
-        <p><strong>No runtime.</strong> Vue ships to every visitor. NMUI ships nothing.</p>
-        <p><strong>M3 built in.</strong> With Vue you add a component library for Material — another dependency, another API. NMUI is the component library.</p>
-        <p><strong>Nothing to learn on top.</strong> Vue's reactivity model is pleasant, but it is still a model. NMUI has no model — it is the platform, with attributes.</p>
+        <p><strong>Approachable, answered.</strong> NMUI is more approachable still: there is nothing to learn beyond the platform. No reactivity model, no single-file-component syntax, no framework concepts at all.</p>
+        <p><strong>Flexible, answered.</strong> NMUI flexes the same way — import one component or the whole set — except the floor is lower: a single HTML file with an import, no CDN-versus-build decision to make.</p>
+        <p><strong>The ecosystem, answered.</strong> Most of it fills gaps the platform has since closed — routing, state, and theming are guides on this site, not packages to install. What's left is your app, in plain JavaScript.</p>
+        <p><strong>Nuxt, answered.</strong> Nuxt solves server rendering — a problem most pages don't have. Static hosting, the router, and the page you're on: that's the stack.</p>
       </section>
 
       <section class="docs-section">

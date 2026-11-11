@@ -10,7 +10,7 @@ if (!mount) {
 }
 
 const nmui = {
-  version: "0.43.26",
+  version: "0.43.27",
 
   // Dead-simple theming: the theme is one attribute on <html>, so it
   // cascades into every component through CSS variables. Persisted.

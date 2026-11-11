@@ -39,9 +39,9 @@ export function render(mount, nmui) {
 
       <section class="docs-section">
         <h2>Where NMUI wins</h2>
-        <p><strong>M3 Expressive.</strong> Bootstrap has its own look, and it is not Material. If the design should be Material 3, Bootstrap is the wrong shape.</p>
-        <p><strong>Components as elements.</strong> Bootstrap is classes plus data attributes; NMUI is custom elements with bare attributes — <code>&lt;nmui-button tonal&gt;</code> instead of a class list.</p>
-        <p><strong>Modern.</strong> No jQuery-era patterns, no global CSS that fights your own. Theming is CSS variables, not a Sass build.</p>
+        <p><strong>Familiar, answered.</strong> Bootstrap is familiar because everyone has used it. NMUI is familiar because everyone has used HTML — the elements are the API.</p>
+        <p><strong>Zero build, answered.</strong> Same story here: an import and you are going. The no-build story is the whole point of NMUI — Bootstrap agrees with the premise, NMUI just carries it further, into Material 3.</p>
+        <p><strong>Battle-tested, answered.</strong> Bootstrap earned its testing over a decade; NMUI is newer, and that's honest. What it has instead is a smaller surface to get wrong — the browser does the work, so there is less library to break.</p>
       </section>
 
       <section class="docs-section">

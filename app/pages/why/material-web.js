@@ -39,10 +39,9 @@ export function render(mount, nmui) {
 
       <section class="docs-section">
         <h2>Where NMUI wins</h2>
-        <p><strong>No Lit runtime.</strong> Material Web ships Lit to every visitor. NMUI ships nothing — the browser is the runtime.</p>
-        <p><strong>No build step, typically.</strong> Material Web is normally bundled; NMUI is an import statement.</p>
-        <p><strong>One element per family.</strong> Material Web has a wider element surface with more props to learn; NMUI keeps one polymorphic element per family with bare attributes.</p>
-        <p><strong>Everything in one library.</strong> Components, typescale, motion, and theming are one coherent set — not a component package plus a separate token story.</p>
+        <p><strong>Official, answered.</strong> Official is a strong argument, and NMUI doesn't claim to be Google. What it claims is the same public spec, zero dependencies, and a smaller surface. The spec belongs to everyone; anyone can build to it.</p>
+        <p><strong>Web components, answered.</strong> NMUI is web components too — real custom elements, framework-agnostic. The difference is what ships with them: Lit, or nothing.</p>
+        <p><strong>Fidelity, answered.</strong> Fidelity to the spec is the whole project here as well — the tokens, the motion, the elevation are the spec's own values. The difference is NMUI doesn't need a runtime to render them.</p>
       </section>
 
       <section class="docs-section">

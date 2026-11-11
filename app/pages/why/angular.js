@@ -39,10 +39,9 @@ export function render(mount, nmui) {
 
       <section class="docs-section">
         <h2>Where NMUI wins</h2>
-        <p><strong>No build step.</strong> Angular is a toolchain — CLI, compiler, config. NMUI is an import statement.</p>
-        <p><strong>No TypeScript requirement.</strong> You can write TypeScript with NMUI if you want it, but nothing in the library demands it.</p>
-        <p><strong>No framework to learn.</strong> Angular is a large body of knowledge — modules, decorators, RxJS, change detection. NMUI is the platform with attributes.</p>
-        <p><strong>M3 built in.</strong> Angular Material is a separate library with its own API; NMUI is the component library.</p>
+        <p><strong>Everything included, answered.</strong> Everything included is everything to learn, configure, and keep updated. NMUI includes the components, the type, the motion, and the theme — and the router, state, and theming tool live as guides, not as a platform you must adopt whole.</p>
+        <p><strong>Enterprise scale, answered.</strong> The scale story is real for huge teams — but the scale comes with a cost every engineer pays daily: the toolchain, the concepts, the build. Most of that weight isn't the app, it's the platform.</p>
+        <p><strong>TypeScript, answered.</strong> You can write TypeScript with NMUI if you want it. The difference is nothing in the library demands it — types are your choice, not the framework's admission price.</p>
       </section>
 
       <section class="docs-section">

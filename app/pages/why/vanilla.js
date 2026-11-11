@@ -39,9 +39,9 @@ export function render(mount, nmui) {
 
       <section class="docs-section">
         <h2>Where NMUI wins</h2>
-        <p><strong>You don't write 30+ components yourself.</strong> Dialogs, menus, date pickers, and nav rails are weeks of work with accessibility done right — and every one of them needs hover, focus, pressed, disabled, and error states.</p>
-        <p><strong>M3 already applied.</strong> The spec, the tokens, the motion, the elevation — done, consistent, and tested against real browsers.</p>
-        <p><strong>Consistent.</strong> One library, one set of patterns, instead of thirty one-off implementations that drift apart over a year.</p>
+        <p><strong>Total control, answered.</strong> NMUI keeps the control: themes are variables, components take attributes, and every component is plain HTML, CSS, and JS you can read. What you give up is writing the same dialog for the fifth time.</p>
+        <p><strong>Zero dependencies, answered.</strong> Same premise — zero is the shared starting point. NMUI is what you get when you spend that zero-dependency budget once, on a library, instead of once per component.</p>
+        <p><strong>No abstraction, answered.</strong> NMUI's abstraction is one element per component — the thinnest layer that still saves you the work. The browser still does the rendering; the library just stops you rewriting it. Dialogs, menus, date pickers, and nav rails are weeks of work with accessibility done right — and every one of them needs hover, focus, pressed, disabled, and error states.</p>
       </section>
 
       <section class="docs-section">

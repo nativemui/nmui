@@ -40,10 +40,10 @@ export function render(mount, nmui) {
 
       <section class="docs-section">
         <h2>Where NMUI wins</h2>
-        <p><strong>No build step.</strong> JSX needs a compiler and a bundler. NMUI is an import statement.</p>
-        <p><strong>No runtime.</strong> React and ReactDOM ship to every visitor on every page load. NMUI ships nothing — the browser is the runtime.</p>
-        <p><strong>M3 built in.</strong> With React you add MUI or another kit — another dependency with its own API to learn, on top of React's.</p>
-        <p><strong>Smaller surface.</strong> One element per component family, settings as attributes. There is no framework API to memorize on top of the platform.</p>
+        <p><strong>The ecosystem, answered.</strong> Most of that ecosystem exists to fill gaps the platform has since closed. Routing, state, theming — <a data-link href="/docs/router">the Router guide</a>, <a data-link href="/docs/state">the State guide</a>, and the Theming tool cover each in a page, no install. What's left is your app, and your app is plain JavaScript.</p>
+        <p><strong>Hiring, answered.</strong> The hiring pool for NMUI is every web developer alive. It is HTML, CSS, and JavaScript — no framework to already know, no six-month ramp to hire for.</p>
+        <p><strong>Server rendering, answered.</strong> Most pages don't need it. Static hosting, the router, and the page you're reading — that's the stack. Next.js is a good answer to a problem most pages don't have.</p>
+        <p><strong>Scale patterns, answered.</strong> Those patterns exist to manage complexity React creates — build config, state libraries, version churn across fifty engineers. Remove the framework and most of the complexity goes with it.</p>
       </section>
 
       <section class="docs-section">
