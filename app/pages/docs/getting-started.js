@@ -60,7 +60,7 @@ export function render(mount, nmui) {
 
       <section class="docs-section">
         <h2>Browser support</h2>
-        <p>Chrome/Edge 93+ and Firefox 147+. nmui imports each component's CSS as a native CSS module (<code>with { type: "css" }</code>), which Safari doesn't support — Safari is intentionally left behind. Everything else is standard web platform: custom elements, constructable stylesheets, <code>color-mix</code>.</p>
+        <p>Chrome/Edge 93+ and Firefox 147+. nmui imports each component's CSS as a native CSS module (<code>with { type: "css" }</code>), which Safari doesn't support (<a href="https://bugs.webkit.org/show_bug.cgi?id=227967">WebKit bug 227967</a>) — Safari is intentionally left behind. Everything else is standard web platform: custom elements, constructable stylesheets, <code>color-mix</code>.</p>
       </section>
     </main>
 

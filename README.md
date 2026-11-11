@@ -207,8 +207,8 @@ exported file's header. Color math is hand-rolled — no color library.
 ## Notes
 
 - CSS module scripts (`with { type: "css" }`) need Chrome/Edge 93+ or
-  Firefox 147+. Safari doesn't support them — Safari is left behind, per
-  project policy.
+  Firefox 147+. Safari doesn't support them ([WebKit bug 227967](https://bugs.webkit.org/show_bug.cgi?id=227967))
+  — Safari is left behind, per project policy.
 - Components use `var(--md-sys-*, <m3 baseline>)` fallbacks, so a single
   component works standalone with zero theme setup.
 
