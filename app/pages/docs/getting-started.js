@@ -50,6 +50,7 @@ export function render(mount, nmui) {
         <p>Components read the standard M3 color roles (<code>--md-sys-color-*</code>), so they pick up any theme that defines them — and they ship with baseline fallbacks, so they look right with no theme at all. For the full light/dark themes, include the theme CSS and flip one attribute:</p>
         <pre class="docs-code">&lt;link rel="stylesheet" href="./css/themes.css"&gt;
 &lt;html theme="dark"&gt;   &lt;!-- or "light" --&gt;</pre>
+        <p>This site's theme toggle cycles light, dark, and system — system follows your OS and updates live when it changes. The library itself only reads the <code>theme</code> attribute; the preference is this site's own code.</p>
         <p>Writing your own theme is one CSS file of color roles — the <a data-link href="/docs/theming">theming tool</a> edits them against a live preview and exports exactly that file.</p>
       </section>
 

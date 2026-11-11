@@ -45,6 +45,7 @@ export function render(mount, nmui) {
         <div class="docs-row">
           <nmui-button tonal id="theme-light">Light</nmui-button>
           <nmui-button tonal id="theme-dark">Dark</nmui-button>
+          <nmui-button tonal id="theme-system">System</nmui-button>
         </div>
         <p>Adding a theme is a CSS block. No JS theming layer exists:</p>
         <pre><code>:root[theme="midnight"] {
@@ -286,6 +287,11 @@ export { NMUIButton };</code></pre>
   </div>`;
 
   const on = (id, fn) => mount.querySelector(id)?.addEventListener("click", fn);
-  on("#theme-light", () => nmui.theme("light"));
-  on("#theme-dark", () => nmui.theme("dark"));
+  const setTheme = (name) => () => {
+    nmui.theme(name);
+    nmui.syncThemeIcons?.();
+  };
+  on("#theme-light", setTheme("light"));
+  on("#theme-dark", setTheme("dark"));
+  on("#theme-system", setTheme("system"));
 }

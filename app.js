@@ -9,22 +9,50 @@ if (!mount) {
   throw new Error("nmui: no <App> mount tag found.");
 }
 
+// The OS color-scheme query: "system" theme resolves through this,
+// and follows it live when it changes.
+const systemQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
 const nmui = {
-  version: "0.43.27",
+  version: "0.43.28",
 
   // Dead-simple theming: the theme is one attribute on <html>, so it
-  // cascades into every component through CSS variables. Persisted.
+  // cascades into every component through CSS variables. The attribute
+  // always holds the resolved theme ("light" / "dark"); the preference
+  // is "light", "dark", or "system" (follow the OS, live), persisted.
   theme(name) {
-    document.documentElement.setAttribute("theme", name);
+    const pref = ["light", "dark", "system"].includes(name) ? name : "system";
+    const resolved =
+      pref === "system"
+        ? systemQuery.matches
+          ? "dark"
+          : "light"
+        : pref;
+    document.documentElement.setAttribute("theme", resolved);
     try {
-      localStorage.setItem("nmui-theme", name);
+      localStorage.setItem("nmui-theme", pref);
     } catch (e) {
       /* private mode — theme still applies for the session */
     }
-    return name;
+    return pref;
   },
   get themeName() {
+    let pref = "system";
+    try {
+      pref = localStorage.getItem("nmui-theme") || "system";
+    } catch (e) {
+      /* private mode */
+    }
+    return ["light", "dark", "system"].includes(pref) ? pref : "system";
+  },
+  get themeResolved() {
     return document.documentElement.getAttribute("theme") || "light";
+  },
+  // Light -> dark -> system -> light. The shell toggles and the home
+  // page button all cycle through this one method.
+  cycleTheme() {
+    const order = ["light", "dark", "system"];
+    return this.theme(order[(order.indexOf(this.themeName) + 1) % order.length]);
   },
 
   // Client-side navigation. Updates the URL, the page, and the title.
@@ -192,11 +220,31 @@ function spinRailIcon(btn, name) {
   };
 }
 
+// The toggle icons show the CURRENT mode (with three states there is
+// no single "other" mode to point at): sun for light, moon for dark,
+// auto-brightness for system.
+const THEME_ICONS = { light: "light_mode", dark: "dark_mode", system: "brightness_auto" };
+
 function syncThemeIcons() {
-  const name = nmui.themeName === "dark" ? "light_mode" : "dark_mode";
-  setRailIcon(themeBtn, name);
-  setRailIcon(topbarThemeBtn, name);
+  const pref = nmui.themeName;
+  setRailIcon(themeBtn, THEME_ICONS[pref]);
+  setRailIcon(topbarThemeBtn, THEME_ICONS[pref]);
+  const label = `Toggle theme (currently ${pref})`;
+  themeBtn.setAttribute("aria-label", label);
+  topbarThemeBtn.setAttribute("aria-label", label);
 }
+// Pages cycle the theme too (home page button, docs hub); let them keep
+// the shell icons in sync after they do.
+nmui.syncThemeIcons = syncThemeIcons;
+
+// In system mode, follow the OS live: an OS change re-resolves the
+// theme without a reload. Light/dark preferences ignore the OS.
+systemQuery.addEventListener("change", () => {
+  if (nmui.themeName === "system") {
+    nmui.theme("system");
+    syncThemeIcons();
+  }
+});
 
 // Apply the shell mode for the current window size. Compact: the
 // rail is a modal overlay (expanded width, opened from the top
@@ -248,8 +296,7 @@ collapseBtn.addEventListener("click", () => {
 });
 
 function toggleTheme() {
-  const next = nmui.themeName === "dark" ? "light" : "dark";
-  nmui.theme(next);
+  nmui.cycleTheme();
   syncThemeIcons();
 }
 themeBtn.addEventListener("click", toggleTheme);

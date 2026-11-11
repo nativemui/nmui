@@ -38,7 +38,27 @@
 }
 
 .home-hero > nmui-button {
-  margin: 0 12px 64px 0;
+  margin: 0 12px 24px 0;
+}
+
+/* Status badges under the hero buttons: CI, license, stars, zero deps. */
+.home-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 8px 0 64px;
+}
+
+.home-badges a {
+  display: block;
+  line-height: 0;
+}
+
+.home-badges img {
+  display: block;
+  height: 20px;
+  width: auto;
 }
 
 .home-points {
@@ -53,10 +73,60 @@
 }
 
 .home-points p,
+.home-showcase p,
+.home-get p,
+.home-why p,
+.home-footer p,
 .home code {
   font: var(--md-sys-typescale-body-medium, 400 14px/20px system-ui, sans-serif);
   color: var(--md-sys-color-on-surface-variant, #49454f);
   margin: 0;
+}
+
+/* Later sections: showcase, install, why, footer. */
+.home-showcase,
+.home-get,
+.home-why {
+  margin-top: 64px;
+}
+
+.home-showcase headline,
+.home-get headline,
+.home-why headline {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.home-showcase-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 24px 0;
+}
+
+.home-code {
+  display: block;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  background: var(--md-sys-color-surface-container, #f3edf7);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  padding: 16px;
+  border-radius: 12px;
+  overflow-x: auto;
+  margin: 16px 0;
+  white-space: pre;
+}
+
+.home-footer {
+  margin-top: 64px;
+  padding-top: 24px;
+  border-top: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+}
+
+.home-footer p + p {
+  margin-top: 8px;
 }
 
 .home code {
