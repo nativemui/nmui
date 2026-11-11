@@ -229,6 +229,10 @@ export function render(mount, nmui) {
             <strong>Text field</strong>
             <span>Filled + outlined, floating label, counter</span>
           </a>
+          <a data-link href="/docs/toolbar" class="docs-card">
+            <strong>Toolbars</strong>
+            <span>Docked + floating, standard + vibrant</span>
+          </a>
           <a data-link href="/docs/time-picker" class="docs-card">
             <strong>Time picker</strong>
             <span>Styled native time input</span>

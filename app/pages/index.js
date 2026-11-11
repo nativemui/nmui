@@ -42,6 +42,7 @@ export const routes = {
   "/docs/switch": () => import("./docs/switch.js"),
   "/docs/tabs": () => import("./docs/tabs.js"),
   "/docs/text-field": () => import("./docs/text-field.js"),
+  "/docs/toolbar": () => import("./docs/toolbar.js"),
   "/docs/time-picker": () => import("./docs/time-picker.js"),
   "/docs/tooltip": () => import("./docs/tooltip.js"),
 };

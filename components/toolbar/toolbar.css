@@ -1,0 +1,92 @@
+/* nmui-toolbar — M3 Expressive toolbar.
+   All toolbars are 64dp tall with a minimum 16dp of outside
+   padding. Docked (default): full width, square corners, no
+   shadow, surface-container, items centered with the 32dp
+   default between them. Floating: a content-sized pill —
+   corner-full, surface-container, elevation level 2 — with
+   8dp padding and gaps; [vertical] stacks it into a 64dp
+   column. Vibrant (either variant): primary-container, with
+   the specs' contained-button remapping scoped inside. */
+
+nmui-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  width: 100%;
+  height: 64px;
+  box-sizing: border-box;
+  padding-inline: 16px;
+  background-color: var(--md-sys-color-surface-container, #ece7f0);
+  color: var(--md-sys-color-on-surface, #1d1b20);
+}
+
+nmui-toolbar[start] {
+  justify-content: flex-start;
+}
+
+nmui-toolbar[end] {
+  justify-content: flex-end;
+}
+
+nmui-toolbar[spread] {
+  justify-content: space-between;
+}
+
+/* Compact windows: a default docked toolbar spreads its
+   items evenly (guidelines, adaptive design). */
+@media (max-width: 599px) {
+  nmui-toolbar:not([floating]):not([start]):not([end]):not([spread]) {
+    justify-content: space-between;
+  }
+}
+
+/* --- floating -------------------------------------------------- */
+
+nmui-toolbar[floating] {
+  display: inline-flex;
+  width: auto;
+  max-width: 100%;
+  gap: 8px;
+  padding: 8px;
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+  box-shadow: var(--md-sys-elevation-level2,
+    0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 6px 2px rgba(0, 0, 0, 0.15));
+}
+
+nmui-toolbar[floating][vertical] {
+  flex-direction: column;
+  width: 64px;
+  height: auto;
+  max-height: 100%;
+  justify-content: flex-start;
+}
+
+/* Collapsed into the overflow menu (JS-managed). */
+nmui-toolbar > [data-overflowed] {
+  display: none !important;
+}
+
+/* --- vibrant ----------------------------------------------------- */
+
+nmui-toolbar[vibrant] {
+  background-color: var(--md-sys-color-primary-container, #eaddff);
+  color: var(--md-sys-color-on-primary-container, #21005d);
+}
+
+/* Specs' vibrant mapping for the buttons inside: plain
+   buttons and standard icon buttons take on-primary-
+   container (their color comes from the primary token, so
+   the token is remapped on those elements only — filled
+   buttons keep primary, per the same table). */
+nmui-toolbar[vibrant] nmui-button[text],
+nmui-toolbar[vibrant] nmui-button[icon]:not([filled]):not([tonal]):not([outlined]) {
+  --md-sys-color-primary: var(--md-sys-color-on-primary-container, #21005d);
+}
+
+/* Tonal toggle buttons ride on surface-container in the
+   vibrant scheme instead of secondary-container. */
+nmui-toolbar[vibrant] nmui-button[tonal] {
+  --md-sys-color-secondary-container: var(--md-sys-color-surface-container, #ece7f0);
+  --md-sys-color-on-secondary-container: var(--md-sys-color-on-surface, #1d1b20);
+}

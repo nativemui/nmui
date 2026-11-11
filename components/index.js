@@ -25,5 +25,6 @@ export { NMUISnackbar } from "./snackbar/snackbar.js";
 export { NMUISwitch } from "./switch/switch.js";
 export { NMUITabs } from "./tabs/tabs.js";
 export { NMUITextField } from "./text-field/text-field.js";
+export { NMUIToolbar } from "./toolbar/toolbar.js";
 export { NMUITimePicker } from "./time-picker/time-picker.js";
 export { NMUITooltip } from "./tooltip/tooltip.js";
