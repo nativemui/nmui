@@ -2,6 +2,8 @@
 // loads on demand — code splitting with no build step.
 export const routes = {
   "/": () => import("./home.js"),
+  "/about": () => import("./about.js"),
+  "/why-nmui": () => import("./why-nmui.js"),
   "/docs": () => import("./docs.js"),
   "/docs/button": () => import("./docs/button.js"),
   "/docs/toggle-button": () => import("./docs/toggle-button.js"),

@@ -327,6 +327,42 @@
   }
 }
 
+/* Comparison table (Why NMUI page) — same treatment as the
+   events table, first column emphasized, scrolls sideways on
+   narrow screens instead of crushing. */
+.docs-table-wrap {
+  overflow-x: auto;
+  margin-bottom: 16px;
+}
+
+.docs-compare {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0;
+  font: var(--md-sys-typescale-body-medium, 400 14px/20px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+.docs-compare th,
+.docs-compare td {
+  border: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+  padding: 8px 12px;
+  text-align: start;
+  vertical-align: top;
+}
+
+.docs-compare th {
+  font: var(--md-sys-typescale-label-large, 500 14px/20px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  background: var(--md-sys-color-surface-container-low, #f7f2fa);
+}
+
+.docs-compare td:first-child {
+  font: var(--md-sys-typescale-label-large, 500 14px/20px system-ui, sans-serif);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  white-space: nowrap;
+}
+
 /* Router config cards (app/pages/docs/router.js) — one small
    rectangular card per stack, all at one level: brand logo on a
    white chip (so black and light logos read in both themes) over
