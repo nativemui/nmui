@@ -10,7 +10,7 @@ if (!mount) {
 }
 
 const nmui = {
-  version: "0.43.14",
+  version: "0.43.15",
 
   // Dead-simple theming: the theme is one attribute on <html>, so it
   // cascades into every component through CSS variables. Persisted.
@@ -80,6 +80,18 @@ mount.innerHTML = `
     <a data-link href="/docs/button"><icon>widgets</icon>Components</a>
     <section>
       <a data-link href="/docs/button"><icon>smart_button</icon>Button</a>
+      <section>
+        <a data-link href="/docs/button"><icon>smart_button</icon>Button</a>
+        <a data-link href="/docs/toggle-button"><icon>toggle_on</icon>Toggle</a>
+        <a data-link href="/docs/icon-button"><icon>star</icon>Icon</a>
+        <a data-link href="/docs/toggle-icon-button"><icon>favorite</icon>Toggle icon</a>
+        <a data-link href="/docs/split-button"><icon>arrow_drop_down</icon>Split</a>
+        <a data-link href="/docs/button-group"><icon>view_column</icon>Group</a>
+        <a data-link href="/docs/connected-button-group"><icon>link</icon>Connected group</a>
+        <a data-link href="/docs/fab"><icon>add</icon>FAB</a>
+        <a data-link href="/docs/extended-fab"><icon>edit</icon>Extended FAB</a>
+        <a data-link href="/docs/fab-menu"><icon>menu</icon>FAB menu</a>
+      </section>
       <a data-link href="/docs/app-bar"><icon>web_asset</icon>App bar</a>
       <a data-link href="/docs/badge"><icon>badge</icon>Badge</a>
       <a data-link href="/docs/card"><icon>style</icon>Cards</a>
@@ -232,21 +244,9 @@ topbarMenuBtn.addEventListener("click", () => rail.show());
 // Only in the collapsed rail — where groups are hidden — do the
 // parents also take the pill, so the top level still shows where
 // you are. Pages with no rail destination of their own (the
-// button family's sub-pages, the unlisted component drafts) fall
-// back to their family instead of the Docs hub: "/docs" itself is
-// exact-match only, never a prefix, or it would swallow every
-// docs page.
-const BUTTON_FAMILY = [
-  "/docs/toggle-button",
-  "/docs/icon-button",
-  "/docs/toggle-icon-button",
-  "/docs/split-button",
-  "/docs/button-group",
-  "/docs/connected-button-group",
-  "/docs/fab",
-  "/docs/extended-fab",
-  "/docs/fab-menu",
-];
+// unlisted component drafts) fall back to the Components parent
+// instead of the Docs hub: "/docs" itself is exact-match only,
+// never a prefix, or it would swallow every docs page.
 
 function syncRail(path) {
   const anchors = [...rail.querySelectorAll("a[data-link]")];
@@ -270,17 +270,16 @@ function syncRail(path) {
   let selected = exact.length ? exact : best ? [best] : [];
   if (!selected.length && path.startsWith("/docs/")) {
     const byHref = (href) => anchors.filter((a) => a.getAttribute("href") === href);
-    if (BUTTON_FAMILY.includes(path)) {
-      // Button itself: the /docs/button anchor inside the group
-      // (the other one is the Components toggle parent).
-      selected = byHref("/docs/button").filter((a) => !isParent(a));
-    } else if (path === "/docs/nav-drawer") {
+    if (path === "/docs/nav-drawer") {
       // The Navigation parent stands for its unlisted sibling page.
       selected = byHref("/docs/navigation-bar").filter((a) => isParent(a));
     } else {
       // Any other docs page is a component page: the Components
-      // parent stands for it.
-      selected = byHref("/docs/button").filter((a) => isParent(a));
+      // parent stands for it — the top-level /docs/button parent,
+      // not the Button parent nested inside the group (same href).
+      selected = byHref("/docs/button").filter(
+        (a) => isParent(a) && a.parentElement.tagName === "DESTINATIONS"
+      );
     }
   }
   const collapsed = rail.hasAttribute("collapsed");
@@ -307,8 +306,6 @@ function syncRail(path) {
 
 // Boot: the markup already carries the right attributes for the
 // current size; this sets the header icons to match the mode.
-// (Called here, not above: syncRail reads BUTTON_FAMILY, which
-// is only initialized once this section has run.)
 applyShellMode();
 
 // -- tiny router ------------------------------------------------------------
