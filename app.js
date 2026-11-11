@@ -10,7 +10,7 @@ if (!mount) {
 }
 
 const nmui = {
-  version: "0.43.20",
+  version: "0.43.21",
 
   // Dead-simple theming: the theme is one attribute on <html>, so it
   // cascades into every component through CSS variables. Persisted.
@@ -200,7 +200,7 @@ function applyShellMode() {
     rail.removeAttribute("modal");
     rail.toggleAttribute("expanded", railPref === "expanded");
     rail.toggleAttribute("collapsed", railPref !== "expanded");
-    setRailIcon(collapseBtn, "menu");
+    setRailIcon(collapseBtn, railPref === "expanded" ? "menu_open" : "menu");
     collapseBtn.setAttribute(
       "aria-label",
       railPref === "expanded" ? "Collapse rail" : "Expand rail"
@@ -217,7 +217,7 @@ function setRailExpanded(expanded) {
   railPref = expanded ? "expanded" : "collapsed";
   rail.toggleAttribute("expanded", expanded);
   rail.toggleAttribute("collapsed", !expanded);
-  spinRailIcon(collapseBtn, "menu");
+  spinRailIcon(collapseBtn, expanded ? "menu_open" : "menu");
   collapseBtn.setAttribute("aria-label", expanded ? "Collapse rail" : "Expand rail");
   try {
     localStorage.setItem("nmui-rail", railPref);
