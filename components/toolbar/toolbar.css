@@ -21,6 +21,14 @@ nmui-toolbar {
   color: var(--md-sys-color-on-surface, #1d1b20);
 }
 
+/* Controls keep their natural size. Without this, flex
+   shrink compresses the items to fit any width, the row
+   never technically overflows, and the floating toolbar's
+   overflow collapse has nothing to measure against. */
+nmui-toolbar > * {
+  flex: none;
+}
+
 nmui-toolbar[start] {
   justify-content: flex-start;
 }

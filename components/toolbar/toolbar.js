@@ -12,9 +12,13 @@ if (!document.adoptedStyleSheets.includes(toolbarStyles)) {
  * through all actions; there is no roving tabindex).
  *
  *   <nmui-toolbar>
- *     <nmui-button icon aria-label="Undo">undo</nmui-button>
+ *     <nmui-button icon standard aria-label="Undo">undo</nmui-button>
  *     ...
  *   </nmui-toolbar>
+ *
+ * (Icon buttons in a toolbar are the standard style unless
+ * one action is deliberately emphasized as [filled] or
+ * [tonal] — a bare [icon] button is the filled style.)
  *
  * Bare = DOCKED: spans the full width of its container,
  * square corners, no shadow, 64dp tall, items centered with
@@ -78,6 +82,10 @@ export class NMUIToolbar extends HTMLElement {
     this.#mo = new MutationObserver(() => this.#layout());
     this.#mo.observe(this, { childList: true });
     this.#layout();
+    // One more pass once the children have connected and
+    // settled — their decoration can change their sizes
+    // after this host's first layout.
+    requestAnimationFrame(() => this.#layout());
   }
 
   disconnectedCallback() {
