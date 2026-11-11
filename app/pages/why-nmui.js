@@ -57,7 +57,7 @@ export function render(mount, nmui) {
         <p>Every framework pitch is a list of things you supposedly can't do without it. Here are the usual ones — and the native answer to each.</p>
         <p><strong>"I need a router."</strong> The site you're reading has one. A tiny SPA router, no framework, with server fallback configs for every stack — <a data-link href="/docs/router">the Router guide</a>. We built a simple one, and it's literally all you need.</p>
         <p><strong>"I need to customize the theme."</strong> We built a tool for that. Thirty color roles, live preview, contrast checks, export the CSS file — <a data-link href="/docs/theming">the Theming tool</a>. It's easy as shit.</p>
-        <p><strong>"I need state management."</strong> State lives in your JavaScript. The components emit events; you keep the state in plain objects. No store library, no subscription model, no framework-shaped state.</p>
+        <p><strong>"I need state management."</strong> State lives in your JavaScript. The components emit events; you keep the state in plain objects — or in a tiny store you copy into your app: <a data-link href="/docs/state">the State guide</a>. No store library, no subscription model, no framework-shaped state.</p>
         <p><strong>"I need server rendering."</strong> Most pages don't. Static hosting, the router, and the page you're on — that's the whole stack, and it works.</p>
       </section>
 

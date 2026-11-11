@@ -363,6 +363,14 @@
   white-space: nowrap;
 }
 
+/* State demo: cart badge, buttons, and readout in one row. */
+.state-demo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
 /* Router config cards (app/pages/docs/router.js) — one small
    rectangular card per stack, all at one level: brand logo on a
    white chip (so black and light logos read in both themes) over

@@ -43,6 +43,7 @@ export const routes = {
   "/docs/progress": () => import("./docs/progress.js"),
   "/docs/radio": () => import("./docs/radio.js"),
   "/docs/router": () => import("./docs/router.js"),
+  "/docs/state": () => import("./docs/state.js"),
   "/docs/theming": () => import("./docs/theming.js"),
   "/docs/typography": () => import("./docs/typography.js"),
   "/docs/motion": () => import("./docs/motion.js"),

@@ -71,6 +71,10 @@ export function render(mount, nmui) {
             <strong>Router</strong>
             <span>Not M3 — this site's router, plus SPA server fallback for every stack</span>
           </a>
+          <a data-link href="/docs/state" class="docs-card">
+            <strong>State</strong>
+            <span>Not M3 — a twenty-five-line store: a value, a set, and subscribers, with a live demo</span>
+          </a>
           <a data-link href="/docs/layout" class="docs-card">
             <strong>Layout</strong>
             <span>Panes, breakpoints, canonical layouts</span>
