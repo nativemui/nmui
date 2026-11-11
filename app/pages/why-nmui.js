@@ -18,6 +18,7 @@ export function render(mount, nmui) {
       <section class="docs-section">
         <h2>The pitch</h2>
         <p>A form, a dialog, a nav rail. Shipping those should not need a compiler, a bundler, and a folder of dependencies — but that is what the standard frontend setup asks for now. The browser already ships custom elements, CSS variables, and real inputs. <strong>NATIVE MUI</strong> is the bet that the platform is enough, and the bet pays off in time: no build config to write, no build errors to debug, no framework upgrade mornings. Edit a file, refresh the page, done.</p>
+        <p>The point is you don't need fancy build tools. Native JavaScript, native CSS, and HTML — and the browsers themselves — have come a long way since React (2013) and AngularJS (2010) first came out. Back then you needed a framework to paper over what browsers couldn't do. You don't anymore. You don't need a complex build process to make something that should be simple.</p>
       </section>
 
       <section class="docs-section">
