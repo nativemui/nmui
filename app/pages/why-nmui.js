@@ -30,7 +30,7 @@ export function render(mount, nmui) {
 
       <section class="docs-section">
         <h2>NMUI vs the rest</h2>
-        <p>Every option below is a good tool for somebody. The question is only what it costs you to ship a page.</p>
+        <p>Every option below is a good tool for somebody. The question is only what it costs you to ship a page. Each matchup has its own page — click a name for the full head-to-head.</p>
         <div class="docs-table-wrap">
         <table class="docs-compare">
           <thead>
@@ -38,14 +38,14 @@ export function render(mount, nmui) {
           </thead>
           <tbody>
             <tr><td>NMUI</td><td>None — import a file</td><td>None (native custom elements)</td><td>Built in</td><td>You want M3 and you'd rather ship a page than configure a toolchain</td></tr>
-            <tr><td>React</td><td>Yes (JSX + bundler)</td><td>React + ReactDOM</td><td>Bring your own (MUI, etc.)</td><td>You need the ecosystem, a big team, or server rendering</td></tr>
-            <tr><td>Vue</td><td>Yes, for single-file components</td><td>Vue</td><td>Bring your own</td><td>You like Vue's model and its ecosystem</td></tr>
-            <tr><td>Svelte</td><td>Yes (compiler)</td><td>Almost none — compiled away</td><td>Bring your own</td><td>You want a compiler that disappears at runtime</td></tr>
-            <tr><td>Angular</td><td>Yes</td><td>Angular</td><td>Bring your own (Angular Material)</td><td>Enterprise, large teams, batteries included</td></tr>
-            <tr><td>Tailwind</td><td>Yes, in practice</td><td>None (it's CSS)</td><td>Bring your own — utilities, not components</td><td>You want full styling control and don't mind composing every component yourself</td></tr>
-            <tr><td>Bootstrap</td><td>No (CDN works)</td><td>Small JS for some components</td><td>No — its own look</td><td>You want a familiar, battle-tested kit and don't care about M3</td></tr>
-            <tr><td>Material Web</td><td>Usually (Lit components, normally bundled)</td><td>Lit</td><td>Built in (Google's own)</td><td>You want Google's official M3 web components and don't mind the Lit runtime</td></tr>
-            <tr><td>Hand-rolled vanilla</td><td>None</td><td>None</td><td>You build it</td><td>You have very few components and full control matters most</td></tr>
+            <tr><td><a data-link href="/why-nmui/react">React</a></td><td>Yes (JSX + bundler)</td><td>React + ReactDOM</td><td>Bring your own (MUI, etc.)</td><td>You need the ecosystem, a big team, or server rendering</td></tr>
+            <tr><td><a data-link href="/why-nmui/vue">Vue</a></td><td>Yes, for single-file components</td><td>Vue</td><td>Bring your own</td><td>You like Vue's model and its ecosystem</td></tr>
+            <tr><td><a data-link href="/why-nmui/svelte">Svelte</a></td><td>Yes (compiler)</td><td>Almost none — compiled away</td><td>Bring your own</td><td>You want a compiler that disappears at runtime</td></tr>
+            <tr><td><a data-link href="/why-nmui/angular">Angular</a></td><td>Yes</td><td>Angular</td><td>Bring your own (Angular Material)</td><td>Enterprise, large teams, batteries included</td></tr>
+            <tr><td><a data-link href="/why-nmui/tailwind">Tailwind</a></td><td>Yes, in practice</td><td>None (it's CSS)</td><td>Bring your own — utilities, not components</td><td>You want full styling control and don't mind composing every component yourself</td></tr>
+            <tr><td><a data-link href="/why-nmui/bootstrap">Bootstrap</a></td><td>No (CDN works)</td><td>Small JS for some components</td><td>No — its own look</td><td>You want a familiar, battle-tested kit and don't care about M3</td></tr>
+            <tr><td><a data-link href="/why-nmui/material-web">Material Web</a></td><td>Usually (Lit components, normally bundled)</td><td>Lit</td><td>Built in (Google's own)</td><td>You want Google's official M3 web components and don't mind the Lit runtime</td></tr>
+            <tr><td><a data-link href="/why-nmui/vanilla">Hand-rolled vanilla</a></td><td>None</td><td>None</td><td>You build it</td><td>You have very few components and full control matters most</td></tr>
           </tbody>
         </table>
         </div>
