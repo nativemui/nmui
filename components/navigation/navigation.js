@@ -260,10 +260,11 @@ class NMUINavigation extends HTMLElement {
 
   // Group sections SLIDE open and closed: the section's height
   // animates between 0 and its natural height (clipped while it
-  // moves) on the same 250ms spring as the caret flip, instead
-  // of the display flip's instant pop. A re-click mid-slide
-  // reverses from the current height. Reduced-motion (and the
-  // collapsed rail, where sections never show) toggles at once.
+  // moves) on the caret flip's spring, over a duration that
+  // grows with the slide's distance, instead of the display
+  // flip's instant pop. A re-click mid-slide reverses from the
+  // current height. Reduced-motion (and the collapsed rail,
+  // where sections never show) toggles at once.
   #toggleGroup(group, parent) {
     // The target state, not the [open] attribute: [open] stays
     // on for the whole closing slide, so deriving direction
@@ -307,22 +308,25 @@ class NMUINavigation extends HTMLElement {
     const token = (group._animToken = (group._animToken ?? 0) + 1);
     if (group._anim?.playState === "running") group._anim.cancel();
     group._anim = null;
-    // The natural padding, read once the old animation is
-    // gone and the section is back on its specified style.
-    // (Read here, not above: mid-flight the computed padding
-    // is the animated value, not the natural one.)
-    const csNat = getComputedStyle(group);
-    const padNatural = `${csNat.paddingTop} ${csNat.paddingBottom}`;
+    // The natural padding, read once [open] reflects the
+    // target state. While closed the section matches only the
+    // base rule (0 block padding), so reading it before
+    // setAttribute("open") returns 0 and the padding never
+    // animates in — the rows then jump by the top padding when
+    // the slide finishes. (Read here, not above: mid-flight
+    // the computed padding is the animated value, not the
+    // natural one — and the old animation is already gone.)
     let to;
     let padTo;
     if (opening) {
       group.setAttribute("open", "");
       to = group.offsetHeight;
-      padTo = padNatural;
     } else {
       to = 0;
-      padTo = "0px 0px";
     }
+    const csNat = getComputedStyle(group);
+    const padNatural = `${csNat.paddingTop} ${csNat.paddingBottom}`;
+    padTo = opening ? padNatural : "0px 0px";
     group.setAttribute("data-sliding", "");
     // Height alone cannot reach 0 or start from 0: with
     // border-box the used height floors at the padding
@@ -331,12 +335,24 @@ class NMUINavigation extends HTMLElement {
     // of a close. Padding-block animates with the height, so
     // the section lands exactly on its natural height opening
     // and on 0 closing, with no snap at either end.
+    // The slide's duration grows with its distance, so a big
+    // group (Components, ~1300dp) takes longer to open or close
+    // than a small one (~140dp): the same 250ms for both makes
+    // the big one look instant — it covers the distance before
+    // the eye can follow it — while the small one is already
+    // unhurried. Capped at 450ms so even the biggest group
+    // never feels sluggish.
+    const distance = Math.abs(to - from);
+    const duration = Math.min(
+      450,
+      250 + Math.max(0, distance - 300) / 4
+    );
     const anim = group.animate(
       [
         { height: `${from}px`, paddingBlock: padFrom },
         { height: `${to}px`, paddingBlock: padTo },
       ],
-      { duration: 250, easing: "cubic-bezier(0.2, 0, 0, 1)" }
+      { duration, easing: "cubic-bezier(0.2, 0, 0, 1)" }
     );
     group._anim = anim;
     anim.onfinish = () => {

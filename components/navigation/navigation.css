@@ -383,9 +383,16 @@ nmui-navigation[rail][expanded] > destinations section[open] :is(a, button):has(
 /* While a group is sliding (height animating in the component),
    its content is clipped to the box — without this, the rows
    paint past the shrinking bottom edge and overlap the
-   destinations moving up underneath. */
+   destinations moving up underneath. flex: none, so the section
+   takes exactly its animated height: overflow: hidden zeroes
+   the automatic minimum size (min-height: auto = 0), and without
+   this the flex layout shrinks a section taller than the rail
+   down to the rail's spare space while it moves — the slide
+   freezes at that cap and snaps to full height when it
+   finishes. */
 nmui-navigation[rail][expanded] > destinations section[data-sliding] {
   overflow: hidden;
+  flex: none;
 }
 
 nmui-navigation[rail][expanded] > destinations section[title]::before {
