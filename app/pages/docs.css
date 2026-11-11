@@ -289,6 +289,44 @@
   color: var(--md-sys-color-on-surface-variant, #49454f);
 }
 
+/* Motion demos: a track with a dot that travels on the token's
+   spring. The dot's transition is inline per demo (each demo runs
+   a different token); .moved is the destination. Reduced-motion
+   users get the jump, not the travel. */
+.motion-demo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.motion-track {
+  flex: 1;
+  height: 48px;
+  background: var(--md-sys-color-surface-container, #f3edf7);
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+  display: flex;
+  align-items: center;
+  padding-inline: 12px;
+}
+
+.motion-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--md-sys-color-primary, #6750a4);
+  flex: none;
+}
+
+.motion-dot.moved {
+  transform: translateX(240px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-dot {
+    transition: none !important;
+  }
+}
+
 /* Router config cards (app/pages/docs/router.js) — one small
    rectangular card per stack, all at one level: brand logo on a
    white chip (so black and light logos read in both themes) over

@@ -79,6 +79,14 @@ export function render(mount, nmui) {
             <strong>Theming tool</strong>
             <span>Build a theme, check its contrast and alarm colors, export the CSS file</span>
           </a>
+          <a data-link href="/docs/typography" class="docs-card">
+            <strong>Typography</strong>
+            <span>Five roles, three sizes each — the type elements for page content</span>
+          </a>
+          <a data-link href="/docs/motion" class="docs-card">
+            <strong>Motion</strong>
+            <span>Expressive springs: spatial and effects curves, with live demos</span>
+          </a>
         </div>
       </section>
 
