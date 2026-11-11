@@ -10,7 +10,7 @@ if (!mount) {
 }
 
 const nmui = {
-  version: "0.43.17",
+  version: "0.43.18",
 
   // Dead-simple theming: the theme is one attribute on <html>, so it
   // cascades into every component through CSS variables. Persisted.
@@ -71,7 +71,7 @@ mount.innerHTML = `
         <headline small class="rail-title brand-word">NATIVE <span>MUI</span></headline>
       </div>
       <div class="rail-tools">
-        <nmui-button icon standard id="rail-collapse" aria-label="Collapse rail">menu_open</nmui-button>
+        <nmui-button icon standard id="rail-collapse" aria-label="Collapse rail">menu</nmui-button>
         <nmui-button icon standard id="rail-theme" aria-label="Toggle theme">dark_mode</nmui-button>
       </div>
     </header>
@@ -194,7 +194,7 @@ function applyShellMode() {
     rail.removeAttribute("modal");
     rail.toggleAttribute("expanded", railPref === "expanded");
     rail.toggleAttribute("collapsed", railPref !== "expanded");
-    setRailIcon(collapseBtn, railPref === "expanded" ? "menu_open" : "menu");
+    setRailIcon(collapseBtn, "menu");
     collapseBtn.setAttribute(
       "aria-label",
       railPref === "expanded" ? "Collapse rail" : "Expand rail"
@@ -211,7 +211,7 @@ function setRailExpanded(expanded) {
   railPref = expanded ? "expanded" : "collapsed";
   rail.toggleAttribute("expanded", expanded);
   rail.toggleAttribute("collapsed", !expanded);
-  spinRailIcon(collapseBtn, expanded ? "menu_open" : "menu");
+  spinRailIcon(collapseBtn, "menu");
   collapseBtn.setAttribute("aria-label", expanded ? "Collapse rail" : "Expand rail");
   try {
     localStorage.setItem("nmui-rail", railPref);
