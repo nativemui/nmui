@@ -316,41 +316,47 @@ nmui-navigation[rail][expanded] > destinations section[open] :is(a, button) {
   background-color: var(--md-sys-color-surface, #fef7ff);
 }
 
-/* A group inside a group — the sub-selections. Pills inside
-   pills read as clutter, so a nested group's block takes the
-   child-pill color (surface) and its children are bare rows
-   on it: the white block with plain text rows from Play's
-   Testing group. The nested parent keeps its pill top and
-   squares off where it meets the block below, ::before
-   included. This holds at any depth: a third-level section
-   is a surface block whose rows simply continue the plain
-   list, indented deeper. */
+/* A group inside a group — the sub-selections, exactly
+   Play's Testing group. The nested parent stays a plain
+   pill among the level-1 pills, and its block is a
+   separate surface rounded rect below it: the 4px gap
+   between them is the same hairline as between any two
+   level-1 pills, so it reads as normal spacing, not the
+   thick blue line that makes Play's version look
+   disjointed. The block's children are TEXT-ONLY rows —
+   no icons — with the text starting close to the block's
+   edge, so the first child sits near the top of its block
+   instead of a whole parent-row down in one big white
+   void. This holds at any depth: a third-level section is
+   a surface block whose text rows simply continue the
+   plain list, indented deeper. */
 nmui-navigation[rail][expanded] > destinations section[open] section[open] {
+  margin-top: 0;
+  padding: 8px 16px 16px;
   background-color: var(--md-sys-color-surface, #fef7ff);
+  border-radius: var(--md-sys-shape-corner-extra-large, 28px);
 }
 
 nmui-navigation[rail][expanded] > destinations section[open] section[open] :is(a, button) {
   background-color: transparent;
+  padding-inline-start: 16px;
 }
 
-/* An open nested group is ONE seamless block, not a pill
-   stacked on a block: the parent is the block's top half
-   (surface, 28dp top corners — the same shape as the
-   level-1 parent on its container) and its section the
-   bottom half. No pill on a block, no gap line between
-   them: the pinched corners where a pill's round bottom
-   met the block's square top, and the blue-line gap in
-   Play's Testing group, both come from treating the parent
-   as a separate pill. Closed, the parent is a plain pill
-   again — this shape only applies while its section is
-   open. */
+nmui-navigation[rail][expanded] > destinations section[open] section[open] :is(a, button) > indicator {
+  display: none;
+}
+
+/* The nested parent itself is a plain pill, not the top
+   half of its block: the level-1 container-top radius
+   (28dp, square bottom) also matches it through :has, so
+   it is overridden back to the full pill here, ::before
+   included. */
 nmui-navigation[rail][expanded] > destinations section[open] :is(a, button):has(+ section[open]) {
-  background-color: var(--md-sys-color-surface, #fef7ff);
-  border-radius: var(--md-sys-shape-corner-extra-large, 28px) var(--md-sys-shape-corner-extra-large, 28px) 0 0;
+  border-radius: var(--md-sys-shape-corner-full, 999px);
 }
 
 nmui-navigation[rail][expanded] > destinations section[open] :is(a, button):has(+ section[open])::before {
-  border-radius: var(--md-sys-shape-corner-extra-large, 28px) var(--md-sys-shape-corner-extra-large, 28px) 0 0;
+  border-radius: var(--md-sys-shape-corner-full, 999px);
 }
 
 /* While a group is sliding (height animating in the component),
