@@ -334,7 +334,11 @@ nmui-navigation[rail][expanded] > destinations section[open] section[open] {
   margin-top: 0;
   padding: 8px 16px 16px;
   background-color: var(--md-sys-color-surface, #fef7ff);
-  border-radius: var(--md-sys-shape-corner-extra-large, 28px);
+  /* The corners facing the parent across the gap are small
+     (12dp, corner-medium) — the parent's bottom corners
+     match. Big radii on both sides of a 4px gap pinch the
+     gap at the edges instead of reading as one clean strip. */
+  border-radius: var(--md-sys-shape-corner-medium, 12px) var(--md-sys-shape-corner-medium, 12px) var(--md-sys-shape-corner-extra-large, 28px) var(--md-sys-shape-corner-extra-large, 28px);
 }
 
 nmui-navigation[rail][expanded] > destinations section[open] section[open] :is(a, button) {
@@ -346,17 +350,18 @@ nmui-navigation[rail][expanded] > destinations section[open] section[open] :is(a
   display: none;
 }
 
-/* The nested parent itself is a plain pill, not the top
-   half of its block: the level-1 container-top radius
-   (28dp, square bottom) also matches it through :has, so
-   it is overridden back to the full pill here, ::before
-   included. */
+/* The nested parent itself is a plain pill on top, not the
+   top half of its block — but its BOTTOM corners are small
+   (12dp), matching the block's top corners across the gap:
+   the level-1 container-top radius (28dp, square bottom)
+   also matches it through :has, so it is overridden here,
+   ::before included. Closed, it is a plain full pill again. */
 nmui-navigation[rail][expanded] > destinations section[open] :is(a, button):has(+ section[open]) {
-  border-radius: var(--md-sys-shape-corner-full, 999px);
+  border-radius: var(--md-sys-shape-corner-full, 999px) var(--md-sys-shape-corner-full, 999px) var(--md-sys-shape-corner-medium, 12px) var(--md-sys-shape-corner-medium, 12px);
 }
 
 nmui-navigation[rail][expanded] > destinations section[open] :is(a, button):has(+ section[open])::before {
-  border-radius: var(--md-sys-shape-corner-full, 999px);
+  border-radius: var(--md-sys-shape-corner-full, 999px) var(--md-sys-shape-corner-full, 999px) var(--md-sys-shape-corner-medium, 12px) var(--md-sys-shape-corner-medium, 12px);
 }
 
 /* While a group is sliding (height animating in the component),
