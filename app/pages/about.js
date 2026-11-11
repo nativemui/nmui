@@ -33,7 +33,7 @@ export function render(mount, nmui) {
 
       <section class="docs-section">
         <h2>Who it's for</h2>
-        <p>Anyone who wants Material 3 without adopting a framework or a build pipeline to get it. Small sites, dashboards, internal tools, prototypes that need to look finished — anywhere the page is the product and the toolchain is overhead. If you already ship a framework and hire for it, that framework is probably still the right call; see <a data-link href="/why-nmui">Why NMUI</a> for the honest version of that argument.</p>
+        <p>Anyone who wants Material 3 without adopting a framework or a build pipeline to get it. Small sites, dashboards, internal tools, prototypes that need to look finished — anywhere the page is the product and the toolchain is overhead. Even if you already ship a framework, NMUI is still the faster way to ship a page — see <a data-link href="/why-nmui">Why NMUI</a> for the argument.</p>
       </section>
 
       <section class="docs-section">
