@@ -75,7 +75,7 @@ export function render(mount, nmui) {
     </section>
     <button><icon>timer</icon>Stopwatch</button>
   </nmui-navigation>
-  <div class="nav-demo-body">Timer heads the "Sleep well" group: its caret gives it away, and clicking it opens or closes the group inline — it never selects and fires no change. The group is authored [open] here; delete the attribute and it starts closed. In the collapsed rail the group hides whole and Timer stands for it — and a group parent is a tinted tile there, so you can tell at a glance which destinations have more underneath. Groups only ever open by clicking the parent. (The grouping itself is the M3 Clock pattern; the toggle is how nmui makes the parent readable.)</div>
+  <div class="nav-demo-body">Timer heads the "Sleep well" group: its caret gives it away, and clicking it opens or closes the group inline — it never selects and fires no change. The group is authored [open] here; delete the attribute and it starts closed. When a group is open, the parent and its children share one tinted rounded container and the children are pills inside it — the block itself is what says they belong together. In the collapsed rail the group hides whole and Timer stands for it — and a group parent is a tinted tile there, so you can tell at a glance which destinations have more underneath. Groups only ever open by clicking the parent. (The grouping itself is the M3 Clock pattern; the toggle is how nmui makes the parent readable.)</div>
 </div>`)}
       </section>
 
