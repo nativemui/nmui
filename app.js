@@ -10,7 +10,7 @@ if (!mount) {
 }
 
 const nmui = {
-  version: "0.43.19",
+  version: "0.43.20",
 
   // Dead-simple theming: the theme is one attribute on <html>, so it
   // cascades into every component through CSS variables. Persisted.
@@ -76,7 +76,7 @@ mount.innerHTML = `
       </div>
     </header>
     <a data-link href="/"><icon>home</icon>Home</a>
-    <a data-link href="/docs"><icon>library_books</icon>Docs</a>
+    <a data-link href="/docs/getting-started"><icon>rocket_launch</icon>Getting started</a>
     <a data-link href="/docs/button"><icon>widgets</icon>Components</a>
     <section>
       <a data-link href="/docs/button"><icon>smart_button</icon>Button</a>
@@ -128,7 +128,6 @@ mount.innerHTML = `
     </section>
     <a data-link href="/docs/layout"><icon>menu_book</icon>Guides</a>
     <section>
-      <a data-link href="/docs/getting-started"><icon>rocket_launch</icon>Getting started</a>
       <a data-link href="/docs/layout"><icon>dashboard</icon>Layout</a>
       <a data-link href="/docs/router"><icon>alt_route</icon>Router</a>
       <a data-link href="/docs/theming"><icon>palette</icon>Theming</a>
@@ -275,9 +274,13 @@ function syncRail(path) {
     }
   });
   let selected = exact.length ? exact : best ? [best] : [];
-  if (!selected.length && path.startsWith("/docs/")) {
+  if (!selected.length && (path === "/docs" || path.startsWith("/docs/"))) {
     const byHref = (href) => anchors.filter((a) => a.getAttribute("href") === href);
-    if (path === "/docs/nav-drawer") {
+    if (path === "/docs") {
+      // The docs hub has no rail entry of its own now — Getting
+      // started is the rail's docs entry, so it stands for the hub.
+      selected = byHref("/docs/getting-started");
+    } else if (path === "/docs/nav-drawer") {
       // The Navigation parent stands for its unlisted sibling page.
       selected = byHref("/docs/navigation-bar").filter((a) => isParent(a));
     } else {
