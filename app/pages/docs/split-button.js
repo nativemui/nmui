@@ -1,7 +1,6 @@
 import docsStyles from "../docs.css" with { type: "css" };
 import { nav } from "../nav.js";
 import { demo, evTable } from "../demo.js";
-import { familyNav } from "./button-family.js";
 
 if (!document.adoptedStyleSheets.includes(docsStyles)) {
   document.adoptedStyleSheets.push(docsStyles);
@@ -18,7 +17,6 @@ export function render(mount, nmui) {
       <p><code>&lt;nmui-button split&gt;</code> — a common button joined to a menu icon button. The host copies its variant and size to both children. Clicking the arrow toggles <code>[open]</code> on the host: the arrow button becomes a circle and its arrow rotates up.</p>
     </header>
 
-    ${familyNav("/docs/split-button")}
 
     <main>
       <section class="docs-section">

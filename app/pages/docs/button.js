@@ -1,7 +1,6 @@
 import docsStyles from "../docs.css" with { type: "css" };
 import { nav } from "../nav.js";
 import { demo, btn, evTable } from "../demo.js";
-import { familyNav } from "./button-family.js";
 
 if (!document.adoptedStyleSheets.includes(docsStyles)) {
   document.adoptedStyleSheets.push(docsStyles);
@@ -18,7 +17,6 @@ export function render(mount, nmui) {
       <p>The common button. <code>&lt;nmui-button&gt;</code> — variant, size, and shape are bare attributes. One page per button type; this page is only the standard button and all of its options.</p>
     </header>
 
-    ${familyNav("/docs/button")}
 
     <main>
       <section class="docs-section">

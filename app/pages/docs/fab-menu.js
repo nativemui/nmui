@@ -1,7 +1,6 @@
 import docsStyles from "../docs.css" with { type: "css" };
 import { nav } from "../nav.js";
 import { demo, evTable } from "../demo.js";
-import { familyNav } from "./button-family.js";
 
 if (!document.adoptedStyleSheets.includes(docsStyles)) {
   document.adoptedStyleSheets.push(docsStyles);
@@ -18,7 +17,6 @@ export function render(mount, nmui) {
       <p><code>&lt;nmui-button fab menu&gt;</code> — a FAB that opens a stack of actions. Button children become the actions (they measure like medium buttons); the remaining content is the FAB's icon. Open, the trigger becomes the circular close button — medium/large triggers shrink to 56 — and the icon swaps to the close glyph. Picking an action, clicking outside, or Escape closes it. <code>open()</code> / <code>close()</code> / <code>toggle()</code> are public.</p>
     </header>
 
-    ${familyNav("/docs/fab-menu")}
 
     <main>
       <section class="docs-section">

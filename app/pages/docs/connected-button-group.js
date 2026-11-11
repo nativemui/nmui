@@ -1,7 +1,6 @@
 import docsStyles from "../docs.css" with { type: "css" };
 import { nav } from "../nav.js";
 import { demo, evTable } from "../demo.js";
-import { familyNav } from "./button-family.js";
 
 if (!document.adoptedStyleSheets.includes(docsStyles)) {
   document.adoptedStyleSheets.push(docsStyles);
@@ -18,7 +17,6 @@ export function render(mount, nmui) {
       <p><code>&lt;nmui-button group connected&gt;</code> — buttons joined into one shape: 2dp apart, fully round outside, inner corners sized by the group (XS 4 · S/M 8 · L 16 · XL 20). A selected button becomes fully round. Connected groups replace the old segmented button, which M3 Expressive no longer recommends.</p>
     </header>
 
-    ${familyNav("/docs/connected-button-group")}
 
     <main>
       <section class="docs-section">

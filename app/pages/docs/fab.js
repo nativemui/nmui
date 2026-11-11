@@ -1,7 +1,6 @@
 import docsStyles from "../docs.css" with { type: "css" };
 import { nav } from "../nav.js";
 import { demo, evTable } from "../demo.js";
-import { familyNav } from "./button-family.js";
 
 if (!document.adoptedStyleSheets.includes(docsStyles)) {
   document.adoptedStyleSheets.push(docsStyles);
@@ -18,7 +17,6 @@ export function render(mount, nmui) {
       <p><code>&lt;nmui-button fab&gt;</code> — the floating action button, as a role of the button tag. The content becomes the icon. Colors are the container set: primary container by default, or <code>[secondary]</code> / <code>[tertiary]</code>.</p>
     </header>
 
-    ${familyNav("/docs/fab")}
 
     <main>
       <section class="docs-section">

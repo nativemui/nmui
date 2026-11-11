@@ -1,7 +1,6 @@
 import docsStyles from "../docs.css" with { type: "css" };
 import { nav } from "../nav.js";
 import { demo, btn, evTable } from "../demo.js";
-import { familyNav } from "./button-family.js";
 
 if (!document.adoptedStyleSheets.includes(docsStyles)) {
   document.adoptedStyleSheets.push(docsStyles);
@@ -18,7 +17,6 @@ export function render(mount, nmui) {
       <p><code>&lt;nmui-button icon toggle&gt;</code> — an icon button with a selected state. Unselected draws the <em>outlined</em> glyph; selected fills it. Colors follow the icon-button spec table per style, and the resting shape morphs round → square on selection.</p>
     </header>
 
-    ${familyNav("/docs/toggle-icon-button")}
 
     <main>
       <section class="docs-section">

@@ -1,7 +1,6 @@
 import docsStyles from "../docs.css" with { type: "css" };
 import { nav } from "../nav.js";
 import { demo, btn, evTable } from "../demo.js";
-import { familyNav } from "./button-family.js";
 
 if (!document.adoptedStyleSheets.includes(docsStyles)) {
   document.adoptedStyleSheets.push(docsStyles);
@@ -18,7 +17,6 @@ export function render(mount, nmui) {
       <p><code>&lt;nmui-button toggle&gt;</code> — a button with a persistent selected state. Clicking flips <code>[selected]</code> and <code>aria-pressed</code>. Colors follow the spec's per-variant table, and a selected toggle rests square (round when <code>[square]</code>). There is no toggle text button.</p>
     </header>
 
-    ${familyNav("/docs/toggle-button")}
 
     <main>
       <section class="docs-section">

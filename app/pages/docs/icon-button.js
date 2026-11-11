@@ -1,7 +1,6 @@
 import docsStyles from "../docs.css" with { type: "css" };
 import { nav } from "../nav.js";
 import { demo, btn, evTable } from "../demo.js";
-import { familyNav } from "./button-family.js";
 
 if (!document.adoptedStyleSheets.includes(docsStyles)) {
   document.adoptedStyleSheets.push(docsStyles);
@@ -18,7 +17,6 @@ export function render(mount, nmui) {
       <p><code>&lt;nmui-button icon&gt;</code> — the content becomes the icon. Four color styles: filled (the default), tonal, outlined, standard. Icons are filled by default; author <code>&lt;icon outline&gt;</code> for the outlined glyph. Xsmall and small keep a 48dp target under the smaller visual.</p>
     </header>
 
-    ${familyNav("/docs/icon-button")}
 
     <main>
       <section class="docs-section">

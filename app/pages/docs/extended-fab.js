@@ -1,7 +1,6 @@
 import docsStyles from "../docs.css" with { type: "css" };
 import { nav } from "../nav.js";
 import { demo, evTable } from "../demo.js";
-import { familyNav } from "./button-family.js";
 
 if (!document.adoptedStyleSheets.includes(docsStyles)) {
   document.adoptedStyleSheets.push(docsStyles);
@@ -18,7 +17,6 @@ export function render(mount, nmui) {
       <p><code>&lt;nmui-button fab extended&gt;</code> — a FAB with a label. Icon is optional; the label is the point.</p>
     </header>
 
-    ${familyNav("/docs/extended-fab")}
 
     <main>
       <section class="docs-section">

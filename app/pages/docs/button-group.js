@@ -1,7 +1,6 @@
 import docsStyles from "../docs.css" with { type: "css" };
 import { nav } from "../nav.js";
 import { demo, evTable } from "../demo.js";
-import { familyNav } from "./button-family.js";
 
 if (!document.adoptedStyleSheets.includes(docsStyles)) {
   document.adoptedStyleSheets.push(docsStyles);
@@ -18,7 +17,6 @@ export function render(mount, nmui) {
       <p><code>&lt;nmui-button group&gt;</code> — buttons that share a width and react to each other: the selected button changes color, rests as a rounded square, and takes its extra room from its neighbours, so it grows from its own center while distant buttons stay put; pressing one does the same, briefly. Children may be plain buttons (the group selects them) or <code>[toggle]</code> buttons. The host's variant and size are copied to children that don't declare their own. Spacing follows the spec's size table (XS 18 · S 12 · M/L/XL 8).</p>
     </header>
 
-    ${familyNav("/docs/button-group")}
 
     <main>
       <section class="docs-section">
