@@ -227,7 +227,7 @@ export function render(mount, nmui) {
           </a>
           <a data-link href="/docs/text-field" class="docs-card">
             <strong>Text field</strong>
-            <span>Filled, outlined, error</span>
+            <span>Filled + outlined, floating label, counter</span>
           </a>
           <a data-link href="/docs/time-picker" class="docs-card">
             <strong>Time picker</strong>
