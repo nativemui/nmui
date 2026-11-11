@@ -2,7 +2,7 @@
 
 <img src="assets/logo.svg" alt="nmui logo" width="240">
 
-[![CI](https://img.shields.io/github/actions/workflow/status/nativemui/nmui/ci.yml?branch=main)](https://github.com/nativemui/nmui/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/github/license/nativemui/nmui)](https://github.com/nativemui/nmui/blob/main/LICENSE) [![Stars](https://img.shields.io/github/stars/nativemui/nmui)](https://github.com/nativemui/nmui/stargazers) [![Dependencies: zero](https://img.shields.io/badge/dependencies-zero-brightgreen)](https://github.com/nativemui/nmui)
+[![License: MIT](https://img.shields.io/github/license/nativemui/nmui)](https://github.com/nativemui/nmui/blob/main/LICENSE) [![Stars](https://img.shields.io/github/stars/nativemui/nmui)](https://github.com/nativemui/nmui/stargazers) [![Dependencies: zero](https://img.shields.io/badge/dependencies-zero-brightgreen)](https://github.com/nativemui/nmui)
 
 Material 3 Expressive, in vanilla JS/HTML/CSS. No framework. No build step.
 No dependencies. Spec: https://m3.material.io/
