@@ -1,60 +1,90 @@
-/* nmui-tooltip — M3 tooltip. Absolutely positioned in its anchor. */
+/* nmui-tooltip — M3 tooltip.
+   Plain: inverse-surface pill, inverse-on-surface body-small
+   text, one line, 4dp corners, 24dp min height, 8dp side
+   padding. Rich: surface-container card, 12dp corners,
+   elevation level 2, top padding 12dp / bottom 8dp / sides
+   16dp, subhead title-small, supporting body-medium
+   on-surface-variant, actions in primary.
+   The host is fixed-positioned (JS sets left/top from the
+   anchor's rect) and stays measurable while closed via
+   visibility — never display: none, or positioning could
+   never measure it. */
 
 nmui-tooltip {
-  display: none;
-  position: absolute;
-  z-index: 70;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
-  max-width: 240px;
-  padding: 4px 8px;
-  border-radius: var(--md-sys-shape-corner-extra-small, 4px);
-  background-color: var(--md-sys-color-inverse-surface, #322f35);
-  color: var(--md-sys-color-inverse-on-surface, #f5eff7);
-  font-size: 12px;
-  line-height: 1.4;
-  white-space: nowrap;
+  position: fixed;
+  z-index: 100;
+  box-sizing: border-box;
+  visibility: hidden;
+  opacity: 0;
   pointer-events: none;
-}
-
-/* the anchor gets positioning context automatically */
-*:has(> nmui-tooltip) {
-  position: relative;
+  font: var(--md-sys-typescale-body-small, 400 12px/16px "Roboto", sans-serif);
+  color: var(--md-sys-color-inverse-on-surface, #f4eff4);
+  background-color: var(--md-sys-color-inverse-surface, #322f35);
+  border-radius: var(--md-sys-shape-corner-extra-small, 4px);
+  padding: 4px 8px;
+  min-height: 24px;
+  max-width: max-content;
+  white-space: nowrap;
+  transition: opacity 150ms cubic-bezier(0.2, 0, 0, 1),
+    visibility 0s linear 150ms;
 }
 
 nmui-tooltip[open] {
-  display: block;
-  animation: nmui-tooltip-in 150ms cubic-bezier(0.2, 0, 0, 1);
-}
-
-@keyframes nmui-tooltip-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-/* rich tooltip: title, text, actions */
-nmui-tooltip[rich] {
-  white-space: normal;
-  min-width: 200px;
-  padding: 12px 8px 8px 16px;
-  border-radius: var(--md-sys-shape-corner-extra-small, 4px);
+  visibility: visible;
+  opacity: 1;
   pointer-events: auto;
-  font-size: 14px;
+  transition: opacity 150ms cubic-bezier(0.2, 0, 0, 1),
+    visibility 0s;
 }
 
-nmui-tooltip[rich] strong {
+/* A plain tooltip never takes the pointer — it's a label,
+   not a surface. Only rich tooltips are interactive. */
+nmui-tooltip[open]:not([rich]) {
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  nmui-tooltip {
+    transition: none;
+  }
+}
+
+/* --- rich ------------------------------------------------------- */
+
+nmui-tooltip[rich] {
   display: block;
+  width: max-content;
+  max-width: 320px;
+  padding: 12px 16px 8px;
+  border-radius: var(--md-sys-shape-corner-medium, 12px);
+  background-color: var(--md-sys-color-surface-container, #ece7f0);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  font: var(--md-sys-typescale-body-medium, 400 14px/20px "Roboto", sans-serif);
+  white-space: normal;
+  box-shadow: var(--md-sys-elevation-level2,
+    0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 6px 2px rgba(0, 0, 0, 0.15));
+}
+
+nmui-tooltip[rich] > [subhead] {
+  display: block;
+  font: var(--md-sys-typescale-title-small, 500 14px/20px "Roboto", sans-serif);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
   margin-bottom: 4px;
 }
 
-nmui-tooltip[rich] actions {
+nmui-tooltip[rich] > actions {
   display: flex;
-  justify-content: flex-end;
   gap: 8px;
   margin-top: 8px;
+  flex-wrap: wrap;
 }
 
-nmui-tooltip[rich] nmui-button[text] > container {
-  color: var(--md-sys-color-inverse-primary, #d0bcff);
+/* Rich action links/buttons read primary, per the specs. */
+nmui-tooltip[rich] a {
+  color: var(--md-sys-color-primary, #6750a4);
+  text-decoration: none;
+}
+
+nmui-tooltip[rich] a:hover {
+  text-decoration: underline;
 }
