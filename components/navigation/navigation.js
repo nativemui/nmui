@@ -289,6 +289,16 @@ class NMUINavigation extends HTMLElement {
     // group actually is. (A closed group measures 0, a settled
     // open one its natural height.)
     const from = group.getBoundingClientRect().height;
+    // The padding the slide starts from: the current (possibly
+    // mid-flight) padding, except a closed group starts from
+    // none — its computed padding is the natural value even
+    // while display: none, and starting from that would pop
+    // the section straight to the 28dp padding floor.
+    const csNow = getComputedStyle(group);
+    const padFrom =
+      from === 0
+        ? "0px 0px"
+        : `${csNow.paddingTop} ${csNow.paddingBottom}`;
     // Invalidate the previous slide's callbacks BEFORE
     // cancelling it: a cancelled animation's handlers can fire
     // late, and the old code let a stale finish clear the clip
@@ -297,16 +307,35 @@ class NMUINavigation extends HTMLElement {
     const token = (group._animToken = (group._animToken ?? 0) + 1);
     if (group._anim?.playState === "running") group._anim.cancel();
     group._anim = null;
+    // The natural padding, read once the old animation is
+    // gone and the section is back on its specified style.
+    // (Read here, not above: mid-flight the computed padding
+    // is the animated value, not the natural one.)
+    const csNat = getComputedStyle(group);
+    const padNatural = `${csNat.paddingTop} ${csNat.paddingBottom}`;
     let to;
+    let padTo;
     if (opening) {
       group.setAttribute("open", "");
       to = group.offsetHeight;
+      padTo = padNatural;
     } else {
       to = 0;
+      padTo = "0px 0px";
     }
     group.setAttribute("data-sliding", "");
+    // Height alone cannot reach 0 or start from 0: with
+    // border-box the used height floors at the padding
+    // (12dp top + 16dp bottom = 28dp), so a height-only slide
+    // pops to 28dp on open and hangs at 28dp through the tail
+    // of a close. Padding-block animates with the height, so
+    // the section lands exactly on its natural height opening
+    // and on 0 closing, with no snap at either end.
     const anim = group.animate(
-      [{ height: `${from}px` }, { height: `${to}px` }],
+      [
+        { height: `${from}px`, paddingBlock: padFrom },
+        { height: `${to}px`, paddingBlock: padTo },
+      ],
       { duration: 250, easing: "cubic-bezier(0.2, 0, 0, 1)" }
     );
     group._anim = anim;

@@ -267,6 +267,13 @@ nmui-navigation[rail][collapsed] > destinations :is(a, button):has(+ section) {
 
 nmui-navigation[rail][expanded] > destinations section {
   display: none;
+  /* Border-box, or the group slide overshoots: #toggleGroup
+     animates `height` from getBoundingClientRect /
+     offsetHeight, which are border-box. On a content-box
+     section those keyframes render 28dp too tall (12dp top
+     + 16dp bottom padding) and snap back when the animation
+     ends — the slide-down-too-far-then-jump-back-up jitter. */
+  box-sizing: border-box;
 }
 
 /* An open group reads as a nested block: its rows indent
