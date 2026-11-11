@@ -213,6 +213,17 @@ nmui-navigation[rail] > destinations :is(a, button):hover::before {
     var(--md-sys-color-on-surface-variant, #49454f) 8%, transparent);
 }
 
+/* An open group parent has NO hover event: its background
+   is already the static container tint (level 1) or the
+   child pill (nested), and hovering it must not paint a
+   highlight over that. Children keep their hover tint.
+   (:not([selected]) keeps the rule from ever hiding a
+   selected pill, though a parent is never [selected] —
+   parents toggle, they don't navigate.) */
+nmui-navigation[rail][expanded] > destinations :is(a, button):has(+ section[open]):not([selected]):hover::before {
+  background-color: transparent;
+}
+
 nmui-navigation[rail] > destinations :is(a, button)[selected]::before {
   background-color: var(--md-sys-color-secondary-container, #e8def8);
 }
@@ -286,32 +297,34 @@ nmui-navigation[rail][expanded] > destinations section[open] {
   border-inline-start: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
 }
 
-/* An open group is a tinted container BELOW a plain parent:
-   the parent never takes the container's tint while its
-   group is open — it stays a plain row, and only the
-   children highlight (their pills, and the selected child's
-   pill). The block replaces the guide rule and indent above:
-   the container itself says "these belong to the parent
-   above". The section is a standalone rounded block (28dp
-   all round) with a normal destinations gap above it; its
-   12px top padding keeps the first pill clear of the
-   block's top edge. The parent's ::before is a full pill,
-   like any plain row's hover tint. */
+/* An open group is ONE tinted container — the Play Console
+   pattern: the parent and its section share a single rounded
+   surface-container-high block, and the children are surface
+   pills inside it, inset from the container's edge. The block
+   replaces the guide rule and indent above: the container
+   itself says "these belong to the parent above". The
+   section's -6px top margin closes the destinations gap so
+   parent and section read as one block; its 12px top padding
+   keeps the first pill clear of the parent's bottom edge.
+   The parent has NO hover event while its group is open
+   (see the suppression by the hover rule): its background
+   is the static container tint, and hovering it must not
+   paint a highlight over that. */
 nmui-navigation[rail][expanded] > destinations :is(a, button):has(+ section[open]) {
-  background-color: transparent;
-  border-radius: var(--md-sys-shape-corner-full, 999px);
+  background-color: var(--md-sys-color-surface-container-high, #e6e0e9);
+  border-radius: var(--md-sys-shape-corner-extra-large, 28px) var(--md-sys-shape-corner-extra-large, 28px) 0 0;
 }
 
 nmui-navigation[rail][expanded] > destinations :is(a, button):has(+ section[open])::before {
-  border-radius: var(--md-sys-shape-corner-full, 999px);
+  border-radius: var(--md-sys-shape-corner-extra-large, 28px) var(--md-sys-shape-corner-extra-large, 28px) 0 0;
 }
 
 nmui-navigation[rail][expanded] > destinations section[open] {
-  margin-top: 0;
+  margin-top: -6px;
   padding: 12px 16px 16px;
   gap: 4px;
   background-color: var(--md-sys-color-surface-container-high, #e6e0e9);
-  border-radius: var(--md-sys-shape-corner-extra-large, 28px);
+  border-radius: 0 0 var(--md-sys-shape-corner-extra-large, 28px) var(--md-sys-shape-corner-extra-large, 28px);
   border-inline-start: none;
 }
 
@@ -353,19 +366,18 @@ nmui-navigation[rail][expanded] > destinations section[open] section[open] :is(a
   display: none;
 }
 
-/* The nested parent, open: a plain row on the level-1
-   container, not a pill — its surface pill background (from
-   the level-1 child rule) is removed while its section is
-   open, same as the level-1 parent above. Its ::before is a
-   full pill, like any plain row's hover tint. Closed, it is
-   a plain surface pill again. */
+/* The nested parent, open: it keeps its surface pill
+   background (from the level-1 child rule) with 28dp top
+   corners and 8dp bottom corners, matching the block's 8dp
+   top corners across the gap — ::before included. No
+   background is set here; the pill color comes from the
+   child rule. Closed, it is a plain surface pill again. */
 nmui-navigation[rail][expanded] > destinations section[open] :is(a, button):has(+ section[open]) {
-  background-color: transparent;
-  border-radius: var(--md-sys-shape-corner-full, 999px);
+  border-radius: var(--md-sys-shape-corner-extra-large, 28px) var(--md-sys-shape-corner-extra-large, 28px) var(--md-sys-shape-corner-small, 8px) var(--md-sys-shape-corner-small, 8px);
 }
 
 nmui-navigation[rail][expanded] > destinations section[open] :is(a, button):has(+ section[open])::before {
-  border-radius: var(--md-sys-shape-corner-full, 999px);
+  border-radius: var(--md-sys-shape-corner-extra-large, 28px) var(--md-sys-shape-corner-extra-large, 28px) var(--md-sys-shape-corner-small, 8px) var(--md-sys-shape-corner-small, 8px);
 }
 
 /* While a group is sliding (height animating in the component),
