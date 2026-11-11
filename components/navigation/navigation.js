@@ -131,6 +131,14 @@ class NMUINavigation extends HTMLElement {
     });
     this.appendChild(destinations);
 
+    // A <footer> child is the rail's bottom row (social links,
+    // status): it is not a destination, so it stays out of
+    // <destinations> — but <destinations> is appended last, so
+    // re-append the footer after it to keep it at the bottom of
+    // the rail instead of above the destinations.
+    const footer = this.querySelector(":scope > footer");
+    if (footer) this.appendChild(footer);
+
     // The active indicator hugs the icon: wrap each destination's icons.
     // The label text gets its own element too, so it can fade on its
     // own when the variant switches. Section destinations included.

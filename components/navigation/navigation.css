@@ -72,6 +72,35 @@ nmui-navigation[rail][expanded] > header {
   align-items: stretch;
 }
 
+/************
+ * Footer   *  A <footer> child is the rail's bottom row — not a
+ ************  destination, so it never scrolls with them. In the
+            expanded rail it is a row of icon buttons, left-aligned
+            on the rail's 16dp content edge; in the collapsed rail
+            it stacks vertically, centered. */
+
+nmui-navigation[rail] > footer {
+  flex: none;
+  display: flex;
+  gap: 8px;
+  padding: 16px;
+}
+
+nmui-navigation[rail][collapsed] > footer {
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 0;
+}
+
+/* Brand marks are inline SVGs (Material Symbols has no brand
+   glyphs), sized to the 24dp icon size and colored by the
+   button's own icon color. */
+nmui-navigation[rail] > footer svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
 /*****************
  * Destinations  *
  *****************/

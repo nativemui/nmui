@@ -37,6 +37,7 @@ const SIZES = ["xsmall", "small", "medium", "large", "xlarge"];
  * Shape: [square] for the square family (default round — morphs on press;
  *   a selected toggle rests square, or round when [square])
  * State: [disabled] [selected] [unselected] [open] (split / fab menu)
+ * Links: [href] navigates on click; [target] opens it in a new tab
  * Press feedback: every press ripples from the press point
  * (keyboard activation ripples from the center). Focus shows a
  * ring in the button's own content color on keyboard Tab only;
@@ -265,7 +266,14 @@ class NMUIButton extends HTMLElement {
     if (this.hasAttribute("href")) {
       this.addEventListener("click", () => {
         if (this.hasAttribute("disabled")) return;
-        window.location = this.getAttribute("href");
+        const href = this.getAttribute("href");
+        // A [target] opens in a new tab (external links); without
+        // one the link navigates in place, as before.
+        if (this.hasAttribute("target")) {
+          window.open(href, this.getAttribute("target"), "noopener");
+        } else {
+          window.location = href;
+        }
       });
     }
 

@@ -54,7 +54,7 @@ export function render(mount, nmui) {
   <nmui-navigation rail collapsed center>
     ${DESTS}
   </nmui-navigation>
-  <div class="nav-demo-body">Destinations align as a group: top by default, center with [center]. The menu and FAB always stay at the top.</div>
+  <div class="nav-demo-body">Destinations align as a group: top by default, center with [center]. The menu and FAB always stay at the top. A <code>&lt;footer&gt;</code> child is the rail's bottom row — it never scrolls with the destinations: a row of icon buttons expanded, stacked and centered collapsed.</div>
 </div>`)}
       </section>
 
