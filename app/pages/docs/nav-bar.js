@@ -1,7 +1,6 @@
 import docsStyles from "../docs.css" with { type: "css" };
 import { nav } from "../nav.js";
 import { demo, evTable } from "../demo.js";
-import { familyNav } from "./navigation-family.js";
 
 if (!document.adoptedStyleSheets.includes(docsStyles)) {
   document.adoptedStyleSheets.push(docsStyles);
@@ -23,7 +22,6 @@ export function render(mount, nmui) {
       <p><code>&lt;nmui-navigation bar&gt;</code> — one element, role as a bare attribute. This is the M3 Expressive <strong>flexible</strong> bar only: the live overview says it replaces the baseline bar, which is no longer recommended, so no baseline bar is implemented. 64dp tall, surface-container, no shadow, 3–5 destinations of equal importance, icon 24dp, pill indicator 64×32. The selected label is secondary (the M3E overview change); the selected icon is on-secondary-container on the secondary-container pill. Compact windows (under 600dp) stack icon over label; medium windows (600dp and up) lay destinations out horizontally, icon beside label, centred as a group — narrow your browser under 600px to see the compact layout, or view it on a phone. Labels show for all destinations by default.</p>
     </header>
 
-    ${familyNav("/docs/navigation-bar")}
 
     <main>
       <section class="docs-section">

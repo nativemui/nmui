@@ -209,33 +209,6 @@
   margin: 0 0 12px;
 }
 
-/* Button family sub-nav (one page per button type). */
-.docs-family {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 24px;
-}
-
-.docs-family a {
-  font: var(--md-sys-typescale-label-large, 500 14px/20px system-ui, sans-serif);
-  color: var(--md-sys-color-on-surface-variant, #49454f);
-  text-decoration: none;
-  padding: 6px 14px;
-  border: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
-  border-radius: var(--md-sys-shape-corner-full, 999px);
-}
-
-.docs-family a:hover {
-  color: var(--md-sys-color-primary, #6750a4);
-}
-
-.docs-family a[aria-current="page"] {
-  background: var(--md-sys-color-secondary-container, #e8def8);
-  color: var(--md-sys-color-on-secondary-container, #4a4458);
-  border-color: transparent;
-}
-
 /* Split button demo: placeholder dropdown (the real menu component
    gets its own pass later). */
 .split-demo {

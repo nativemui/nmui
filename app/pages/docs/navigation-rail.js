@@ -1,7 +1,6 @@
 import docsStyles from "../docs.css" with { type: "css" };
 import { nav } from "../nav.js";
 import { demo, evTable } from "../demo.js";
-import { familyNav } from "./navigation-family.js";
 
 if (!document.adoptedStyleSheets.includes(docsStyles)) {
   document.adoptedStyleSheets.push(docsStyles);
@@ -23,7 +22,6 @@ export function render(mount, nmui) {
       <p><code>&lt;nmui-navigation rail&gt;</code> — one element, role as a bare attribute. M3 Expressive retires the baseline rail: <code>[collapsed]</code> (96dp) replaces it, <code>[expanded]</code> is 360dp, the spec range's max. Destinations are <code>&lt;a&gt;</code> / <code>&lt;button&gt;</code> children — an <code>&lt;icon&gt;</code> plus a one-word label. A <code>&lt;section&gt;</code> after a destination groups secondary destinations under it: that destination becomes the group's toggle, gains a caret, and opens or closes the group inline instead of selecting. Groups start closed (author <code>[open]</code> on the section to start one open) and never show in the collapsed rail, where the parent stands for them. This app's own shell, on the left, works exactly this way.</p>
     </header>
 
-    ${familyNav("/docs/navigation-rail")}
 
     <main>
       <section class="docs-section">
