@@ -22,12 +22,6 @@ export function render(mount, nmui) {
       <nmui-button tonal large id="home-docs">Read the docs</nmui-button>
       <nmui-button outlined large id="home-theme">Toggle theme</nmui-button>
       <nmui-button outlined large href="https://github.com/nativemui/nmui" target="_blank">GitHub</nmui-button>
-      <div class="home-badges">
-        <a href="https://github.com/nativemui/nmui/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/nativemui/nmui/ci.yml?branch=main" alt="CI status"></a>
-        <a href="https://github.com/nativemui/nmui/blob/main/LICENSE"><img src="https://img.shields.io/github/license/nativemui/nmui" alt="License: MIT"></a>
-        <a href="https://github.com/nativemui/nmui/stargazers"><img src="https://img.shields.io/github/stars/nativemui/nmui" alt="GitHub stars"></a>
-        <img src="https://img.shields.io/badge/dependencies-zero-brightgreen" alt="Zero dependencies">
-      </div>
     </header>
     <section class="home-points">
       <nmui-card outlined>

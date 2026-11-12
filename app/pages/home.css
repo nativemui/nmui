@@ -38,27 +38,7 @@
 }
 
 .home-hero > nmui-button {
-  margin: 0 12px 24px 0;
-}
-
-/* Status badges under the hero buttons: CI, license, stars, zero deps. */
-.home-badges {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  align-items: center;
-  margin: 8px 0 64px;
-}
-
-.home-badges a {
-  display: block;
-  line-height: 0;
-}
-
-.home-badges img {
-  display: block;
-  height: 20px;
-  width: auto;
+  margin: 0 12px 64px 0;
 }
 
 .home-points {

@@ -14,7 +14,7 @@ if (!mount) {
 const systemQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
 const nmui = {
-  version: "0.43.30",
+  version: "0.43.31",
 
   // Dead-simple theming: the theme is one attribute on <html>, so it
   // cascades into every component through CSS variables. The attribute
