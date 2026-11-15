@@ -1,5 +1,5 @@
-/* nmui-dialog — M3 dialog. Host is the scrim; ::after is the surface.
-   (A custom element can't use ::backdrop, so the scrim is the host.) */
+/* nmui-dialog — M3 dialogs. The host is the scrim (a custom element
+   has no ::backdrop); the card is a created <surface>. */
 
 nmui-dialog {
   display: none;
@@ -16,53 +16,150 @@ nmui-dialog {
 
 nmui-dialog[open] {
   display: flex;
-  animation: nmui-dialog-scrim var(--md-sys-motion-spring-fast-effects, 200ms cubic-bezier(0.2, 0, 0, 1));
+  animation: nmui-dialog-scrim var(--md-sys-motion-spring-fast-effects, 150ms cubic-bezier(0.2, 0, 0, 1));
 }
 
 @keyframes nmui-dialog-scrim {
   from { opacity: 0; }
-  to { opacity: 1; }
+}
+
+nmui-dialog > surface {
+  display: none;
 }
 
 nmui-dialog[open] > surface {
   display: block;
-  animation: nmui-dialog-in var(--md-sys-motion-spring-default-spatial, 400ms cubic-bezier(0.2, 0, 0, 1));
-}
-
-/* The surface wraps the light DOM so the host stays a click-through scrim. */
-nmui-dialog > surface {
-  display: none;
   min-width: 280px;
   max-width: 560px;
   max-height: calc(100vh - 48px);
   overflow: auto;
   padding: 24px;
   box-sizing: border-box;
-  border-radius: 28px;
+  border-radius: var(--md-sys-shape-corner-extra-large, 28px);
   background-color: var(--md-sys-color-surface-container-high, #ece6f0);
   color: var(--md-sys-color-on-surface, #1c1b1f);
-  box-shadow: var(--md-sys-elevation-level3, 0 4px 8px 3px rgb(0 0 0 / 0.15));
+  box-shadow: var(--md-sys-elevation-level3,
+    0 4px 8px 3px rgb(0 0 0 / 0.15), 0 1px 3px rgb(0 0 0 / 0.3));
+  animation: nmui-dialog-in var(--md-sys-motion-spring-medium-effects, 250ms cubic-bezier(0.2, 0, 0, 1));
 }
 
 @keyframes nmui-dialog-in {
-  from { opacity: 0; transform: scale(0.9) translateY(16px); }
-  to { opacity: 1; transform: none; }
+  from { opacity: 0; transform: scale(0.92); }
+}
+
+/* With an icon the headline and supporting text center; without
+   one they start-align. The actions stay at the end either way. */
+nmui-dialog > surface:has(> icon) {
+  text-align: center;
+}
+
+nmui-dialog > surface > icon {
+  display: block;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--md-sys-color-secondary, #625b71);
+  margin-bottom: 16px;
 }
 
 nmui-dialog headline,
 nmui-dialog nmui-title {
+  display: block;
+  font: var(--md-sys-typescale-headline-small);
+  letter-spacing: var(--md-sys-typescale-headline-small-tracking, 0);
   margin: 0 0 16px;
 }
 
-nmui-dialog p {
-  margin: 0 0 16px;
+nmui-dialog > surface p {
+  font: var(--md-sys-typescale-body-medium);
+  letter-spacing: var(--md-sys-typescale-body-medium-tracking, 0.25px);
   color: var(--md-sys-color-on-surface-variant, #49454f);
+  margin: 0;
 }
 
-nmui-dialog > surface > actions,
+nmui-dialog > surface p + p {
+  margin-top: 12px;
+}
+
 nmui-dialog actions {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
   margin-top: 24px;
+}
+
+/* Full-screen: the surface fills the screen (capped at 560dp wide),
+   square corners, header over a divider, scrolling body. */
+
+nmui-dialog[fullscreen] {
+  padding: 0;
+}
+
+nmui-dialog[fullscreen][open] > surface {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 560px;
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  padding: 0;
+  border-radius: 0;
+}
+
+nmui-dialog > surface > header {
+  flex: none;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-inline: 8px 16px;
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+}
+
+nmui-dialog > surface > header headline,
+nmui-dialog > surface > header nmui-title {
+  flex: 1;
+  font: var(--md-sys-typescale-title-large);
+  letter-spacing: var(--md-sys-typescale-title-large-tracking, 0);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+nmui-dialog > surface > header actions {
+  flex: none;
+  margin: 0;
+}
+
+nmui-dialog > surface > header > button.close {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--md-sys-shape-corner-full, 999px);
+  background: transparent;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+nmui-dialog > surface > header > button.close:hover {
+  background-color: color-mix(in srgb,
+    var(--md-sys-color-on-surface, #1c1b1f) 8%, transparent);
+}
+
+nmui-dialog > surface > header > button.close icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+nmui-dialog > surface > content {
+  display: block;
+  flex: 1;
+  overflow: auto;
+  padding: 24px;
 }

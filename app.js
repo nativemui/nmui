@@ -14,7 +14,7 @@ if (!mount) {
 const systemQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
 const nmui = {
-  version: "0.43.32",
+  version: "0.43.33",
 
   // Dead-simple theming: the theme is one attribute on <html>, so it
   // cascades into every component through CSS variables. The attribute
@@ -126,6 +126,7 @@ mount.innerHTML = `
       <a data-link href="/docs/checkbox"><icon>check_box</icon>Checkbox</a>
       <a data-link href="/docs/chip"><icon>sell</icon>Chip</a>
       <a data-link href="/docs/date-picker"><icon>calendar_month</icon>Date picker</a>
+      <a data-link href="/docs/dialog"><icon>forum</icon>Dialog</a>
       <a data-link href="/docs/divider"><icon>horizontal_rule</icon>Divider</a>
       <a data-link href="/docs/list"><icon>list</icon>List</a>
       <a data-link href="/docs/loading"><icon>progress_activity</icon>Loading & progress</a>
