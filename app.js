@@ -14,7 +14,7 @@ if (!mount) {
 const systemQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
 const nmui = {
-  version: "0.43.31",
+  version: "0.43.32",
 
   // Dead-simple theming: the theme is one attribute on <html>, so it
   // cascades into every component through CSS variables. The attribute
@@ -255,7 +255,7 @@ function applyShellMode() {
     rail.setAttribute("modal", "");
     rail.setAttribute("expanded", "");
     rail.removeAttribute("collapsed");
-    setRailIcon(collapseBtn, "close");
+    setRailIcon(collapseBtn, "menu_open");
     collapseBtn.setAttribute("aria-label", "Close navigation");
   } else {
     rail.close();
