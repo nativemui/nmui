@@ -64,9 +64,14 @@ export function render(mount, nmui) {
       <p>Frontend tooling got heavy. The browser didn't. If the browser can do it, NMUI lets the browser do it.</p>
       <nmui-button outlined id="home-why">Why NMUI?</nmui-button>
     </section>
+    <section class="home-support">
+      <headline medium>Support the project</headline>
+      <p>Free and open source, and it stays that way. If NMUI saves you time, you can support its development on Ko-fi — appreciated, never expected.</p>
+      <nmui-button tonal href="https://ko-fi.com/nativemui" target="_blank">Support on Ko-fi</nmui-button>
+    </section>
     <footer class="home-footer">
       <p><span class="brand-word">NATIVE MUI</span> — Material 3 Expressive, in vanilla JS/HTML/CSS.</p>
-      <p><a href="https://github.com/nativemui/nmui">GitHub</a> · <a data-link href="/docs">Docs</a> · <a data-link href="/about">About</a></p>
+      <p><a href="https://github.com/nativemui/nmui">GitHub</a> · <a data-link href="/docs">Docs</a> · <a data-link href="/about">About</a> · <a href="https://ko-fi.com/nativemui">Ko-fi</a></p>
     </footer>
   </div>`;
 
