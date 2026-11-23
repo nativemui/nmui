@@ -221,6 +221,14 @@ Source of truth is this repo — new builds land as commits on `main`.
 `nmui.0.1.0.zip`, `nmui.0.2.0.zip`, …; the current version is in
 `nmui.version` at runtime.)
 
+## Support
+
+**NATIVE MUI** is free and open source, and it stays that way. If it saves
+you time, you can support its development on
+[Ko-fi](https://ko-fi.com/nativemui) — donations help cover the time and
+costs involved in building and maintaining the library, and are always
+appreciated, never expected.
+
 ## License
 
 MIT — see `LICENSE`.

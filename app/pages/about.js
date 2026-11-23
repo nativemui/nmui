@@ -37,13 +37,19 @@ export function render(mount, nmui) {
       </section>
 
       <section class="docs-section">
+        <h2>Support the project</h2>
+        <p><strong>NATIVE MUI</strong> is free and open source under the MIT license, and it stays that way. If it saves you time, you can support its development on Ko-fi — donations help cover the time and costs involved in building and maintaining the library, and are always appreciated, never expected.</p>
+        <p><nmui-button tonal href="https://ko-fi.com/nativemui" target="_blank">Support on Ko-fi</nmui-button></p>
+      </section>
+
+      <section class="docs-section">
         <h2>Honest limits</h2>
         <p>Safari is intentionally unsupported: the library loads CSS as JS modules, which WebKit does not implement (<a href="https://bugs.webkit.org/show_bug.cgi?id=227967">WebKit bug 227967</a>). Everything else modern works. The library is pre-1.0 and moving fast — attributes and details still change between versions, and the version number on the home page is the truth about what you're looking at.</p>
       </section>
     </main>
 
     <footer class="docs-footer">
-      <p><strong>NATIVE MUI</strong> — <a href="https://github.com/nativemui">github.com/nativemui</a></p>
+      <p><strong>NATIVE MUI</strong> — <a href="https://github.com/nativemui">github.com/nativemui</a> · <a href="https://ko-fi.com/nativemui">Support on Ko-fi</a></p>
     </footer>
   </div>`;
 }
