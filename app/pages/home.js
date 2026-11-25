@@ -52,7 +52,8 @@ export function render(mount, nmui) {
     </section>
     <section class="home-get">
       <headline medium>Get it</headline>
-      <p>Clone the repo, copy <code>components/</code> and <code>css/</code> into your project, import a component. That's the whole install.</p>
+      <p>Install it from npm, or clone the repo and copy <code>components/</code> and <code>css/</code> into your project. That's the whole install.</p>
+      <pre class="home-code">npm install @nativemui/nmui</pre>
       <pre class="home-code">git clone https://github.com/nativemui/nmui.git</pre>
       <pre class="home-code">&lt;script type="module"&gt;
   import "./components/index.js";

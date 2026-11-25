@@ -1,0 +1,45 @@
+{
+  "name": "@nativemui/nmui",
+  "version": "0.43.37",
+  "description": "Material 3 Expressive, in vanilla JS/HTML/CSS. No framework. No build step. No dependencies.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Native MUI",
+  "homepage": "https://nativemui.com/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nativemui/nmui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nativemui/nmui/issues"
+  },
+  "keywords": [
+    "material-3",
+    "material-design",
+    "material-expressive",
+    "web-components",
+    "custom-elements",
+    "vanilla-js",
+    "css",
+    "ui",
+    "components"
+  ],
+  "main": "./components/index.js",
+  "module": "./components/index.js",
+  "exports": {
+    ".": "./components/index.js",
+    "./components/*": "./components/*",
+    "./css/*": "./css/*",
+    "./layout/*": "./layout/*"
+  },
+  "files": [
+    "components/",
+    "css/",
+    "layout/",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

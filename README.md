@@ -15,6 +15,12 @@ which is built with the library but isn't part of it. To use nmui in your
 own project you only need the library folders:
 
 ```sh
+npm install @nativemui/nmui
+```
+
+Or clone the repo and copy the library folders in by hand:
+
+```sh
 git clone https://github.com/nativemui/nmui.git
 # copy components/ and css/ into your project (layout/ too, for Panes)
 ```
