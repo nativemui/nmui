@@ -59,6 +59,7 @@ export function render(mount, nmui) {
   import "./components/index.js";
 &lt;/script&gt;</pre>
       <p>Full setup, theming, and the browser note — <a data-link href="/docs/getting-started">Getting started</a>.</p>
+      <p>Package page: <a href="https://www.npmjs.com/package/@nativemui/nmui">npmjs.com/package/@nativemui/nmui</a></p>
     </section>
     <section class="home-why">
       <headline medium>Why native?</headline>

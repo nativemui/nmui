@@ -14,13 +14,15 @@ export function render(mount, nmui) {
     ${nav("/docs/getting-started")}
     <header class="docs-header">
       <h1>Getting started</h1>
-      <p>nmui is a library, not a framework: copy the component folders into your project, import the ones you use, and write the tags. There is nothing to install, nothing to compile, and no runtime to keep happy — every component is a self-registering custom element in plain JS with its CSS riding along.</p>
+      <p>nmui is a library, not a framework: install it from npm, or copy the component folders into your project, import the ones you use, and write the tags. There is nothing to compile and no runtime to keep happy — every component is a self-registering custom element in plain JS with its CSS riding along.</p>
     </header>
 
     <main>
       <section class="docs-section">
-        <h2>1. Get the files</h2>
-        <p>Clone the repo or download it, and take the two folders that are the library — <code>components/</code> and <code>css/</code> (<code>layout/</code> too, if you want the Panes layout system). The rest of the repo is this documentation site, which is built with the library but isn't part of it.</p>
+        <h2>1. Get the library</h2>
+        <p>Two ways in — npm is the easy one:</p>
+        <pre class="docs-code">npm install @nativemui/nmui</pre>
+        <p>Or clone the repo and take the two folders that are the library — <code>components/</code> and <code>css/</code> (<code>layout/</code> too, if you want the Panes layout system). The rest of the repo is this documentation site, which is built with the library but isn't part of it. The package is also on npm at <a href="https://www.npmjs.com/package/@nativemui/nmui">npmjs.com/package/@nativemui/nmui</a>.</p>
         <pre class="docs-code">git clone https://github.com/nativemui/nmui.git</pre>
       </section>
 
@@ -30,10 +32,11 @@ export function render(mount, nmui) {
         ${demo(`<nmui-button tonal>Save draft</nmui-button>
 <nmui-button>Publish</nmui-button>`)}
         <pre class="docs-code">&lt;script type="module"&gt;
-  import "./components/button/button.js";
+  import "@nativemui/nmui/components/button/button.js";
 &lt;/script&gt;
 
 &lt;nmui-button tonal&gt;Save draft&lt;/nmui-button&gt;</pre>
+        <p class="demo-hint">With the cloned folders instead of npm, the same import is a relative path: <code>import "./components/button/button.js";</code></p>
         <p class="demo-hint">Variants are bare attributes — <code>tonal</code>, <code>outlined</code>, <code>xxlarge</code>, <code>rounded</code> — never classes or config objects. Settings live on the tag.</p>
       </section>
 
@@ -41,8 +44,9 @@ export function render(mount, nmui) {
         <h2>3. Or import everything</h2>
         <p>The barrel file registers every component at once. Fine for an app built entirely on nmui; import individually when you only need a few.</p>
         <pre class="docs-code">&lt;script type="module"&gt;
-  import "./components/index.js";
+  import "@nativemui/nmui";
 &lt;/script&gt;</pre>
+        <p class="demo-hint">With the cloned folders: <code>import "./components/index.js";</code></p>
       </section>
 
       <section class="docs-section">
@@ -50,6 +54,7 @@ export function render(mount, nmui) {
         <p>Components read the standard M3 color roles (<code>--md-sys-color-*</code>), so they pick up any theme that defines them — and they ship with baseline fallbacks, so they look right with no theme at all. For the full light/dark themes, include the theme CSS and flip one attribute:</p>
         <pre class="docs-code">&lt;link rel="stylesheet" href="./css/themes.css"&gt;
 &lt;html theme="dark"&gt;   &lt;!-- or "light" --&gt;</pre>
+        <p>With npm, the same file is <code>node_modules/@nativemui/nmui/css/themes.css</code> — serve it from there, or let your bundler or import map resolve it.</p>
         <p>This site's theme toggle cycles light, dark, and system — system follows your OS and updates live when it changes. The library itself only reads the <code>theme</code> attribute; the preference is this site's own code.</p>
         <p>Writing your own theme is one CSS file of color roles — the <a data-link href="/docs/theming">theming tool</a> edits them against a live preview and exports exactly that file.</p>
       </section>
@@ -66,7 +71,7 @@ export function render(mount, nmui) {
     </main>
 
     <footer class="docs-footer">
-      <p>nmui — <a href="https://github.com/nativemui/nmui">github.com/nativemui/nmui</a></p>
+      <p>nmui — <a href="https://github.com/nativemui/nmui">github.com/nativemui/nmui</a> · <a href="https://www.npmjs.com/package/@nativemui/nmui">npm</a></p>
     </footer>
   </div>`;
 }

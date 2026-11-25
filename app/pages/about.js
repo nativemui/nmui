@@ -49,7 +49,7 @@ export function render(mount, nmui) {
     </main>
 
     <footer class="docs-footer">
-      <p><strong>NATIVE MUI</strong> — <a href="https://github.com/nativemui">github.com/nativemui</a> · <a href="https://ko-fi.com/nativemui">Support on Ko-fi</a></p>
+      <p><strong>NATIVE MUI</strong> — <a href="https://github.com/nativemui">github.com/nativemui</a> · <a href="https://www.npmjs.com/package/@nativemui/nmui">npm</a> · <a href="https://ko-fi.com/nativemui">Support on Ko-fi</a></p>
     </footer>
   </div>`;
 }
